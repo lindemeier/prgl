@@ -5,20 +5,11 @@
 namespace prgl
 {
 
-Texture2D::Texture2D()
-  : mId(0), mWidth(0), mHeight(0), mTarget(GL_TEXTURE_2D), mMipLevel(0),
-    mInternalFormat(GL_RGBA), mFormat(TextureFormat::RGBA), mBorder(0),
-    mType(GL_UNSIGNED_BYTE), mMinFilter(GL_LINEAR_MIPMAP_LINEAR),
-    mMagFilter(GL_LINEAR), mWrap(GL_CLAMP), mEnvMode(GL_REPLACE),
-    mCreateMipMaps(GL_FALSE), mMaxAnisotropy(16.0f), mCreated(GL_FALSE)
-{
-}
-
 // Create empty texture
-Texture2D::Texture2D(int32_t width, int32_t height, int32_t internalFormat,
-                     TextureFormat format, int32_t type, int32_t minFilter,
-                     int32_t magFilter, int32_t envMode, int32_t wrapMode,
-                     bool createMipMaps)
+Texture2D::Texture2D(int32_t width, int32_t height,
+                     TextureFormatInternal internalFormat, TextureFormat format,
+                     TextureDataType type, int32_t minFilter, int32_t magFilter,
+                     int32_t envMode, int32_t wrapMode, bool createMipMaps)
   : mId(0), mWidth(width), mHeight(height), mTarget(GL_TEXTURE_2D),
     mMipLevel(0), mInternalFormat(internalFormat), mFormat(format), mBorder(0),
     mType(type), mMinFilter(minFilter), mMagFilter(magFilter), mWrap(wrapMode),
@@ -44,8 +35,9 @@ void Texture2D::upload(void* data)
 
   bind(true);
 
-  glTexImage2D(mTarget, mMipLevel, mInternalFormat, mWidth, mHeight, mBorder,
-               static_cast<uint32_t>(mFormat), mType, data);
+  glTexImage2D(mTarget, mMipLevel, static_cast<uint32_t>(mInternalFormat),
+               mWidth, mHeight, mBorder, static_cast<uint32_t>(mFormat),
+               static_cast<uint32_t>(mType), data);
 
   if (mCreateMipMaps)
     {
@@ -120,8 +112,9 @@ void Texture2D::create(void* data)
   glGenTextures(1, &mId);
   glBindTexture(mTarget, mId);
 
-  glTexImage2D(mTarget, mMipLevel, mInternalFormat, mWidth, mHeight, mBorder,
-               static_cast<uint32_t>(mFormat), mType, data);
+  glTexImage2D(mTarget, mMipLevel, static_cast<uint32_t>(mInternalFormat),
+               mWidth, mHeight, mBorder, static_cast<uint32_t>(mFormat),
+               static_cast<uint32_t>(mType), data);
   if (mCreateMipMaps)
     {
       glTexParameteri(mTarget, GL_GENERATE_MIPMAP, GL_TRUE);
@@ -157,7 +150,8 @@ void Texture2D::bind(bool bind) const
 void Texture2D::bindImageTexture(uint32_t unit, uint32_t access, int32_t level,
                                  bool layered, int32_t layer)
 {
-  glBindImageTexture(unit, mId, level, layered, layer, access, mInternalFormat);
+  glBindImageTexture(unit, mId, level, layered, layer, access,
+                     static_cast<uint32_t>(mInternalFormat));
 }
 
 void Texture2D::deleteTex()
@@ -174,13 +168,16 @@ uint32_t Texture2D::getWidth() const { return mWidth; }
 
 uint32_t Texture2D::getHeight() const { return mHeight; }
 
-int32_t Texture2D::getInternalFormat() const { return mInternalFormat; }
+TextureFormatInternal Texture2D::getInternalFormat() const
+{
+  return mInternalFormat;
+}
 
 TextureFormat Texture2D::getFormat() const { return mFormat; }
 
 int32_t Texture2D::getBorder() const { return mBorder; }
 
-uint32_t Texture2D::getType() const { return mType; }
+TextureDataType Texture2D::getType() const { return mType; }
 
 int32_t Texture2D::getMinFilter() const { return mMinFilter; }
 
