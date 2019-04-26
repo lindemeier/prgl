@@ -67,44 +67,44 @@ GLuint GlslProgram::compile(const std::string& source, GLuint type)
 
 void GlslProgram::seti(const std::string& label, int32_t arg)
 {
-  use(true);
+  bind(true);
   glUniform1i(glGetUniformLocation(mProgHandle, label.c_str()), arg);
 }
 
 void GlslProgram::setui(const std::string& label, uint32_t arg)
 {
-  use(true);
+  bind(true);
   glUniform1ui(glGetUniformLocation(mProgHandle, label.c_str()), arg);
 }
 
 void GlslProgram::setf(const std::string& label, float arg)
 {
-  use(true);
+  bind(true);
   glUniform1f(glGetUniformLocation(mProgHandle, label.c_str()), arg);
 }
 
 void GlslProgram::set2i(const std::string& label, int32_t arg1, int32_t arg2)
 {
-  use(true);
+  bind(true);
   glUniform2i(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2);
 }
 
 void GlslProgram::set2f(const std::string& label, float arg1, float arg2)
 {
-  use(true);
+  bind(true);
   glUniform2f(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2);
 }
 
 void GlslProgram::set2f(const std::string& label, const std::array<float, 2>& v)
 {
-  use(true);
+  bind(true);
   glUniform2f(glGetUniformLocation(mProgHandle, label.c_str()), v[0], v[1]);
 }
 
 void GlslProgram::set3i(const std::string& label, int32_t arg1, int32_t arg2,
                         int32_t arg3)
 {
-  use(true);
+  bind(true);
   glUniform3i(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2,
               arg3);
 }
@@ -112,21 +112,21 @@ void GlslProgram::set3i(const std::string& label, int32_t arg1, int32_t arg2,
 void GlslProgram::set3f(const std::string& label, float arg1, float arg2,
                         float arg3)
 {
-  use(true);
+  bind(true);
   glUniform3f(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2,
               arg3);
 }
 
 void GlslProgram::set3f(const std::string& label, const std::array<float, 3>& v)
 {
-  use(true);
+  bind(true);
   glUniform3f(glGetUniformLocation(mProgHandle, label.c_str()), v[0], v[1],
               v[2]);
 }
 
 void GlslProgram::set4f(const std::string& label, const std::array<float, 4>& v)
 {
-  use(true);
+  bind(true);
   glUniform4f(glGetUniformLocation(mProgHandle, label.c_str()), v[0], v[1],
               v[2], v[3]);
 }
@@ -134,7 +134,7 @@ void GlslProgram::set4f(const std::string& label, const std::array<float, 4>& v)
 void GlslProgram::set4i(const std::string& label, int32_t arg1, int32_t arg2,
                         int32_t arg3, int32_t arg4)
 {
-  use(true);
+  bind(true);
   glUniform4i(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2,
               arg3, arg4);
 }
@@ -142,33 +142,33 @@ void GlslProgram::set4i(const std::string& label, int32_t arg1, int32_t arg2,
 void GlslProgram::set4f(const std::string& label, float arg1, float arg2,
                         float arg3, float arg4)
 {
-  use(true);
+  bind(true);
   glUniform4f(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2,
               arg3, arg4);
 }
 
 void GlslProgram::set3iv(const std::string& label, const int* args)
 {
-  use(true);
+  bind(true);
   glUniform3iv(glGetUniformLocation(mProgHandle, label.c_str()), 1, args);
 }
 
 void GlslProgram::set3fv(const std::string& label, const float* args)
 {
-  use(true);
+  bind(true);
   glUniform3fv(glGetUniformLocation(mProgHandle, label.c_str()), 1, args);
 }
 
 void GlslProgram::set4fv(const std::string& label, const float* args)
 {
-  use(true);
+  bind(true);
   glUniform4fv(glGetUniformLocation(mProgHandle, label.c_str()), 1, args);
 }
 
 void GlslProgram::setMatrix(const std::string& label, const float* m,
                             bool transpose)
 {
-  use(true);
+  bind(true);
   glUniformMatrix4fv(glGetUniformLocation(mProgHandle, label.c_str()), 1,
                      transpose, m);
 }
@@ -176,12 +176,12 @@ void GlslProgram::setMatrix(const std::string& label, const float* m,
 void GlslProgram::setMatrix(const std::string& label, const double* m,
                             bool transpose)
 {
-  use(true);
+  bind(true);
   glUniformMatrix4dv(glGetUniformLocation(mProgHandle, label.c_str()), 1,
                      transpose, m);
 }
 
-void GlslProgram::use(bool use)
+void GlslProgram::bind(bool use)
 {
   if (use)
     {
@@ -281,7 +281,7 @@ void GlslVertFrag::execute2D(const std::shared_ptr<Texture2D>& target,
   mFbo->attachTexture(target);
   mFbo->bind(true);
 
-  use(true);
+  bind(true);
 
   glPushAttrib(GL_ALL_ATTRIB_BITS);
   glClampColor(GL_CLAMP_VERTEX_COLOR_ARB, GL_FALSE);
@@ -327,7 +327,7 @@ void GlslVertFrag::execute2D(const std::shared_ptr<Texture2D>& target,
   glPopMatrix();
   glPopAttrib();
 
-  use(false);
+  bind(false);
 
   mFbo->bind(false);
 }
@@ -338,9 +338,9 @@ void GlslVertFrag::executeCustom(const std::shared_ptr<Texture2D>& target,
   mFbo->attachTexture(target);
   mFbo->bind(true);
 
-  use(true);
+  bind(true);
   func();
-  use(false);
+  bind(false);
 
   mFbo->bind(false);
 }
@@ -421,7 +421,7 @@ void GlslCompute::memoryBarrier(GLbitfield barrierType) const
 
 void GlslCompute::execute(int32_t x, int32_t y, int32_t w, int32_t h)
 {
-  use(true);
+  bind(true);
 
   set2i("offset", x, y);
 
@@ -429,7 +429,7 @@ void GlslCompute::execute(int32_t x, int32_t y, int32_t w, int32_t h)
   dispatchCompute(w / workSize[0] + 1U, h / workSize[1] + 1U, 1U);
   memoryBarrier(GL_ALL_BARRIER_BITS);
 
-  use(false);
+  bind(false);
 }
 
 /**
@@ -440,28 +440,28 @@ void GlslCompute::bindImage2D(GLuint                            location,
                               GLenum                            access)
 {
   mBindings[location] = texture;
-  use(true);
+  bind(true);
   texture->bindImageTexture(location, access);
-  use(false);
+  bind(false);
 }
 
 // void GlslCompute::bindSSBO(GLuint location, std::shared_ptr<SSBO> &buffer)
 //{
 //  mBindings[location] = buffer;
-//  use(true);
+//  bind(true);
 //  buffer->bindBase(location);
-//  use(false);
+//  bind(false);
 //}
 
 void GlslCompute::bindSampler(GLuint location, const std::string& name,
                               const std::shared_ptr<Texture2D>& sampler)
 {
   mBindings[location] = sampler;
-  use(true);
+  bind(true);
   glActiveTexture(GL_TEXTURE0 + location);
   sampler->bind(true);
   seti(name.data(), location);
-  use(false);
+  bind(false);
 }
 
 } // namespace prgl

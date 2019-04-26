@@ -28,7 +28,7 @@ public:
 
   virtual ~GlslProgram();
 
-  void use(bool use);
+  void bind(bool use);
   void seti(const std::string& label, int32_t arg);
   void setui(const std::string& label, uint32_t arg);
   void setf(const std::string& label, float arg);
