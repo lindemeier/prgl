@@ -53,10 +53,10 @@ public:
   static std::string ReadShaderFromFile(const std::string& filename);
 
 protected:
-  GLuint getCurrentlyBoundProgram() const;
-  GLuint compile(const std::string& source, GLuint type);
+  uint32_t getCurrentlyBoundProgram() const;
+  uint32_t compile(const std::string& source, uint32_t type);
 
-  GLuint mProgHandle;
+  uint32_t mProgHandle;
 };
 
 class GlslVertFrag final : public GlslProgram
@@ -81,8 +81,8 @@ private:
 
   std::map<std::string, std::shared_ptr<Texture2D>> mAttachments;
   std::unique_ptr<FrameBufferObject>                mFbo;
-  GLuint                                            mVertProg;
-  GLuint                                            mFragProg;
+  uint32_t                                          mVertProg;
+  uint32_t                                          mFragProg;
 };
 
 class GlslCompute final : public GlslProgram
@@ -97,10 +97,10 @@ public:
   /*
    * GL_READ_ONLY, GL_WRITE_ONLY, GL_READ_WRITE
    */
-  void bindImage2D(GLuint location, const std::shared_ptr<Texture2D>& texture,
-                   GLenum access);
-  // void bindSSBO(GLuint location, std::shared_ptr<SSBO> &buffer);
-  void bindSampler(GLuint location, const std::string& name,
+  void bindImage2D(uint32_t location, const std::shared_ptr<Texture2D>& texture,
+                   int32_t access);
+  // void bindSSBO(uint32_t location, std::shared_ptr<SSBO> &buffer);
+  void bindSampler(uint32_t location, const std::string& name,
                    const std::shared_ptr<Texture2D>& sampler);
 
 private:
@@ -108,13 +108,13 @@ private:
 
   std::array<int32_t, 3> getWorkGroupSize();
   std::array<int32_t, 3> getMaxWorkGroupSize() const;
-  void dispatchCompute(GLuint num_groups_x, GLuint num_groups_y,
-                       GLuint num_groups_z) const;
+  void dispatchCompute(uint32_t num_groups_x, uint32_t num_groups_y,
+                       uint32_t num_groups_z) const;
   void memoryBarrier(GLbitfield barrierType = GL_ALL_BARRIER_BITS) const;
 
-  std::map<GLuint, std::shared_ptr<Texture2D>> mBindings;
+  std::map<uint32_t, std::shared_ptr<Texture2D>> mBindings;
 
-  GLuint mShaderHandle;
+  uint32_t mShaderHandle;
 };
 
 } // namespace prgl

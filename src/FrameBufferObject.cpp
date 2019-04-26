@@ -91,8 +91,8 @@ bool FrameBufferObject::checkStatus()
 
   // glReadBuffer(GL_NONE);
 
-  GLenum status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-  bool   result = false;
+  int32_t status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+  bool    result = false;
 
   switch (status)
     {

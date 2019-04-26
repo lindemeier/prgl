@@ -263,7 +263,7 @@ void Texture2D::render(float posX, float posY, float width, float height)
 
   glDisable(GL_DEPTH_TEST);
 
-  GLint iViewport[4];
+  int32_t iViewport[4];
   glGetIntegerv(GL_VIEWPORT, iViewport);
 
   glMatrixMode(GL_PROJECTION);

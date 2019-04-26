@@ -16,9 +16,9 @@ SSBO::~SSBO()
     glDeleteBuffers(1, &mHandle);
 }
 
-GLint SSBO::getSizeInBytes() const
+int32_t SSBO::getSizeInBytes() const
 {
-  GLint size;
+  int32_t size;
   bind(true);
   glGetBufferParameteriv(GL_SHADER_STORAGE_BUFFER, GL_BUFFER_SIZE, &size);
 
@@ -26,7 +26,7 @@ GLint SSBO::getSizeInBytes() const
   return size;
 }
 
-void SSBO::create(const void* dataStart, GLuint nBytes)
+void SSBO::create(const void* dataStart, uint32_t nBytes)
 {
   if (mHandle > 0)
     {
@@ -42,10 +42,10 @@ void SSBO::create(const void* dataStart, GLuint nBytes)
   bind(false);
 }
 
-void SSBO::upload(const void* dataStart, GLuint nBytes)
+void SSBO::upload(const void* dataStart, uint32_t nBytes)
 {
   // check if enough bytes allocated
-  if (nBytes != (GLuint)getSizeInBytes())
+  if (nBytes != (uint32_t)getSizeInBytes())
     {
       std::cout << "SSBO::reallocated:size: " << nBytes << std::endl;
       create(dataStart, nBytes);
@@ -63,7 +63,7 @@ void SSBO::upload(const void* dataStart, GLuint nBytes)
   bind(false);
 }
 
-void SSBO::download(void* dataStart, GLuint nBytes) const
+void SSBO::download(void* dataStart, uint32_t nBytes) const
 {
   bind(true);
 
@@ -97,12 +97,12 @@ void SSBO::bindBase(uint32_t location) const
 
 void SSBO::copyTo(SSBO& other) const
 {
-  GLint otherSize = other.getSizeInBytes();
-  GLint thisSize  = getSizeInBytes();
+  int32_t otherSize = other.getSizeInBytes();
+  int32_t thisSize  = getSizeInBytes();
 
-  GLint cReadBuffer;
+  int32_t cReadBuffer;
   glGetIntegerv(GL_COPY_READ_BUFFER, &cReadBuffer);
-  GLint cWriteBuffer;
+  int32_t cWriteBuffer;
   glGetIntegerv(GL_COPY_WRITE_BUFFER, &cWriteBuffer);
 
   if (thisSize != otherSize)

@@ -38,9 +38,9 @@ GlslProgram::~GlslProgram()
     }
 }
 
-GLuint GlslProgram::compile(const std::string& source, GLuint type)
+uint32_t GlslProgram::compile(const std::string& source, uint32_t type)
 {
-  GLuint id = glCreateShader(type);
+  uint32_t id = glCreateShader(type);
 
   const char* c_str = source.c_str();
   glShaderSource(id, 1, &c_str, NULL);
@@ -196,12 +196,12 @@ void GlslProgram::bind(bool use)
     }
 }
 
-GLuint GlslProgram::getCurrentlyBoundProgram() const
+uint32_t GlslProgram::getCurrentlyBoundProgram() const
 {
-  GLint id;
+  int32_t id;
   glGetIntegerv(GL_CURRENT_PROGRAM, &id);
 
-  return (GLuint)id;
+  return (uint32_t)id;
 }
 
 GlslVertFrag::GlslVertFrag(const std::string& glslVertSource,
@@ -408,8 +408,8 @@ std::array<int32_t, 3> GlslCompute::getMaxWorkGroupSize() const
   return size;
 }
 
-void GlslCompute::dispatchCompute(GLuint num_groups_x, GLuint num_groups_y,
-                                  GLuint num_groups_z) const
+void GlslCompute::dispatchCompute(uint32_t num_groups_x, uint32_t num_groups_y,
+                                  uint32_t num_groups_z) const
 {
   glDispatchCompute(num_groups_x, num_groups_y, num_groups_z);
 }
@@ -435,9 +435,9 @@ void GlslCompute::execute(int32_t x, int32_t y, int32_t w, int32_t h)
 /**
  * uniform readonly image2D fromTex;
  */
-void GlslCompute::bindImage2D(GLuint                            location,
+void GlslCompute::bindImage2D(uint32_t                          location,
                               const std::shared_ptr<Texture2D>& texture,
-                              GLenum                            access)
+                              int32_t                           access)
 {
   mBindings[location] = texture;
   bind(true);
@@ -445,7 +445,7 @@ void GlslCompute::bindImage2D(GLuint                            location,
   bind(false);
 }
 
-// void GlslCompute::bindSSBO(GLuint location, std::shared_ptr<SSBO> &buffer)
+// void GlslCompute::bindSSBO(uint32_t location, std::shared_ptr<SSBO> &buffer)
 //{
 //  mBindings[location] = buffer;
 //  bind(true);
@@ -453,7 +453,7 @@ void GlslCompute::bindImage2D(GLuint                            location,
 //  bind(false);
 //}
 
-void GlslCompute::bindSampler(GLuint location, const std::string& name,
+void GlslCompute::bindSampler(uint32_t location, const std::string& name,
                               const std::shared_ptr<Texture2D>& sampler)
 {
   mBindings[location] = sampler;

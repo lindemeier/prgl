@@ -12,7 +12,7 @@ namespace prgl
 
 void checkGLError(const char* file, const char* function, int line)
 {
-  GLenum err(glGetError());
+  int32_t err(glGetError());
 
   while (err != GL_NO_ERROR)
     {
@@ -40,8 +40,8 @@ void checkGLError(const char* file, const char* function, int line)
 }
 
 // http://blog.nobel-joergensen.com/2013/02/17/debugging-opengl-part-2-using-gldebugmessagecallback/
-void APIENTRY openGlDebugCallback(GLenum source, GLenum type, GLuint id,
-                                  GLenum severity, GLsizei length,
+void APIENTRY openGlDebugCallback(int32_t source, int32_t type, uint32_t id,
+                                  int32_t severity, uint32_t length,
                                   const GLchar* message, const void* userParam)
 {
   if (severity != GL_DEBUG_SEVERITY_MEDIUM &&
@@ -98,7 +98,7 @@ ContextImplementation::~ContextImplementation()
     }
 }
 
-void ContextImplementation::onError(GLint errorCode, const char* errorMessage)
+void ContextImplementation::onError(int32_t errorCode, const char* errorMessage)
 {
   std::cerr << "GLWindow::ERROR_GLFW:\t" << errorMessage << std::endl;
   std::cout << "press continue to exit";
@@ -108,7 +108,7 @@ void ContextImplementation::onError(GLint errorCode, const char* errorMessage)
 
 void ContextImplementation::initGLFW()
 {
-  GLboolean error = glfwInit();
+  bool error = glfwInit();
   if (!error)
     {
       std::cerr << "could not init GLFW:" << std::endl;
@@ -124,7 +124,7 @@ void ContextImplementation::initGLEW(GLFWwindow* window)
   makeCurrent();
 
   // glewExperimental = GL_TRUE;
-  GLenum err = glewInit();
+  int32_t err = glewInit();
   if (GLEW_OK != err)
     {
       fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
@@ -196,7 +196,7 @@ ContextImplementation::ContextImplementation(
       glEnable(GL_DEBUG_OUTPUT);
       glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
       glDebugMessageCallback(openGlDebugCallback, nullptr);
-      GLuint unusedIds = 0;
+      uint32_t unusedIds = 0;
       glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0,
                             &unusedIds, true);
     }
@@ -207,9 +207,10 @@ ContextImplementation::ContextImplementation(
 #endif
 
   // check viewport size
-  GLint dims;
+  int32_t dims;
   glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE, &dims);
-  if (width > static_cast<GLuint>(dims) || height > static_cast<GLuint>(dims))
+  if (width > static_cast<uint32_t>(dims) ||
+      height > static_cast<uint32_t>(dims))
     {
       std::cerr << "OPENGL: "
                 << "maximum GL_MAX_RENDERBUFFER_SIZE size exceeded: width: "
