@@ -16,7 +16,7 @@
 namespace prgl
 {
 
-enum class TextureMinFilter : int32_t
+enum class TextureMinFilter : uint32_t
 {
   Nearest,
   Linear,
@@ -26,13 +26,13 @@ enum class TextureMinFilter : int32_t
   LinearMipMapLinear
 };
 
-enum class TextureMagFilter : int32_t
+enum class TextureMagFilter : uint32_t
 {
   Nearest,
   Linear
 };
 
-enum class TextureEnvMode : int32_t
+enum class TextureEnvMode : uint32_t
 {
   Replace,
   Modulate,
@@ -42,7 +42,7 @@ enum class TextureEnvMode : int32_t
   Subtract
 };
 
-enum class TextureWrapMode : int32_t
+enum class TextureWrapMode : uint32_t
 {
   Repeat,
   MirroredRepeat,
@@ -50,14 +50,20 @@ enum class TextureWrapMode : int32_t
   ClampToBorder
 };
 
-enum class TextureAccess : int32_t
+enum class TextureAccess : uint32_t
 {
   ReadOnly,
   WriteOnly,
   ReadWrite
 };
 
-enum class TextureFormat : int32_t
+/**
+ * @brief "Specifies the number of color components in the texture. Must be one
+ * of base internal formats given in Table 1, one of the sized internal formats
+ * given in Table 2, or one of the compressed internal formats given in Table 3,
+ * below.""
+ */
+enum class TextureFormatInternal : uint32_t
 {
   R8U,
   Rg8U,
@@ -73,12 +79,35 @@ enum class TextureFormat : int32_t
   Rgba32U,
 };
 
+/**
+ * @brief "Specifies the format of the pixel data. The following symbolic values
+ * are accepted:"
+ */
+enum class TextureFormat : uint32_t
+{
+  RED             = GL_RED,
+  RG              = GL_RG,
+  RGB             = GL_RGB,
+  BGR             = GL_BGR,
+  RGBA            = GL_RGBA,
+  BGRA            = GL_BGRA,
+  RED_INTEGER     = GL_RED_INTEGER,
+  RG_INTEGER      = GL_RG_INTEGER,
+  RGB_INTEGER     = GL_RGB_INTEGER,
+  BGR_INTEGER     = GL_BGR_INTEGER,
+  RGBA_INTEGER    = GL_RGBA_INTEGER,
+  BGRA_INTEGER    = GL_BGRA_INTEGER,
+  STENCIL_INDEX   = GL_STENCIL_INDEX,
+  DEPTH_COMPONENT = GL_DEPTH_COMPONENT,
+  DEPTH_STENCIL   = GL_DEPTH_STENCIL
+};
+
 class Texture2D
 {
 public:
   Texture2D();
   Texture2D(int32_t width, int32_t height, int32_t internalFormat = GL_RGB32F,
-            uint32_t format = GL_RGB, int32_t type = GL_FLOAT,
+            TextureFormat format = TextureFormat::RGB, int32_t type = GL_FLOAT,
             int32_t minFilter = GL_LINEAR, int32_t magFilter = GL_LINEAR,
             int32_t envMode = GL_REPLACE, int32_t wrapMode = GL_REPEAT,
             bool createMipMaps = GL_FALSE);
@@ -109,37 +138,37 @@ public:
   uint32_t getHeight() const;
   bool     isCreated() const { return mCreated; }
 
-  int32_t  getInternalFormat() const;
-  uint32_t getFormat() const;
-  int32_t  getBorder() const;
-  uint32_t getType() const;
-  int32_t  getMinFilter() const;
-  int32_t  getMagFilter() const;
-  int32_t  getWrap() const;
-  int32_t  getEnvMode() const;
-  uint32_t getTarget() const;
-  void     copyTo(Texture2D& other) const;
+  int32_t       getInternalFormat() const;
+  TextureFormat getFormat() const;
+  int32_t       getBorder() const;
+  uint32_t      getType() const;
+  int32_t       getMinFilter() const;
+  int32_t       getMagFilter() const;
+  int32_t       getWrap() const;
+  int32_t       getEnvMode() const;
+  uint32_t      getTarget() const;
+  void          copyTo(Texture2D& other) const;
 
 private:
   void deleteTex();
 
 private:
-  uint32_t mId;
-  uint32_t mWidth;
-  uint32_t mHeight;
-  uint32_t mTarget;
-  int32_t  mMipLevel;
-  int32_t  mInternalFormat;
-  uint32_t mFormat;
-  int32_t  mBorder;
-  uint32_t mType;
-  int32_t  mMinFilter;
-  int32_t  mMagFilter;
-  int32_t  mWrap;
-  int32_t  mEnvMode;
-  bool     mCreateMipMaps;
-  float    mMaxAnisotropy;
-  bool     mCreated;
+  uint32_t      mId;
+  uint32_t      mWidth;
+  uint32_t      mHeight;
+  uint32_t      mTarget;
+  int32_t       mMipLevel;
+  int32_t       mInternalFormat;
+  TextureFormat mFormat;
+  int32_t       mBorder;
+  uint32_t      mType;
+  int32_t       mMinFilter;
+  int32_t       mMagFilter;
+  int32_t       mWrap;
+  int32_t       mEnvMode;
+  bool          mCreateMipMaps;
+  float         mMaxAnisotropy;
+  bool          mCreated;
 };
 
 } // namespace prgl
