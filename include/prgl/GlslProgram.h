@@ -29,31 +29,32 @@ public:
   virtual ~GlslProgram();
 
   void use(bool use);
-  void seti(const GLchar* label, int32_t arg);
-  void setui(const GLchar* label, uint32_t arg);
-  void setf(const GLchar* label, float arg);
-  void set2i(const GLchar* label, int32_t arg1, int32_t arg2);
-  void set2f(const GLchar* label, float arg1, float arg2);
-  void set2f(const GLchar* label, const std::array<float, 2>& v);
-  void set3i(const GLchar* label, int32_t arg1, int32_t arg2, int32_t arg3);
-  void set3f(const GLchar* label, float arg1, float arg2, float arg3);
-  void set3f(const GLchar* label, const std::array<float, 3>& v);
-  void set4f(const GLchar* label, const std::array<float, 4>& v);
-  void set4i(const GLchar* label, int32_t arg1, int32_t arg2, int32_t arg3,
+  void seti(const std::string& label, int32_t arg);
+  void setui(const std::string& label, uint32_t arg);
+  void setf(const std::string& label, float arg);
+  void set2i(const std::string& label, int32_t arg1, int32_t arg2);
+  void set2f(const std::string& label, float arg1, float arg2);
+  void set2f(const std::string& label, const std::array<float, 2>& v);
+  void set3i(const std::string& label, int32_t arg1, int32_t arg2,
+             int32_t arg3);
+  void set3f(const std::string& label, float arg1, float arg2, float arg3);
+  void set3f(const std::string& label, const std::array<float, 3>& v);
+  void set4f(const std::string& label, const std::array<float, 4>& v);
+  void set4i(const std::string& label, int32_t arg1, int32_t arg2, int32_t arg3,
              int32_t arg4);
-  void set4f(const GLchar* label, float arg1, float arg2, float arg3,
+  void set4f(const std::string& label, float arg1, float arg2, float arg3,
              float arg4);
-  void set3iv(const GLchar* label, const int* args);
-  void set3fv(const GLchar* label, const float* args);
-  void set4fv(const GLchar* label, const float* args);
-  void setMatrix(const GLchar* label, const float* m, bool transpose);
-  void setMatrix(const GLchar* label, const double* m, bool transpose);
+  void set3iv(const std::string& label, const int* args);
+  void set3fv(const std::string& label, const float* args);
+  void set4fv(const std::string& label, const float* args);
+  void setMatrix(const std::string& label, const float* m, bool transpose);
+  void setMatrix(const std::string& label, const double* m, bool transpose);
 
   static std::string ReadShaderFromFile(const std::string& filename);
 
 protected:
   GLuint getCurrentlyBoundProgram() const;
-  GLuint compile(const GLchar* source, GLuint type);
+  GLuint compile(const std::string& source, GLuint type);
 
   GLuint mProgHandle;
 };

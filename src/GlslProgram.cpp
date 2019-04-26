@@ -38,10 +38,12 @@ GlslProgram::~GlslProgram()
     }
 }
 
-GLuint GlslProgram::compile(const GLchar* source, GLuint type)
+GLuint GlslProgram::compile(const std::string& source, GLuint type)
 {
   GLuint id = glCreateShader(type);
-  glShaderSource(id, 1, &source, NULL);
+
+  const char* c_str = source.c_str();
+  glShaderSource(id, 1, &c_str, NULL);
   glCompileShader(id);
 
   int32_t c = 0;
@@ -63,110 +65,120 @@ GLuint GlslProgram::compile(const GLchar* source, GLuint type)
   return id;
 }
 
-void GlslProgram::seti(const GLchar* label, int32_t arg)
+void GlslProgram::seti(const std::string& label, int32_t arg)
 {
   use(true);
-  glUniform1i(glGetUniformLocation(mProgHandle, label), arg);
+  glUniform1i(glGetUniformLocation(mProgHandle, label.c_str()), arg);
 }
 
-void GlslProgram::setui(const GLchar* label, uint32_t arg)
+void GlslProgram::setui(const std::string& label, uint32_t arg)
 {
   use(true);
-  glUniform1ui(glGetUniformLocation(mProgHandle, label), arg);
+  glUniform1ui(glGetUniformLocation(mProgHandle, label.c_str()), arg);
 }
 
-void GlslProgram::setf(const GLchar* label, float arg)
+void GlslProgram::setf(const std::string& label, float arg)
 {
   use(true);
-  glUniform1f(glGetUniformLocation(mProgHandle, label), arg);
+  glUniform1f(glGetUniformLocation(mProgHandle, label.c_str()), arg);
 }
 
-void GlslProgram::set2i(const GLchar* label, int32_t arg1, int32_t arg2)
+void GlslProgram::set2i(const std::string& label, int32_t arg1, int32_t arg2)
 {
   use(true);
-  glUniform2i(glGetUniformLocation(mProgHandle, label), arg1, arg2);
+  glUniform2i(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2);
 }
 
-void GlslProgram::set2f(const GLchar* label, float arg1, float arg2)
+void GlslProgram::set2f(const std::string& label, float arg1, float arg2)
 {
   use(true);
-  glUniform2f(glGetUniformLocation(mProgHandle, label), arg1, arg2);
+  glUniform2f(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2);
 }
 
-void GlslProgram::set2f(const GLchar* label, const std::array<float, 2>& v)
+void GlslProgram::set2f(const std::string& label, const std::array<float, 2>& v)
 {
   use(true);
-  glUniform2f(glGetUniformLocation(mProgHandle, label), v[0], v[1]);
+  glUniform2f(glGetUniformLocation(mProgHandle, label.c_str()), v[0], v[1]);
 }
 
-void GlslProgram::set3i(const GLchar* label, int32_t arg1, int32_t arg2,
+void GlslProgram::set3i(const std::string& label, int32_t arg1, int32_t arg2,
                         int32_t arg3)
 {
   use(true);
-  glUniform3i(glGetUniformLocation(mProgHandle, label), arg1, arg2, arg3);
+  glUniform3i(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2,
+              arg3);
 }
 
-void GlslProgram::set3f(const GLchar* label, float arg1, float arg2, float arg3)
+void GlslProgram::set3f(const std::string& label, float arg1, float arg2,
+                        float arg3)
 {
   use(true);
-  glUniform3f(glGetUniformLocation(mProgHandle, label), arg1, arg2, arg3);
+  glUniform3f(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2,
+              arg3);
 }
 
-void GlslProgram::set3f(const GLchar* label, const std::array<float, 3>& v)
+void GlslProgram::set3f(const std::string& label, const std::array<float, 3>& v)
 {
   use(true);
-  glUniform3f(glGetUniformLocation(mProgHandle, label), v[0], v[1], v[2]);
+  glUniform3f(glGetUniformLocation(mProgHandle, label.c_str()), v[0], v[1],
+              v[2]);
 }
 
-void GlslProgram::set4f(const GLchar* label, const std::array<float, 4>& v)
+void GlslProgram::set4f(const std::string& label, const std::array<float, 4>& v)
 {
   use(true);
-  glUniform4f(glGetUniformLocation(mProgHandle, label), v[0], v[1], v[2], v[3]);
+  glUniform4f(glGetUniformLocation(mProgHandle, label.c_str()), v[0], v[1],
+              v[2], v[3]);
 }
 
-void GlslProgram::set4i(const GLchar* label, int32_t arg1, int32_t arg2,
+void GlslProgram::set4i(const std::string& label, int32_t arg1, int32_t arg2,
                         int32_t arg3, int32_t arg4)
 {
   use(true);
-  glUniform4i(glGetUniformLocation(mProgHandle, label), arg1, arg2, arg3, arg4);
+  glUniform4i(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2,
+              arg3, arg4);
 }
 
-void GlslProgram::set4f(const GLchar* label, float arg1, float arg2, float arg3,
-                        float arg4)
+void GlslProgram::set4f(const std::string& label, float arg1, float arg2,
+                        float arg3, float arg4)
 {
   use(true);
-  glUniform4f(glGetUniformLocation(mProgHandle, label), arg1, arg2, arg3, arg4);
+  glUniform4f(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2,
+              arg3, arg4);
 }
 
-void GlslProgram::set3iv(const GLchar* label, const int* args)
+void GlslProgram::set3iv(const std::string& label, const int* args)
 {
   use(true);
-  glUniform3iv(glGetUniformLocation(mProgHandle, label), 1, args);
+  glUniform3iv(glGetUniformLocation(mProgHandle, label.c_str()), 1, args);
 }
 
-void GlslProgram::set3fv(const GLchar* label, const float* args)
+void GlslProgram::set3fv(const std::string& label, const float* args)
 {
   use(true);
-  glUniform3fv(glGetUniformLocation(mProgHandle, label), 1, args);
+  glUniform3fv(glGetUniformLocation(mProgHandle, label.c_str()), 1, args);
 }
 
-void GlslProgram::set4fv(const GLchar* label, const float* args)
+void GlslProgram::set4fv(const std::string& label, const float* args)
 {
   use(true);
-  glUniform4fv(glGetUniformLocation(mProgHandle, label), 1, args);
+  glUniform4fv(glGetUniformLocation(mProgHandle, label.c_str()), 1, args);
 }
 
-void GlslProgram::setMatrix(const GLchar* label, const float* m, bool transpose)
-{
-  use(true);
-  glUniformMatrix4fv(glGetUniformLocation(mProgHandle, label), 1, transpose, m);
-}
-
-void GlslProgram::setMatrix(const GLchar* label, const double* m,
+void GlslProgram::setMatrix(const std::string& label, const float* m,
                             bool transpose)
 {
   use(true);
-  glUniformMatrix4dv(glGetUniformLocation(mProgHandle, label), 1, transpose, m);
+  glUniformMatrix4fv(glGetUniformLocation(mProgHandle, label.c_str()), 1,
+                     transpose, m);
+}
+
+void GlslProgram::setMatrix(const std::string& label, const double* m,
+                            bool transpose)
+{
+  use(true);
+  glUniformMatrix4dv(glGetUniformLocation(mProgHandle, label.c_str()), 1,
+                     transpose, m);
 }
 
 void GlslProgram::use(bool use)
