@@ -7,7 +7,7 @@ namespace prgl
 {
 
 GlslRenderingPipelineProgram::GlslRenderingPipelineProgram()
-  : GlslProgram(), mAttachments(), mVertProg(INVALID_HANDLE),
+  : GlslProgram(), mVertProg(INVALID_HANDLE),
     mTesselationControlProg(INVALID_HANDLE),
     mTesselationEvaluationProg(INVALID_HANDLE), mGeometryProg(INVALID_HANDLE),
     mFragProg(INVALID_HANDLE)
@@ -210,10 +210,20 @@ void GlslRenderingPipelineProgram::attachFragmentShader(
     }
 }
 
-void GlslRenderingPipelineProgram::addSampler(
-  const std::string& name, const std::shared_ptr<Texture2d>& input)
+/**
+ * @brief Bind texture to shader
+ *
+ * @param name Label in the shader
+ * @param unit texture unit (GL_TEXTURE0+x)
+ * @param texturethe texture
+ */
+void GlslRenderingPipelineProgram::bindSampler(
+  const std::string& name, const TextureUnit unit,
+  const std::shared_ptr<Texture2d>& texture)
 {
-  mAttachments[name] = input;
+  glActiveTexture(static_cast<uint32_t>(unit));
+  texture->bind(true);
+  seti(name.c_str(), static_cast<uint32_t>(unit));
 }
 
 void GlslRenderingPipelineProgram::execute2D(

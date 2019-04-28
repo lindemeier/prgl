@@ -13,7 +13,6 @@
 #include "prgl/Texture2d.h"
 
 #include <array>
-#include <map>
 #include <memory>
 
 namespace prgl
@@ -30,7 +29,8 @@ public:
 
   ~GlslRenderingPipelineProgram() override;
 
-  void addSampler(const std::string& name, const std::shared_ptr<Texture2d>& m);
+  void bindSampler(const std::string& name, const TextureUnit unit,
+                   const std::shared_ptr<Texture2d>& texture);
 
   void execute2D(const std::shared_ptr<Texture2d>& target, int32_t x, int32_t y,
                  int32_t w, int32_t h);
@@ -42,8 +42,6 @@ public:
   void attachFragmentShader(const std::string& source);
 
 private:
-  std::map<std::string, std::shared_ptr<Texture2d>> mAttachments;
-
   uint32_t mVertProg;
   uint32_t mTesselationControlProg;
   uint32_t mTesselationEvaluationProg;
