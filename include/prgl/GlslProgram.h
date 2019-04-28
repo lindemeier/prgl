@@ -107,8 +107,8 @@ public:
 private:
   void attach(const std::string& source);
 
-  std::array<int32_t, 3> getWorkGroupSize();
-  std::array<int32_t, 3> getMaxWorkGroupSize() const;
+  std::array<int32_t, 3U> getWorkGroupSize();
+  std::array<int32_t, 3U> getMaxWorkGroupSize() const;
   void dispatchCompute(uint32_t num_groups_x, uint32_t num_groups_y,
                        uint32_t num_groups_z) const;
   void memoryBarrier(GLbitfield barrierType = GL_ALL_BARRIER_BITS) const;

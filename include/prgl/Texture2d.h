@@ -159,6 +159,10 @@ enum class TextureFormat : uint32_t
   DepthStencil   = GL_DEPTH_STENCIL
 };
 
+/**
+ * @brief Represents a 2d texture.
+ *
+ */
 class Texture2d
 {
 public:
@@ -176,8 +180,7 @@ public:
   ~Texture2d();
 
   void bind(bool bind) const;
-  // used for binding at shader location for write andor read operations,
-  // acess:: GL_READ_ONLY, GL_WRITE_ONLY, or GL_READ_WRITE
+  // used for binding at shader location for write andor read operations
   void     bindImageTexture(uint32_t      unit,
                             TextureAccess access = TextureAccess::ReadWrite,
                             int32_t level = 0, bool layered = GL_TRUE,

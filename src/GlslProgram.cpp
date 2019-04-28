@@ -28,11 +28,14 @@ std::string ReadShaderFromFile(const std::string& filename)
   return content;
 }
 
-GlslProgram::GlslProgram() : mProgHandle(0) { mProgHandle = glCreateProgram(); }
+GlslProgram::GlslProgram() : mProgHandle(INVALID_HANDLE)
+{
+  mProgHandle = glCreateProgram();
+}
 
 GlslProgram::~GlslProgram()
 {
-  if (mProgHandle)
+  if (mProgHandle > INVALID_HANDLE)
     {
       glDeleteProgram(mProgHandle);
     }
@@ -67,44 +70,37 @@ uint32_t GlslProgram::compile(const std::string& source, uint32_t type)
 
 void GlslProgram::seti(const std::string& label, int32_t arg)
 {
-  bind(true);
   glUniform1i(glGetUniformLocation(mProgHandle, label.c_str()), arg);
 }
 
 void GlslProgram::setui(const std::string& label, uint32_t arg)
 {
-  bind(true);
   glUniform1ui(glGetUniformLocation(mProgHandle, label.c_str()), arg);
 }
 
 void GlslProgram::setf(const std::string& label, float arg)
 {
-  bind(true);
   glUniform1f(glGetUniformLocation(mProgHandle, label.c_str()), arg);
 }
 
 void GlslProgram::set2i(const std::string& label, int32_t arg1, int32_t arg2)
 {
-  bind(true);
   glUniform2i(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2);
 }
 
 void GlslProgram::set2f(const std::string& label, float arg1, float arg2)
 {
-  bind(true);
   glUniform2f(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2);
 }
 
 void GlslProgram::set2f(const std::string& label, const std::array<float, 2>& v)
 {
-  bind(true);
   glUniform2f(glGetUniformLocation(mProgHandle, label.c_str()), v[0], v[1]);
 }
 
 void GlslProgram::set3i(const std::string& label, int32_t arg1, int32_t arg2,
                         int32_t arg3)
 {
-  bind(true);
   glUniform3i(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2,
               arg3);
 }
@@ -112,21 +108,18 @@ void GlslProgram::set3i(const std::string& label, int32_t arg1, int32_t arg2,
 void GlslProgram::set3f(const std::string& label, float arg1, float arg2,
                         float arg3)
 {
-  bind(true);
   glUniform3f(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2,
               arg3);
 }
 
 void GlslProgram::set3f(const std::string& label, const std::array<float, 3>& v)
 {
-  bind(true);
   glUniform3f(glGetUniformLocation(mProgHandle, label.c_str()), v[0], v[1],
               v[2]);
 }
 
 void GlslProgram::set4f(const std::string& label, const std::array<float, 4>& v)
 {
-  bind(true);
   glUniform4f(glGetUniformLocation(mProgHandle, label.c_str()), v[0], v[1],
               v[2], v[3]);
 }
@@ -134,7 +127,6 @@ void GlslProgram::set4f(const std::string& label, const std::array<float, 4>& v)
 void GlslProgram::set4i(const std::string& label, int32_t arg1, int32_t arg2,
                         int32_t arg3, int32_t arg4)
 {
-  bind(true);
   glUniform4i(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2,
               arg3, arg4);
 }
@@ -142,33 +134,28 @@ void GlslProgram::set4i(const std::string& label, int32_t arg1, int32_t arg2,
 void GlslProgram::set4f(const std::string& label, float arg1, float arg2,
                         float arg3, float arg4)
 {
-  bind(true);
   glUniform4f(glGetUniformLocation(mProgHandle, label.c_str()), arg1, arg2,
               arg3, arg4);
 }
 
 void GlslProgram::set3iv(const std::string& label, const int* args)
 {
-  bind(true);
   glUniform3iv(glGetUniformLocation(mProgHandle, label.c_str()), 1, args);
 }
 
 void GlslProgram::set3fv(const std::string& label, const float* args)
 {
-  bind(true);
   glUniform3fv(glGetUniformLocation(mProgHandle, label.c_str()), 1, args);
 }
 
 void GlslProgram::set4fv(const std::string& label, const float* args)
 {
-  bind(true);
   glUniform4fv(glGetUniformLocation(mProgHandle, label.c_str()), 1, args);
 }
 
 void GlslProgram::setMatrix(const std::string& label, const float* m,
                             bool transpose)
 {
-  bind(true);
   glUniformMatrix4fv(glGetUniformLocation(mProgHandle, label.c_str()), 1,
                      transpose, m);
 }
@@ -176,7 +163,6 @@ void GlslProgram::setMatrix(const std::string& label, const float* m,
 void GlslProgram::setMatrix(const std::string& label, const double* m,
                             bool transpose)
 {
-  bind(true);
   glUniformMatrix4dv(glGetUniformLocation(mProgHandle, label.c_str()), 1,
                      transpose, m);
 }
@@ -394,16 +380,16 @@ void GlslCompute::attach(const std::string& source)
     }
 }
 
-std::array<int32_t, 3> GlslCompute::getWorkGroupSize()
+std::array<int32_t, 3U> GlslCompute::getWorkGroupSize()
 {
-  std::array<int32_t, 3> size;
+  std::array<int32_t, 3U> size;
   glGetProgramiv(mProgHandle, GL_COMPUTE_WORK_GROUP_SIZE, &(size[0]));
   return size;
 }
 
-std::array<int32_t, 3> GlslCompute::getMaxWorkGroupSize() const
+std::array<int32_t, 3U> GlslCompute::getMaxWorkGroupSize() const
 {
-  std::array<int32_t, 3> size;
+  std::array<int32_t, 3U> size;
   glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &(size[0]));
   return size;
 }
