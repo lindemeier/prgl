@@ -67,19 +67,19 @@ public:
 
   virtual ~GlslVertFrag();
 
-  void addSampler(const std::string& name, const std::shared_ptr<Texture2D>& m);
+  void addSampler(const std::string& name, const std::shared_ptr<Texture2d>& m);
 
-  void execute2D(const std::shared_ptr<Texture2D>&, int32_t x, int32_t y,
+  void execute2D(const std::shared_ptr<Texture2d>&, int32_t x, int32_t y,
                  int32_t w, int32_t h);
 
-  void executeCustom(const std::shared_ptr<Texture2D>& target,
+  void executeCustom(const std::shared_ptr<Texture2d>& target,
                      std::function<void()>&&           func);
 
 private:
   void attachVertexShader(const std::string& source);
   void attachFragmentShader(const std::string& source);
 
-  std::map<std::string, std::shared_ptr<Texture2D>> mAttachments;
+  std::map<std::string, std::shared_ptr<Texture2d>> mAttachments;
   std::unique_ptr<FrameBufferObject>                mFbo;
   uint32_t                                          mVertProg;
   uint32_t                                          mFragProg;
@@ -97,12 +97,12 @@ public:
   /*
    * GL_READ_ONLY, GL_WRITE_ONLY, GL_READ_WRITE
    */
-  void bindImage2D(uint32_t location, const std::shared_ptr<Texture2D>& texture,
+  void bindImage2D(uint32_t location, const std::shared_ptr<Texture2d>& texture,
                    int32_t access);
   // void bindSSBO(uint32_t location, std::shared_ptr<ShaderStorageBuffer>
   // &buffer);
   void bindSampler(uint32_t location, const std::string& name,
-                   const std::shared_ptr<Texture2D>& sampler);
+                   const std::shared_ptr<Texture2d>& sampler);
 
 private:
   void attach(const std::string& source);
@@ -113,7 +113,7 @@ private:
                        uint32_t num_groups_z) const;
   void memoryBarrier(GLbitfield barrierType = GL_ALL_BARRIER_BITS) const;
 
-  std::map<uint32_t, std::shared_ptr<Texture2D>> mBindings;
+  std::map<uint32_t, std::shared_ptr<Texture2d>> mBindings;
 
   uint32_t mShaderHandle;
 };

@@ -29,7 +29,7 @@ void FrameBufferObject::bind(bool bind)
     }
 }
 
-void FrameBufferObject::attachTexture(const std::shared_ptr<Texture2D>& texture)
+void FrameBufferObject::attachTexture(const std::shared_ptr<Texture2d>& texture)
 {
   mTarget = texture;
 
@@ -43,7 +43,7 @@ void FrameBufferObject::attachTexture(const std::shared_ptr<Texture2D>& texture)
   checkStatus();
 }
 
-void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2D>& texture)
+void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2d>& texture)
 {
   mDepth = texture;
 
@@ -59,19 +59,19 @@ void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2D>& texture)
 
 void FrameBufferObject::attachDepth(uint32_t width, uint32_t height)
 {
-  std::shared_ptr<Texture2D> depth = std::make_shared<Texture2D>(
+  std::shared_ptr<Texture2d> depth = std::make_shared<Texture2d>(
     width, height, TextureFormatInternal::DepthComponent,
     TextureFormat::DepthComponent, TextureDataType::UnsignedShort, GL_LINEAR,
     GL_LINEAR, GL_REPLACE, GL_REPEAT);
   attachDepth(depth);
 }
 
-const std::shared_ptr<Texture2D>& FrameBufferObject::getTarget() const
+const std::shared_ptr<Texture2d>& FrameBufferObject::getTarget() const
 {
   return mTarget;
 }
 
-const std::shared_ptr<Texture2D>& FrameBufferObject::getDepth() const
+const std::shared_ptr<Texture2d>& FrameBufferObject::getDepth() const
 {
   return mDepth;
 }

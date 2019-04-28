@@ -159,10 +159,10 @@ enum class TextureFormat : uint32_t
   DepthStencil   = GL_DEPTH_STENCIL
 };
 
-class Texture2D
+class Texture2d
 {
 public:
-  Texture2D(
+  Texture2d(
     int32_t width, int32_t height,
     TextureFormatInternal internalFormat = TextureFormatInternal::Rgb32F,
     TextureFormat         format         = TextureFormat::Rgb,
@@ -171,7 +171,7 @@ public:
     int32_t envMode = GL_REPLACE, int32_t wrapMode = GL_REPEAT,
     bool createMipMaps = GL_FALSE);
 
-  ~Texture2D();
+  ~Texture2d();
 
   void bind(bool bind) const;
   // used for binding at shader location for write andor read operations,
@@ -204,7 +204,7 @@ public:
   int32_t               getWrap() const;
   int32_t               getEnvMode() const;
   uint32_t              getTarget() const;
-  void                  copyTo(Texture2D& other) const;
+  void                  copyTo(Texture2d& other) const;
 
 private:
   void cleanup();

@@ -6,7 +6,7 @@ namespace prgl
 {
 
 // Create empty texture
-Texture2D::Texture2D(int32_t width, int32_t height,
+Texture2d::Texture2d(int32_t width, int32_t height,
                      TextureFormatInternal internalFormat, TextureFormat format,
                      TextureDataType type, int32_t minFilter, int32_t magFilter,
                      int32_t envMode, int32_t wrapMode, bool createMipMaps)
@@ -23,9 +23,9 @@ Texture2D::Texture2D(int32_t width, int32_t height,
     }
 }
 
-Texture2D::~Texture2D() { cleanup(); }
+Texture2d::~Texture2d() { cleanup(); }
 
-void Texture2D::upload(void* data)
+void Texture2d::upload(void* data)
 {
   bind(true);
 
@@ -53,7 +53,7 @@ void Texture2D::upload(void* data)
   bind(false);
 }
 
-void Texture2D::download(std::vector<float>& data) const
+void Texture2d::download(std::vector<float>& data) const
 {
   data.resize(mWidth * mHeight);
   bind(true);
@@ -61,7 +61,7 @@ void Texture2D::download(std::vector<float>& data) const
   bind(false);
 }
 
-void Texture2D::download(std::vector<std::array<float, 3>>& data) const
+void Texture2d::download(std::vector<std::array<float, 3>>& data) const
 {
   data.resize(mWidth * mHeight);
   bind(true);
@@ -69,7 +69,7 @@ void Texture2D::download(std::vector<std::array<float, 3>>& data) const
   bind(false);
 }
 
-void Texture2D::download(std::vector<std::array<float, 4>>& data) const
+void Texture2d::download(std::vector<std::array<float, 4>>& data) const
 {
   data.resize(mWidth * mHeight);
   bind(true);
@@ -77,7 +77,7 @@ void Texture2D::download(std::vector<std::array<float, 4>>& data) const
   bind(false);
 }
 
-void Texture2D::download(std::vector<uint8_t>& data) const
+void Texture2d::download(std::vector<uint8_t>& data) const
 {
   data.resize(mWidth * mHeight);
   bind(true);
@@ -85,7 +85,7 @@ void Texture2D::download(std::vector<uint8_t>& data) const
   bind(false);
 }
 
-void Texture2D::download(std::vector<std::array<uint8_t, 3>>& data) const
+void Texture2d::download(std::vector<std::array<uint8_t, 3>>& data) const
 {
   data.resize(mWidth * mHeight);
   bind(true);
@@ -93,7 +93,7 @@ void Texture2D::download(std::vector<std::array<uint8_t, 3>>& data) const
   bind(false);
 }
 
-void Texture2D::download(std::vector<std::array<uint8_t, 4>>& data) const
+void Texture2d::download(std::vector<std::array<uint8_t, 4>>& data) const
 {
   data.resize(mWidth * mHeight);
   bind(true);
@@ -101,7 +101,7 @@ void Texture2D::download(std::vector<std::array<uint8_t, 4>>& data) const
   bind(false);
 }
 
-void Texture2D::bind(bool bind) const
+void Texture2d::bind(bool bind) const
 {
   if (bind)
     {
@@ -113,14 +113,14 @@ void Texture2D::bind(bool bind) const
     }
 }
 
-void Texture2D::bindImageTexture(uint32_t unit, uint32_t access, int32_t level,
+void Texture2d::bindImageTexture(uint32_t unit, uint32_t access, int32_t level,
                                  bool layered, int32_t layer)
 {
   glBindImageTexture(unit, mHandle, level, layered, layer, access,
                      static_cast<uint32_t>(mInternalFormat));
 }
 
-void Texture2D::cleanup()
+void Texture2d::cleanup()
 {
   if (mHandle > INVALID_HANDLE)
     {
@@ -128,34 +128,34 @@ void Texture2D::cleanup()
     }
 }
 
-uint32_t Texture2D::getId() const { return mHandle; }
+uint32_t Texture2d::getId() const { return mHandle; }
 
-uint32_t Texture2D::getWidth() const { return mWidth; }
+uint32_t Texture2d::getWidth() const { return mWidth; }
 
-uint32_t Texture2D::getHeight() const { return mHeight; }
+uint32_t Texture2d::getHeight() const { return mHeight; }
 
-TextureFormatInternal Texture2D::getInternalFormat() const
+TextureFormatInternal Texture2d::getInternalFormat() const
 {
   return mInternalFormat;
 }
 
-TextureFormat Texture2D::getFormat() const { return mFormat; }
+TextureFormat Texture2d::getFormat() const { return mFormat; }
 
-int32_t Texture2D::getBorder() const { return mBorder; }
+int32_t Texture2d::getBorder() const { return mBorder; }
 
-TextureDataType Texture2D::getType() const { return mType; }
+TextureDataType Texture2d::getType() const { return mType; }
 
-int32_t Texture2D::getMinFilter() const { return mMinFilter; }
+int32_t Texture2d::getMinFilter() const { return mMinFilter; }
 
-int32_t Texture2D::getMagFilter() const { return mMagFilter; }
+int32_t Texture2d::getMagFilter() const { return mMagFilter; }
 
-int32_t Texture2D::getWrap() const { return mWrap; }
+int32_t Texture2d::getWrap() const { return mWrap; }
 
-int32_t Texture2D::getEnvMode() const { return mEnvMode; }
+int32_t Texture2d::getEnvMode() const { return mEnvMode; }
 
-uint32_t Texture2D::getTarget() const { return mTarget; }
+uint32_t Texture2d::getTarget() const { return mTarget; }
 
-void Texture2D::setWrapMode(int32_t wrap)
+void Texture2d::setWrapMode(int32_t wrap)
 {
   mWrap = wrap;
 
@@ -168,7 +168,7 @@ void Texture2D::setWrapMode(int32_t wrap)
   bind(false);
 }
 
-void Texture2D::setEnvMode(int32_t envMode)
+void Texture2d::setEnvMode(int32_t envMode)
 {
 
   mEnvMode = envMode;
@@ -180,7 +180,7 @@ void Texture2D::setEnvMode(int32_t envMode)
   bind(false);
 }
 
-void Texture2D::setFilter(int32_t minFilter, int32_t magFilter)
+void Texture2d::setFilter(int32_t minFilter, int32_t magFilter)
 {
   mMinFilter = minFilter;
   mMagFilter = magFilter;
@@ -193,7 +193,7 @@ void Texture2D::setFilter(int32_t minFilter, int32_t magFilter)
   bind(false);
 }
 
-void Texture2D::setMaxIsotropy(float anisotropy)
+void Texture2d::setMaxIsotropy(float anisotropy)
 {
   mMaxAnisotropy = anisotropy;
 
@@ -204,7 +204,7 @@ void Texture2D::setMaxIsotropy(float anisotropy)
   bind(false);
 }
 
-void Texture2D::render(float posX, float posY, float width, float height)
+void Texture2d::render(float posX, float posY, float width, float height)
 {
   glPushAttrib(GL_ALL_ATTRIB_BITS);
 
@@ -274,7 +274,7 @@ void Texture2D::render(float posX, float posY, float width, float height)
   glPopAttrib();
 }
 
-void Texture2D::copyTo(Texture2D& other) const
+void Texture2d::copyTo(Texture2d& other) const
 {
   glCopyImageSubData(mHandle, mTarget, 0, 0, 0, 0, other.mHandle, other.mTarget,
                      0, 0, 0, 0, mWidth, mHeight, 1);
