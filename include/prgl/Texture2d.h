@@ -52,23 +52,6 @@ enum class TextureUnit : uint32_t
   Texture31 = GL_TEXTURE31
 };
 
-/**
- * @brief "Specifies the data type of the pixel data. The following symbolic
- * values are accepted:""
- *
- */
-enum class TextureDataType : uint32_t
-{
-  UnsignedByte  = GL_UNSIGNED_BYTE,
-  Byte          = GL_BYTE,
-  UnsignedShort = GL_UNSIGNED_SHORT,
-  Short         = GL_SHORT,
-  UnsignedInt   = GL_UNSIGNED_INT,
-  Int           = GL_INT,
-  HalfFloat     = GL_HALF_FLOAT,
-  Float         = GL_FLOAT
-};
-
 enum class TextureMinFilter : uint32_t
 {
   Nearest              = GL_NEAREST,
@@ -205,13 +188,12 @@ public:
   Texture2d(
     uint32_t width, uint32_t height,
     TextureFormatInternal internalFormat = TextureFormatInternal::Rgb32F,
-    TextureFormat         format         = TextureFormat::Rgb,
-    TextureDataType       type           = TextureDataType::Float,
-    TextureMinFilter      minFilter      = TextureMinFilter::Linear,
-    TextureMagFilter      magFilter      = TextureMagFilter::Linear,
-    TextureEnvMode        envMode        = TextureEnvMode::Replace,
-    TextureWrapMode       wrapMode       = TextureWrapMode::Repeat,
-    bool                  createMipMaps  = false);
+    TextureFormat format = TextureFormat::Rgb, DataType type = DataType::Float,
+    TextureMinFilter minFilter     = TextureMinFilter::Linear,
+    TextureMagFilter magFilter     = TextureMagFilter::Linear,
+    TextureEnvMode   envMode       = TextureEnvMode::Replace,
+    TextureWrapMode  wrapMode      = TextureWrapMode::Repeat,
+    bool             createMipMaps = false);
 
   ~Texture2d();
 
@@ -240,7 +222,7 @@ public:
   TextureFormatInternal getInternalFormat() const;
   TextureFormat         getFormat() const;
   int32_t               getBorder() const;
-  TextureDataType       getType() const;
+  DataType              getType() const;
   TextureMinFilter      getMinFilter() const;
   TextureMagFilter      getMagFilter() const;
   TextureWrapMode       getWrap() const;
@@ -259,7 +241,7 @@ private:
   TextureFormatInternal mInternalFormat;
   TextureFormat         mFormat;
   int32_t               mBorder;
-  TextureDataType       mType;
+  DataType              mType;
   TextureMinFilter      mMinFilter;
   TextureMagFilter      mMagFilter;
   TextureWrapMode       mWrap;

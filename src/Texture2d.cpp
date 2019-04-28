@@ -8,7 +8,7 @@ namespace prgl
 // Create empty texture
 Texture2d::Texture2d(uint32_t width, uint32_t height,
                      TextureFormatInternal internalFormat, TextureFormat format,
-                     TextureDataType type, TextureMinFilter minFilter,
+                     DataType type, TextureMinFilter minFilter,
                      TextureMagFilter magFilter, TextureEnvMode envMode,
                      TextureWrapMode wrapMode, bool createMipMaps)
   : mHandle(INVALID_HANDLE), mWidth(width), mHeight(height),
@@ -150,7 +150,7 @@ TextureFormat Texture2d::getFormat() const { return mFormat; }
 
 int32_t Texture2d::getBorder() const { return mBorder; }
 
-TextureDataType Texture2d::getType() const { return mType; }
+DataType Texture2d::getType() const { return mType; }
 
 TextureMinFilter Texture2d::getMinFilter() const { return mMinFilter; }
 

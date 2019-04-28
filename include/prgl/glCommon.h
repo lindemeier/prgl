@@ -26,6 +26,23 @@ void checkGLError(const char* file, const char* function, int line);
 using color3f = std::array<float, 3U>;
 using color4f = std::array<float, 4U>;
 
+/**
+ * @brief "Specifies the data type of the pixel data. The following symbolic
+ * values are accepted:""
+ *
+ */
+enum class DataType : uint32_t
+{
+  UnsignedByte  = GL_UNSIGNED_BYTE,
+  Byte          = GL_BYTE,
+  UnsignedShort = GL_UNSIGNED_SHORT,
+  Short         = GL_SHORT,
+  UnsignedInt   = GL_UNSIGNED_INT,
+  Int           = GL_INT,
+  HalfFloat     = GL_HALF_FLOAT,
+  Float         = GL_FLOAT
+};
+
 } //  namespace prgl
 
 #endif // !PRGL_OPENGL_HEADER
