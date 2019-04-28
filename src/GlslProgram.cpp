@@ -190,8 +190,8 @@ uint32_t GlslProgram::getCurrentlyBoundProgram() const
   return (uint32_t)id;
 }
 
-GlslVertFrag::GlslVertFrag(const std::string& glslVertSource,
-                           const std::string& glslFragSource)
+GlslRenderingPipelineShader::GlslRenderingPipelineShader(
+  const std::string& glslVertSource, const std::string& glslFragSource)
   : GlslProgram(), mAttachments(), mFbo(nullptr), mVertProg(0), mFragProg(0)
 {
   mFbo = std::make_unique<FrameBufferObject>();
@@ -200,7 +200,7 @@ GlslVertFrag::GlslVertFrag(const std::string& glslVertSource,
   attachFragmentShader(glslVertSource);
 }
 
-GlslVertFrag::~GlslVertFrag()
+GlslRenderingPipelineShader::~GlslRenderingPipelineShader()
 {
   if (mVertProg)
     {
@@ -216,7 +216,7 @@ GlslVertFrag::~GlslVertFrag()
     }
 }
 
-void GlslVertFrag::attachVertexShader(const std::string& source)
+void GlslRenderingPipelineShader::attachVertexShader(const std::string& source)
 {
   if (!source.empty())
     {
@@ -235,7 +235,8 @@ void GlslVertFrag::attachVertexShader(const std::string& source)
     }
 }
 
-void GlslVertFrag::attachFragmentShader(const std::string& source)
+void GlslRenderingPipelineShader::attachFragmentShader(
+  const std::string& source)
 {
   if (!source.empty())
     {
@@ -255,14 +256,15 @@ void GlslVertFrag::attachFragmentShader(const std::string& source)
     }
 }
 
-void GlslVertFrag::addSampler(const std::string&                name,
-                              const std::shared_ptr<Texture2d>& input)
+void GlslRenderingPipelineShader::addSampler(
+  const std::string& name, const std::shared_ptr<Texture2d>& input)
 {
   mAttachments[name] = input;
 }
 
-void GlslVertFrag::execute2D(const std::shared_ptr<Texture2d>& target,
-                             int32_t x, int32_t y, int32_t w, int32_t h)
+void GlslRenderingPipelineShader::execute2D(
+  const std::shared_ptr<Texture2d>& target, int32_t x, int32_t y, int32_t w,
+  int32_t h)
 {
   mFbo->attachTexture(target);
   mFbo->bind(true);
@@ -318,8 +320,8 @@ void GlslVertFrag::execute2D(const std::shared_ptr<Texture2d>& target,
   mFbo->bind(false);
 }
 
-void GlslVertFrag::executeCustom(const std::shared_ptr<Texture2d>& target,
-                                 std::function<void()>&&           func)
+void GlslRenderingPipelineShader::executeCustom(
+  const std::shared_ptr<Texture2d>& target, std::function<void()>&& func)
 {
   mFbo->attachTexture(target);
   mFbo->bind(true);

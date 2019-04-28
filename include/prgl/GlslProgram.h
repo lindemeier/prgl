@@ -59,13 +59,13 @@ protected:
   uint32_t mProgHandle;
 };
 
-class GlslVertFrag final : public GlslProgram
+class GlslRenderingPipelineShader final : public GlslProgram
 {
 public:
-  GlslVertFrag(const std::string& glslVertSource,
-               const std::string& glslFragSource);
+  GlslRenderingPipelineShader(const std::string& glslVertSource,
+                              const std::string& glslFragSource);
 
-  virtual ~GlslVertFrag();
+  virtual ~GlslRenderingPipelineShader();
 
   void addSampler(const std::string& name, const std::shared_ptr<Texture2d>& m);
 
