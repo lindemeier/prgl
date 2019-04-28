@@ -8,7 +8,7 @@
 #ifndef PRGL_FRAMEBUFFEROBJECT_H
 #define PRGL_FRAMEBUFFEROBJECT_H
 
-#include "prgl/Texture2D.h"
+#include "prgl/Texture2d.h"
 
 #include <memory>
 

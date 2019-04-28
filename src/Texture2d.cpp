@@ -1,4 +1,4 @@
-#include "prgl/Texture2D.h"
+#include "prgl/Texture2d.h"
 
 #include <iostream>
 

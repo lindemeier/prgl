@@ -1,5 +1,5 @@
 #include "prgl/FrameBufferObject.h"
-#include "prgl/Texture2D.h"
+#include "prgl/Texture2d.h"
 
 #include <GL/glew.h>
 
@@ -70,8 +70,8 @@ void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2D>& texture)
 void FrameBufferObject::attachDepth(uint32_t width, uint32_t height)
 {
   std::shared_ptr<Texture2D> depth = std::make_shared<Texture2D>(
-    width, height, TextureFormatInternal::DEPTH_COMPONENT,
-    TextureFormat::DEPTH_COMPONENT, TextureDataType::UNSIGNED_SHORT, GL_LINEAR,
+    width, height, TextureFormatInternal::DepthComponent,
+    TextureFormat::DepthComponent, TextureDataType::UnsignedShort, GL_LINEAR,
     GL_LINEAR, GL_REPLACE, GL_REPEAT);
   attachDepth(depth);
 }
