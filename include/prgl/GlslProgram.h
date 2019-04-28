@@ -99,7 +99,8 @@ public:
    */
   void bindImage2D(uint32_t location, const std::shared_ptr<Texture2D>& texture,
                    int32_t access);
-  // void bindSSBO(uint32_t location, std::shared_ptr<SSBO> &buffer);
+  // void bindSSBO(uint32_t location, std::shared_ptr<ShaderStorageBuffer>
+  // &buffer);
   void bindSampler(uint32_t location, const std::string& name,
                    const std::shared_ptr<Texture2D>& sampler);
 

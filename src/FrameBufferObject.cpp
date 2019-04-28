@@ -1,7 +1,7 @@
 #include "prgl/FrameBufferObject.h"
 #include "prgl/Texture2d.h"
 
-#include <GL/glew.h>
+#include "prgl/glCommon.h"
 
 #include <iostream>
 
@@ -33,11 +33,6 @@ void FrameBufferObject::attachTexture(const std::shared_ptr<Texture2D>& texture)
 {
   mTarget = texture;
 
-  if (!mTarget->isCreated())
-    {
-      mTarget->create(nullptr);
-    }
-
   bind(true);
 
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
@@ -51,11 +46,6 @@ void FrameBufferObject::attachTexture(const std::shared_ptr<Texture2D>& texture)
 void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2D>& texture)
 {
   mDepth = texture;
-
-  if (!mDepth->isCreated())
-    {
-      mDepth->create(nullptr);
-    }
 
   bind(true);
 

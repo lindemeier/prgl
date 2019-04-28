@@ -11,12 +11,10 @@
 #include <memory>
 #include <string>
 
-#include "glCommon.h"
+#include "prgl/glCommon.h"
 
 namespace prgl
 {
-
-void checkGLError(const char* file, const char* function, int line);
 
 class ContextImplementation
 {

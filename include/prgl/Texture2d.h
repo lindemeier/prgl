@@ -8,7 +8,7 @@
 #ifndef PRGL_TEXTURE_H
 #define PRGL_TEXTURE_H
 
-#include <GL/glew.h>
+#include "glCommon.h"
 
 #include <array>
 #include <vector>
@@ -179,7 +179,6 @@ public:
   void     bindImageTexture(uint32_t unit, uint32_t access = GL_READ_WRITE,
                             int32_t level = 0, bool layered = GL_TRUE,
                             int32_t layer = 0);
-  void     create(void* data = nullptr);
   void     upload(void* data);
   void     download(std::vector<float>& data) const;
   void     download(std::vector<std::array<float, 3>>& data) const;
@@ -195,7 +194,6 @@ public:
   uint32_t getId() const;
   uint32_t getWidth() const;
   uint32_t getHeight() const;
-  bool     isCreated() const { return mCreated; }
 
   TextureFormatInternal getInternalFormat() const;
   TextureFormat         getFormat() const;
@@ -209,10 +207,10 @@ public:
   void                  copyTo(Texture2D& other) const;
 
 private:
-  void deleteTex();
+  void cleanup();
 
 private:
-  uint32_t              mId;
+  uint32_t              mHandle;
   uint32_t              mWidth;
   uint32_t              mHeight;
   uint32_t              mTarget;
@@ -227,7 +225,6 @@ private:
   int32_t               mEnvMode;
   bool                  mCreateMipMaps;
   float                 mMaxAnisotropy;
-  bool                  mCreated;
 };
 
 } // namespace prgl

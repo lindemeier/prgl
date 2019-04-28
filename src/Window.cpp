@@ -1,7 +1,7 @@
 #include "prgl/Window.h"
 
 #include "ContextImplementation.h"
-#include "glCommon.h"
+#include "prgl/glCommon.h"
 
 namespace prgl
 {

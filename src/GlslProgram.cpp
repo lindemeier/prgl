@@ -445,7 +445,7 @@ void GlslCompute::bindImage2D(uint32_t                          location,
   bind(false);
 }
 
-// void GlslCompute::bindSSBO(uint32_t location, std::shared_ptr<SSBO> &buffer)
+// void GlslCompute::bindSSBO(uint32_t location, std::shared_ptr<ShaderStorageBuffer> &buffer)
 //{
 //  mBindings[location] = buffer;
 //  bind(true);

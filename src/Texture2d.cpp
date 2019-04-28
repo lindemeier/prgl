@@ -10,29 +10,23 @@ Texture2D::Texture2D(int32_t width, int32_t height,
                      TextureFormatInternal internalFormat, TextureFormat format,
                      TextureDataType type, int32_t minFilter, int32_t magFilter,
                      int32_t envMode, int32_t wrapMode, bool createMipMaps)
-  : mId(0), mWidth(width), mHeight(height), mTarget(GL_TEXTURE_2D),
+  : mHandle(0), mWidth(width), mHeight(height), mTarget(GL_TEXTURE_2D),
     mMipLevel(0), mInternalFormat(internalFormat), mFormat(format), mBorder(0),
     mType(type), mMinFilter(minFilter), mMagFilter(magFilter), mWrap(wrapMode),
-    mEnvMode(envMode), mCreateMipMaps(createMipMaps), mMaxAnisotropy(1.0f),
-    mCreated(GL_FALSE)
+    mEnvMode(envMode), mCreateMipMaps(createMipMaps), mMaxAnisotropy(1.0f)
 {
+  glGenTextures(1, &mHandle);
+  if (mHandle == INVALID_HANDLE)
+    {
+      std::cerr << "invalid texture handle: " << std::endl;
+      checkGLError(__FILE__, __FUNCTION__, __LINE__);
+    }
 }
 
-Texture2D::~Texture2D() { deleteTex(); }
+Texture2D::~Texture2D() { cleanup(); }
 
 void Texture2D::upload(void* data)
 {
-  if (!mCreated)
-    {
-      create(data);
-      return;
-    }
-
-  if (!mId)
-    {
-      std::cerr << "create texture first" << std::endl;
-    }
-
   bind(true);
 
   glTexImage2D(mTarget, mMipLevel, static_cast<uint32_t>(mInternalFormat),
@@ -107,39 +101,11 @@ void Texture2D::download(std::vector<std::array<uint8_t, 4>>& data) const
   bind(false);
 }
 
-void Texture2D::create(void* data)
-{
-  glGenTextures(1, &mId);
-  glBindTexture(mTarget, mId);
-
-  glTexImage2D(mTarget, mMipLevel, static_cast<uint32_t>(mInternalFormat),
-               mWidth, mHeight, mBorder, static_cast<uint32_t>(mFormat),
-               static_cast<uint32_t>(mType), data);
-  if (mCreateMipMaps)
-    {
-      glTexParameteri(mTarget, GL_GENERATE_MIPMAP, GL_TRUE);
-      glGenerateMipmap(GL_TEXTURE_2D);
-    }
-
-  glTexParameteri(mTarget, GL_TEXTURE_MIN_FILTER, mMinFilter);
-  glTexParameteri(mTarget, GL_TEXTURE_MAG_FILTER, mMagFilter);
-
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, mEnvMode);
-
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, mWrap);
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, mWrap);
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_R, mWrap);
-
-  glTexParameterf(mTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT, mMaxAnisotropy);
-
-  mCreated = GL_TRUE;
-}
-
 void Texture2D::bind(bool bind) const
 {
   if (bind)
     {
-      glBindTexture(mTarget, mId);
+      glBindTexture(mTarget, mHandle);
     }
   else
     {
@@ -150,19 +116,19 @@ void Texture2D::bind(bool bind) const
 void Texture2D::bindImageTexture(uint32_t unit, uint32_t access, int32_t level,
                                  bool layered, int32_t layer)
 {
-  glBindImageTexture(unit, mId, level, layered, layer, access,
+  glBindImageTexture(unit, mHandle, level, layered, layer, access,
                      static_cast<uint32_t>(mInternalFormat));
 }
 
-void Texture2D::deleteTex()
+void Texture2D::cleanup()
 {
-  if (mCreated)
+  if (mHandle > INVALID_HANDLE)
     {
-      glDeleteTextures(1, &mId);
+      glDeleteTextures(1, &mHandle);
     }
 }
 
-uint32_t Texture2D::getId() const { return mId; }
+uint32_t Texture2D::getId() const { return mHandle; }
 
 uint32_t Texture2D::getWidth() const { return mWidth; }
 
@@ -310,8 +276,8 @@ void Texture2D::render(float posX, float posY, float width, float height)
 
 void Texture2D::copyTo(Texture2D& other) const
 {
-  glCopyImageSubData(mId, mTarget, 0, 0, 0, 0, other.mId, other.mTarget, 0, 0,
-                     0, 0, mWidth, mHeight, 1);
+  glCopyImageSubData(mHandle, mTarget, 0, 0, 0, 0, other.mHandle, other.mTarget,
+                     0, 0, 0, 0, mWidth, mHeight, 1);
 }
 
 } // namespace prgl

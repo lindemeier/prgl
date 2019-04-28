@@ -34,7 +34,7 @@ add_library(${PROJECT_NAME} STATIC
   include/prgl/GlslProgram.h
   include/prgl/FrameBufferObject.h
   include/prgl/ShaderStorageBuffer.h 	
-  src/glCommon.h
+  include/prgl/glCommon.h
   src/ContextImplementation.h
   src/ContextImplementation.cpp
   src/Window.cpp
