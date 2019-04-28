@@ -35,13 +35,19 @@ public:
   void execute2D(const std::shared_ptr<Texture2d>& target, int32_t x, int32_t y,
                  int32_t w, int32_t h);
 
-private:
   void attachVertexShader(const std::string& source);
+  void attachTesselationControlShader(const std::string& source);
+  void attachTesselationEvaluationShader(const std::string& source);
+  void attachGeometryShader(const std::string& source);
   void attachFragmentShader(const std::string& source);
 
+private:
   std::map<std::string, std::shared_ptr<Texture2d>> mAttachments;
 
   uint32_t mVertProg;
+  uint32_t mTesselationControlProg;
+  uint32_t mTesselationEvaluationProg;
+  uint32_t mGeometryProg;
   uint32_t mFragProg;
 };
 

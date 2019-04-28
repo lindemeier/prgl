@@ -8,6 +8,8 @@ namespace prgl
 
 GlslRenderingPipelineProgram::GlslRenderingPipelineProgram()
   : GlslProgram(), mAttachments(), mVertProg(INVALID_HANDLE),
+    mTesselationControlProg(INVALID_HANDLE),
+    mTesselationEvaluationProg(INVALID_HANDLE), mGeometryProg(INVALID_HANDLE),
     mFragProg(INVALID_HANDLE)
 {
 }
@@ -22,6 +24,24 @@ GlslRenderingPipelineProgram::~GlslRenderingPipelineProgram()
           glDeleteShader(mVertProg);
           mVertProg = INVALID_HANDLE;
         }
+      if (mTesselationControlProg > INVALID_HANDLE)
+        {
+          glDetachShader(mProgHandle, mTesselationControlProg);
+          glDeleteShader(mTesselationControlProg);
+          mTesselationControlProg = INVALID_HANDLE;
+        }
+      if (mTesselationEvaluationProg > INVALID_HANDLE)
+        {
+          glDetachShader(mProgHandle, mTesselationEvaluationProg);
+          glDeleteShader(mTesselationEvaluationProg);
+          mTesselationEvaluationProg = INVALID_HANDLE;
+        }
+      if (mGeometryProg > INVALID_HANDLE)
+        {
+          glDetachShader(mProgHandle, mGeometryProg);
+          glDeleteShader(mGeometryProg);
+          mGeometryProg = INVALID_HANDLE;
+        }
 
       if (mFragProg > INVALID_HANDLE)
         {
@@ -34,10 +54,22 @@ GlslRenderingPipelineProgram::~GlslRenderingPipelineProgram()
 
 void GlslRenderingPipelineProgram::attachVertexShader(const std::string& source)
 {
+
   if (!source.empty())
     {
+      if (mProgHandle > INVALID_HANDLE)
+        {
+          if (mVertProg > INVALID_HANDLE)
+            {
+              glDetachShader(mProgHandle, mVertProg);
+              glDeleteShader(mVertProg);
+              mVertProg = INVALID_HANDLE;
+            }
+        }
+
       mVertProg = compile(source.c_str(), GL_VERTEX_SHADER);
-      if (mVertProg)
+
+      if (mVertProg > INVALID_HANDLE)
         {
           glAttachShader(mProgHandle, mVertProg);
           glLinkProgram(mProgHandle);
@@ -51,14 +83,120 @@ void GlslRenderingPipelineProgram::attachVertexShader(const std::string& source)
     }
 }
 
+void GlslRenderingPipelineProgram::attachTesselationControlShader(
+  const std::string& source)
+{
+  if (!source.empty())
+    {
+      if (mProgHandle > INVALID_HANDLE)
+        {
+          if (mTesselationControlProg > INVALID_HANDLE)
+            {
+              glDetachShader(mProgHandle, mTesselationControlProg);
+              glDeleteShader(mTesselationControlProg);
+              mTesselationControlProg = INVALID_HANDLE;
+            }
+        }
+
+      mTesselationControlProg = compile(source.c_str(), GL_TESS_CONTROL_SHADER);
+
+      if (mTesselationControlProg > INVALID_HANDLE)
+        {
+          glAttachShader(mProgHandle, mTesselationControlProg);
+          glLinkProgram(mProgHandle);
+        }
+    }
+  else
+    {
+      std::stringstream ss;
+      ss << "TesselationControlShader() : source empty: " << source
+         << std::endl;
+      throw std::runtime_error(ss.str());
+    }
+}
+
+void GlslRenderingPipelineProgram::attachTesselationEvaluationShader(
+  const std::string& source)
+{
+  if (!source.empty())
+    {
+      if (mProgHandle > INVALID_HANDLE)
+        {
+          if (mTesselationEvaluationProg > INVALID_HANDLE)
+            {
+              glDetachShader(mProgHandle, mTesselationEvaluationProg);
+              glDeleteShader(mTesselationEvaluationProg);
+              mTesselationEvaluationProg = INVALID_HANDLE;
+            }
+        }
+
+      mTesselationEvaluationProg =
+        compile(source.c_str(), GL_TESS_EVALUATION_SHADER);
+
+      if (mTesselationEvaluationProg > INVALID_HANDLE)
+        {
+          glAttachShader(mProgHandle, mTesselationEvaluationProg);
+          glLinkProgram(mProgHandle);
+        }
+    }
+  else
+    {
+      std::stringstream ss;
+      ss << "TesselationEvaluationShader() : source empty: " << source
+         << std::endl;
+      throw std::runtime_error(ss.str());
+    }
+}
+
+void GlslRenderingPipelineProgram::attachGeometryShader(
+  const std::string& source)
+{
+  if (!source.empty())
+    {
+      if (mProgHandle > INVALID_HANDLE)
+        {
+          if (mGeometryProg > INVALID_HANDLE)
+            {
+              glDetachShader(mProgHandle, mGeometryProg);
+              glDeleteShader(mGeometryProg);
+              mGeometryProg = INVALID_HANDLE;
+            }
+        }
+
+      mGeometryProg = compile(source.c_str(), GL_GEOMETRY_SHADER);
+
+      if (mGeometryProg > INVALID_HANDLE)
+        {
+          glAttachShader(mProgHandle, mGeometryProg);
+          glLinkProgram(mProgHandle);
+        }
+    }
+  else
+    {
+      std::stringstream ss;
+      ss << "GeometryShader() : source empty: " << source << std::endl;
+      throw std::runtime_error(ss.str());
+    }
+}
+
 void GlslRenderingPipelineProgram::attachFragmentShader(
   const std::string& source)
 {
   if (!source.empty())
     {
+      if (mProgHandle > INVALID_HANDLE)
+        {
+          if (mFragProg > INVALID_HANDLE)
+            {
+              glDetachShader(mProgHandle, mFragProg);
+              glDeleteShader(mFragProg);
+              mFragProg = INVALID_HANDLE;
+            }
+        }
+
       mFragProg = compile(source.c_str(), GL_FRAGMENT_SHADER);
 
-      if (mFragProg)
+      if (mFragProg > INVALID_HANDLE)
         {
           glAttachShader(mProgHandle, mFragProg);
           glLinkProgram(mProgHandle);
