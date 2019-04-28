@@ -163,7 +163,7 @@ class Texture2d
 {
 public:
   Texture2d(
-    int32_t width, int32_t height,
+    uint32_t width, uint32_t height,
     TextureFormatInternal internalFormat = TextureFormatInternal::Rgb32F,
     TextureFormat         format         = TextureFormat::Rgb,
     TextureDataType       type           = TextureDataType::Float,
@@ -206,7 +206,6 @@ public:
   TextureMagFilter      getMagFilter() const;
   TextureWrapMode       getWrap() const;
   TextureEnvMode        getEnvMode() const;
-  uint32_t              getTarget() const;
   void                  copyTo(Texture2d& other) const;
 
 private:

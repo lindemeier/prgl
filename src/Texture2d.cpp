@@ -6,15 +6,16 @@ namespace prgl
 {
 
 // Create empty texture
-Texture2d::Texture2d(int32_t width, int32_t height,
+Texture2d::Texture2d(uint32_t width, uint32_t height,
                      TextureFormatInternal internalFormat, TextureFormat format,
                      TextureDataType type, TextureMinFilter minFilter,
                      TextureMagFilter magFilter, TextureEnvMode envMode,
                      TextureWrapMode wrapMode, bool createMipMaps)
-  : mHandle(0), mWidth(width), mHeight(height), mTarget(GL_TEXTURE_2D),
-    mMipLevel(0), mInternalFormat(internalFormat), mFormat(format), mBorder(0),
-    mType(type), mMinFilter(minFilter), mMagFilter(magFilter), mWrap(wrapMode),
-    mEnvMode(envMode), mCreateMipMaps(createMipMaps), mMaxAnisotropy(1.0f)
+  : mHandle(INVALID_HANDLE), mWidth(width), mHeight(height),
+    mTarget(GL_TEXTURE_2D), mMipLevel(0), mInternalFormat(internalFormat),
+    mFormat(format), mBorder(0), mType(type), mMinFilter(minFilter),
+    mMagFilter(magFilter), mWrap(wrapMode), mEnvMode(envMode),
+    mCreateMipMaps(createMipMaps), mMaxAnisotropy(1.0f)
 {
   glGenTextures(1, &mHandle);
   if (mHandle == INVALID_HANDLE)
@@ -157,8 +158,6 @@ TextureMagFilter Texture2d::getMagFilter() const { return mMagFilter; }
 TextureWrapMode Texture2d::getWrap() const { return mWrap; }
 
 TextureEnvMode Texture2d::getEnvMode() const { return mEnvMode; }
-
-uint32_t Texture2d::getTarget() const { return mTarget; }
 
 void Texture2d::setWrapMode(TextureWrapMode wrap)
 {
