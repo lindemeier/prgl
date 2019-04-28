@@ -98,7 +98,7 @@ public:
    * GL_READ_ONLY, GL_WRITE_ONLY, GL_READ_WRITE
    */
   void bindImage2D(uint32_t location, const std::shared_ptr<Texture2d>& texture,
-                   int32_t access);
+                   TextureAccess access);
   // void bindSSBO(uint32_t location, std::shared_ptr<ShaderStorageBuffer>
   // &buffer);
   void bindSampler(uint32_t location, const std::string& name,

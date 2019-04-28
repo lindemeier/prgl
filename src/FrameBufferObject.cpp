@@ -61,8 +61,9 @@ void FrameBufferObject::attachDepth(uint32_t width, uint32_t height)
 {
   std::shared_ptr<Texture2d> depth = std::make_shared<Texture2d>(
     width, height, TextureFormatInternal::DepthComponent,
-    TextureFormat::DepthComponent, TextureDataType::UnsignedShort, GL_LINEAR,
-    GL_LINEAR, GL_REPLACE, TextureWrapMode::Repeat);
+    TextureFormat::DepthComponent, TextureDataType::UnsignedShort,
+    TextureMinFilter::Linear, TextureMagFilter::Linear, TextureEnvMode::Replace,
+    TextureWrapMode::Repeat);
   attachDepth(depth);
 }
 

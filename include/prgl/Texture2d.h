@@ -35,28 +35,28 @@ enum class TextureDataType : uint32_t
 
 enum class TextureMinFilter : uint32_t
 {
-  Nearest,
-  Linear,
-  NearestMipMapNearest,
-  LinearMipMapNearest,
-  NearestMipMapLinear,
-  LinearMipMapLinear
+  Nearest              = GL_NEAREST,
+  Linear               = GL_LINEAR,
+  NearestMipMapNearest = GL_NEAREST_MIPMAP_NEAREST,
+  LinearMipMapNearest  = GL_LINEAR_MIPMAP_NEAREST,
+  NearestMipMapLinear  = GL_NEAREST_MIPMAP_LINEAR,
+  LinearMipMapLinear   = GL_LINEAR_MIPMAP_LINEAR
 };
 
 enum class TextureMagFilter : uint32_t
 {
-  Nearest,
-  Linear
+  Nearest = GL_NEAREST,
+  Linear  = GL_LINEAR
 };
 
 enum class TextureEnvMode : uint32_t
 {
-  Replace,
-  Modulate,
-  Add,
-  AddSigned,
-  Interpolate,
-  Subtract
+  Replace     = GL_REPLACE,
+  Modulate    = GL_MODULATE,
+  Add         = GL_ADD,
+  AddSigned   = GL_ADD_SIGNED,
+  Interpolate = GL_INTERPOLATE,
+  Subtract    = GL_SUBTRACT
 };
 
 enum class TextureWrapMode : uint32_t
@@ -69,9 +69,9 @@ enum class TextureWrapMode : uint32_t
 
 enum class TextureAccess : uint32_t
 {
-  ReadOnly,
-  WriteOnly,
-  ReadWrite
+  ReadOnly  = GL_READ_ONLY,
+  WriteOnly = GL_WRITE_ONLY,
+  ReadWrite = GL_READ_WRITE
 };
 
 /**
@@ -167,17 +167,19 @@ public:
     TextureFormatInternal internalFormat = TextureFormatInternal::Rgb32F,
     TextureFormat         format         = TextureFormat::Rgb,
     TextureDataType       type           = TextureDataType::Float,
-    int32_t minFilter = GL_LINEAR, int32_t magFilter = GL_LINEAR,
-    int32_t         envMode       = GL_REPLACE,
-    TextureWrapMode wrapMode      = TextureWrapMode::Repeat,
-    bool            createMipMaps = GL_FALSE);
+    TextureMinFilter      minFilter      = TextureMinFilter::Linear,
+    TextureMagFilter      magFilter      = TextureMagFilter::Linear,
+    TextureEnvMode        envMode        = TextureEnvMode::Replace,
+    TextureWrapMode       wrapMode       = TextureWrapMode::Repeat,
+    bool                  createMipMaps  = false);
 
   ~Texture2d();
 
   void bind(bool bind) const;
   // used for binding at shader location for write andor read operations,
   // acess:: GL_READ_ONLY, GL_WRITE_ONLY, or GL_READ_WRITE
-  void     bindImageTexture(uint32_t unit, uint32_t access = GL_READ_WRITE,
+  void     bindImageTexture(uint32_t      unit,
+                            TextureAccess access = TextureAccess::ReadWrite,
                             int32_t level = 0, bool layered = GL_TRUE,
                             int32_t layer = 0);
   void     upload(void* data);
@@ -188,8 +190,8 @@ public:
   void     download(std::vector<std::array<uint8_t, 3>>& data) const;
   void     download(std::vector<std::array<uint8_t, 4>>& data) const;
   void     setWrapMode(TextureWrapMode wrap);
-  void     setEnvMode(int32_t envMode);
-  void     setFilter(int32_t minFilter, int32_t magFilter);
+  void     setEnvMode(TextureEnvMode envMode);
+  void     setFilter(TextureMinFilter minFilter, TextureMagFilter magFilter);
   void     setMaxIsotropy(float anisotropy);
   void     render(float posX, float posY, float width, float height);
   uint32_t getId() const;
@@ -200,10 +202,10 @@ public:
   TextureFormat         getFormat() const;
   int32_t               getBorder() const;
   TextureDataType       getType() const;
-  int32_t               getMinFilter() const;
-  int32_t               getMagFilter() const;
+  TextureMinFilter      getMinFilter() const;
+  TextureMagFilter      getMagFilter() const;
   TextureWrapMode       getWrap() const;
-  int32_t               getEnvMode() const;
+  TextureEnvMode        getEnvMode() const;
   uint32_t              getTarget() const;
   void                  copyTo(Texture2d& other) const;
 
@@ -220,10 +222,10 @@ private:
   TextureFormat         mFormat;
   int32_t               mBorder;
   TextureDataType       mType;
-  int32_t               mMinFilter;
-  int32_t               mMagFilter;
+  TextureMinFilter      mMinFilter;
+  TextureMagFilter      mMagFilter;
   TextureWrapMode       mWrap;
-  int32_t               mEnvMode;
+  TextureEnvMode        mEnvMode;
   bool                  mCreateMipMaps;
   float                 mMaxAnisotropy;
 };

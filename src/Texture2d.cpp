@@ -8,9 +8,9 @@ namespace prgl
 // Create empty texture
 Texture2d::Texture2d(int32_t width, int32_t height,
                      TextureFormatInternal internalFormat, TextureFormat format,
-                     TextureDataType type, int32_t minFilter, int32_t magFilter,
-                     int32_t envMode, TextureWrapMode wrapMode,
-                     bool createMipMaps)
+                     TextureDataType type, TextureMinFilter minFilter,
+                     TextureMagFilter magFilter, TextureEnvMode envMode,
+                     TextureWrapMode wrapMode, bool createMipMaps)
   : mHandle(0), mWidth(width), mHeight(height), mTarget(GL_TEXTURE_2D),
     mMipLevel(0), mInternalFormat(internalFormat), mFormat(format), mBorder(0),
     mType(type), mMinFilter(minFilter), mMagFilter(magFilter), mWrap(wrapMode),
@@ -40,10 +40,13 @@ void Texture2d::upload(void* data)
       glGenerateMipmap(GL_TEXTURE_2D);
     }
 
-  glTexParameteri(mTarget, GL_TEXTURE_MIN_FILTER, mMinFilter);
-  glTexParameteri(mTarget, GL_TEXTURE_MAG_FILTER, mMagFilter);
+  glTexParameteri(mTarget, GL_TEXTURE_MIN_FILTER,
+                  static_cast<uint32_t>(mMinFilter));
+  glTexParameteri(mTarget, GL_TEXTURE_MAG_FILTER,
+                  static_cast<uint32_t>(mMagFilter));
 
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, mEnvMode);
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,
+            static_cast<uint32_t>(mEnvMode));
 
   glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, static_cast<uint32_t>(mWrap));
   glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, static_cast<uint32_t>(mWrap));
@@ -114,10 +117,11 @@ void Texture2d::bind(bool bind) const
     }
 }
 
-void Texture2d::bindImageTexture(uint32_t unit, uint32_t access, int32_t level,
-                                 bool layered, int32_t layer)
+void Texture2d::bindImageTexture(uint32_t unit, TextureAccess access,
+                                 int32_t level, bool layered, int32_t layer)
 {
-  glBindImageTexture(unit, mHandle, level, layered, layer, access,
+  glBindImageTexture(unit, mHandle, level, layered, layer,
+                     static_cast<uint32_t>(access),
                      static_cast<uint32_t>(mInternalFormat));
 }
 
@@ -146,13 +150,13 @@ int32_t Texture2d::getBorder() const { return mBorder; }
 
 TextureDataType Texture2d::getType() const { return mType; }
 
-int32_t Texture2d::getMinFilter() const { return mMinFilter; }
+TextureMinFilter Texture2d::getMinFilter() const { return mMinFilter; }
 
-int32_t Texture2d::getMagFilter() const { return mMagFilter; }
+TextureMagFilter Texture2d::getMagFilter() const { return mMagFilter; }
 
 TextureWrapMode Texture2d::getWrap() const { return mWrap; }
 
-int32_t Texture2d::getEnvMode() const { return mEnvMode; }
+TextureEnvMode Texture2d::getEnvMode() const { return mEnvMode; }
 
 uint32_t Texture2d::getTarget() const { return mTarget; }
 
@@ -169,27 +173,31 @@ void Texture2d::setWrapMode(TextureWrapMode wrap)
   bind(false);
 }
 
-void Texture2d::setEnvMode(int32_t envMode)
+void Texture2d::setEnvMode(TextureEnvMode envMode)
 {
 
   mEnvMode = envMode;
 
   bind(true);
 
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, mEnvMode);
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,
+            static_cast<uint32_t>(mEnvMode));
 
   bind(false);
 }
 
-void Texture2d::setFilter(int32_t minFilter, int32_t magFilter)
+void Texture2d::setFilter(TextureMinFilter minFilter,
+                          TextureMagFilter magFilter)
 {
   mMinFilter = minFilter;
   mMagFilter = magFilter;
 
   bind(true);
 
-  glTexParameteri(mTarget, GL_TEXTURE_MIN_FILTER, mMinFilter);
-  glTexParameteri(mTarget, GL_TEXTURE_MAG_FILTER, mMagFilter);
+  glTexParameteri(mTarget, GL_TEXTURE_MIN_FILTER,
+                  static_cast<uint32_t>(mMinFilter));
+  glTexParameteri(mTarget, GL_TEXTURE_MAG_FILTER,
+                  static_cast<uint32_t>(mMagFilter));
 
   bind(false);
 }

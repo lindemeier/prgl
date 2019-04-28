@@ -437,7 +437,7 @@ void GlslCompute::execute(int32_t x, int32_t y, int32_t w, int32_t h)
  */
 void GlslCompute::bindImage2D(uint32_t                          location,
                               const std::shared_ptr<Texture2d>& texture,
-                              int32_t                           access)
+                              TextureAccess                     access)
 {
   mBindings[location] = texture;
   bind(true);
