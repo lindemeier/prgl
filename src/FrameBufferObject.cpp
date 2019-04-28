@@ -13,7 +13,14 @@ FrameBufferObject::FrameBufferObject() : mTarget(nullptr), mDepth(nullptr)
   glGenFramebuffers(1, &mHandle);
 }
 
-FrameBufferObject::~FrameBufferObject() { glDeleteFramebuffers(1, &mHandle); }
+FrameBufferObject::~FrameBufferObject()
+{
+  if (mHandle > INVALID_HANDLE)
+    {
+      glDeleteFramebuffers(1, &mHandle);
+      mHandle = INVALID_HANDLE;
+    }
+}
 
 uint32_t FrameBufferObject::id() const { return mHandle; }
 

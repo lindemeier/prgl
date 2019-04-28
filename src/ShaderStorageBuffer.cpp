@@ -8,12 +8,15 @@
 namespace prgl
 {
 
-ShaderStorageBuffer::ShaderStorageBuffer() : mHandle(0) {}
+ShaderStorageBuffer::ShaderStorageBuffer() : mHandle(INVALID_HANDLE) {}
 
 ShaderStorageBuffer::~ShaderStorageBuffer()
 {
-  if (mHandle > 0)
-    glDeleteBuffers(1, &mHandle);
+  if (mHandle > INVALID_HANDLE)
+    {
+      glDeleteBuffers(1, &mHandle);
+      mHandle = INVALID_HANDLE;
+    }
 }
 
 int32_t ShaderStorageBuffer::getSizeInBytes() const
@@ -28,9 +31,10 @@ int32_t ShaderStorageBuffer::getSizeInBytes() const
 
 void ShaderStorageBuffer::create(const void* dataStart, uint32_t nBytes)
 {
-  if (mHandle > 0)
+  if (mHandle > INVALID_HANDLE)
     {
       glDeleteBuffers(1, &mHandle);
+      mHandle = INVALID_HANDLE;
     }
   glGenBuffers(1, &mHandle);
 

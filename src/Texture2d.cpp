@@ -131,6 +131,7 @@ void Texture2d::cleanup()
   if (mHandle > INVALID_HANDLE)
     {
       glDeleteTextures(1, &mHandle);
+      mHandle = INVALID_HANDLE;
     }
 }
 

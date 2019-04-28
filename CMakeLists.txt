@@ -35,6 +35,9 @@ add_library(${PROJECT_NAME} STATIC
   include/prgl/FrameBufferObject.h
   include/prgl/ShaderStorageBuffer.h 	
   include/prgl/glCommon.h
+  include/prgl/GlslRenderingPipelineProgram.h
+  include/prgl/GlslComputeShader.h
+
   src/ContextImplementation.h
   src/ContextImplementation.cpp
   src/Window.cpp
@@ -42,6 +45,8 @@ add_library(${PROJECT_NAME} STATIC
   src/GlslProgram.cpp
   src/FrameBufferObject.cpp
   src/ShaderStorageBuffer.cpp
+  src/GlslRenderingPipelineProgram.cpp
+  src/GlslComputeShader.cpp
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
