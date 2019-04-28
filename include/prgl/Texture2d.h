@@ -61,10 +61,10 @@ enum class TextureEnvMode : uint32_t
 
 enum class TextureWrapMode : uint32_t
 {
-  Repeat,
-  MirroredRepeat,
-  ClampToEdge,
-  ClampToBorder
+  Repeat         = GL_REPEAT,
+  MirroredRepeat = GL_MIRRORED_REPEAT,
+  ClampToEdge    = GL_CLAMP_TO_EDGE,
+  ClampToBorder  = GL_CLAMP_TO_BORDER
 };
 
 enum class TextureAccess : uint32_t
@@ -168,8 +168,9 @@ public:
     TextureFormat         format         = TextureFormat::Rgb,
     TextureDataType       type           = TextureDataType::Float,
     int32_t minFilter = GL_LINEAR, int32_t magFilter = GL_LINEAR,
-    int32_t envMode = GL_REPLACE, int32_t wrapMode = GL_REPEAT,
-    bool createMipMaps = GL_FALSE);
+    int32_t         envMode       = GL_REPLACE,
+    TextureWrapMode wrapMode      = TextureWrapMode::Repeat,
+    bool            createMipMaps = GL_FALSE);
 
   ~Texture2d();
 
@@ -186,7 +187,7 @@ public:
   void     download(std::vector<uint8_t>& data) const;
   void     download(std::vector<std::array<uint8_t, 3>>& data) const;
   void     download(std::vector<std::array<uint8_t, 4>>& data) const;
-  void     setWrapMode(int32_t wrap);
+  void     setWrapMode(TextureWrapMode wrap);
   void     setEnvMode(int32_t envMode);
   void     setFilter(int32_t minFilter, int32_t magFilter);
   void     setMaxIsotropy(float anisotropy);
@@ -201,7 +202,7 @@ public:
   TextureDataType       getType() const;
   int32_t               getMinFilter() const;
   int32_t               getMagFilter() const;
-  int32_t               getWrap() const;
+  TextureWrapMode       getWrap() const;
   int32_t               getEnvMode() const;
   uint32_t              getTarget() const;
   void                  copyTo(Texture2d& other) const;
@@ -221,7 +222,7 @@ private:
   TextureDataType       mType;
   int32_t               mMinFilter;
   int32_t               mMagFilter;
-  int32_t               mWrap;
+  TextureWrapMode       mWrap;
   int32_t               mEnvMode;
   bool                  mCreateMipMaps;
   float                 mMaxAnisotropy;

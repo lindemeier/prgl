@@ -9,7 +9,8 @@ namespace prgl
 Texture2d::Texture2d(int32_t width, int32_t height,
                      TextureFormatInternal internalFormat, TextureFormat format,
                      TextureDataType type, int32_t minFilter, int32_t magFilter,
-                     int32_t envMode, int32_t wrapMode, bool createMipMaps)
+                     int32_t envMode, TextureWrapMode wrapMode,
+                     bool createMipMaps)
   : mHandle(0), mWidth(width), mHeight(height), mTarget(GL_TEXTURE_2D),
     mMipLevel(0), mInternalFormat(internalFormat), mFormat(format), mBorder(0),
     mType(type), mMinFilter(minFilter), mMagFilter(magFilter), mWrap(wrapMode),
@@ -44,9 +45,9 @@ void Texture2d::upload(void* data)
 
   glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, mEnvMode);
 
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, mWrap);
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, mWrap);
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_R, mWrap);
+  glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, static_cast<uint32_t>(mWrap));
+  glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, static_cast<uint32_t>(mWrap));
+  glTexParameteri(mTarget, GL_TEXTURE_WRAP_R, static_cast<uint32_t>(mWrap));
 
   glTexParameterf(mTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT, mMaxAnisotropy);
 
@@ -149,21 +150,21 @@ int32_t Texture2d::getMinFilter() const { return mMinFilter; }
 
 int32_t Texture2d::getMagFilter() const { return mMagFilter; }
 
-int32_t Texture2d::getWrap() const { return mWrap; }
+TextureWrapMode Texture2d::getWrap() const { return mWrap; }
 
 int32_t Texture2d::getEnvMode() const { return mEnvMode; }
 
 uint32_t Texture2d::getTarget() const { return mTarget; }
 
-void Texture2d::setWrapMode(int32_t wrap)
+void Texture2d::setWrapMode(TextureWrapMode wrap)
 {
   mWrap = wrap;
 
   bind(true);
 
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, mWrap);
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, mWrap);
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_R, mWrap);
+  glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, static_cast<uint32_t>(mWrap));
+  glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, static_cast<uint32_t>(mWrap));
+  glTexParameteri(mTarget, GL_TEXTURE_WRAP_R, static_cast<uint32_t>(mWrap));
 
   bind(false);
 }
