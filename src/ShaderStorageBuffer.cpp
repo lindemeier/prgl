@@ -3,20 +3,20 @@
 #include <cstring>
 #include <iostream>
 
-#include "glCommon.h"
+#include "prgl/glCommon.h"
 
 namespace prgl
 {
 
-SSBO::SSBO() : mHandle(0) {}
+ShaderStorageBuffer::ShaderStorageBuffer() : mHandle(0) {}
 
-SSBO::~SSBO()
+ShaderStorageBuffer::~ShaderStorageBuffer()
 {
   if (mHandle > 0)
     glDeleteBuffers(1, &mHandle);
 }
 
-int32_t SSBO::getSizeInBytes() const
+int32_t ShaderStorageBuffer::getSizeInBytes() const
 {
   int32_t size;
   bind(true);
@@ -26,7 +26,7 @@ int32_t SSBO::getSizeInBytes() const
   return size;
 }
 
-void SSBO::create(const void* dataStart, uint32_t nBytes)
+void ShaderStorageBuffer::create(const void* dataStart, uint32_t nBytes)
 {
   if (mHandle > 0)
     {
@@ -37,17 +37,19 @@ void SSBO::create(const void* dataStart, uint32_t nBytes)
   bind(true);
 
   glBufferData(GL_SHADER_STORAGE_BUFFER, nBytes, dataStart, GL_STATIC_DRAW);
-  // std::cout << "SSBO::allocated:size: " << nBytes << std::endl;
+  // std::cout << "ShaderStorageBuffer::allocated:size: " << nBytes <<
+  // std::endl;
 
   bind(false);
 }
 
-void SSBO::upload(const void* dataStart, uint32_t nBytes)
+void ShaderStorageBuffer::upload(const void* dataStart, uint32_t nBytes)
 {
   // check if enough bytes allocated
   if (nBytes != (uint32_t)getSizeInBytes())
     {
-      std::cout << "SSBO::reallocated:size: " << nBytes << std::endl;
+      std::cout << "ShaderStorageBuffer::reallocated:size: " << nBytes
+                << std::endl;
       create(dataStart, nBytes);
       return;
     }
@@ -63,13 +65,13 @@ void SSBO::upload(const void* dataStart, uint32_t nBytes)
   bind(false);
 }
 
-void SSBO::download(void* dataStart, uint32_t nBytes) const
+void ShaderStorageBuffer::download(void* dataStart, uint32_t nBytes) const
 {
   bind(true);
 
   void* data = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
 
-  // std::cout << "SSBO::download:size: " << nBytes << std::endl;
+  // std::cout << "ShaderStorageBuffer::download:size: " << nBytes << std::endl;
 
   memcpy(dataStart, data, nBytes);
 
@@ -78,7 +80,7 @@ void SSBO::download(void* dataStart, uint32_t nBytes) const
   bind(false);
 }
 
-void SSBO::bind(bool bind) const
+void ShaderStorageBuffer::bind(bool bind) const
 {
   if (bind)
     {
@@ -90,12 +92,12 @@ void SSBO::bind(bool bind) const
     }
 }
 
-void SSBO::bindBase(uint32_t location) const
+void ShaderStorageBuffer::bindBase(uint32_t location) const
 {
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, location, mHandle);
 }
 
-void SSBO::copyTo(SSBO& other) const
+void ShaderStorageBuffer::copyTo(ShaderStorageBuffer& other) const
 {
   int32_t otherSize = other.getSizeInBytes();
   int32_t thisSize  = getSizeInBytes();
@@ -120,6 +122,6 @@ void SSBO::copyTo(SSBO& other) const
   glBindBuffer(GL_COPY_WRITE_BUFFER, cWriteBuffer);
 }
 
-uint32_t SSBO::getHandle() const { return mHandle; }
+uint32_t ShaderStorageBuffer::getHandle() const { return mHandle; }
 
 } // namespace prgl

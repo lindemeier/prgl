@@ -1,7 +1,7 @@
 #include "prgl/FrameBufferObject.h"
-#include "prgl/Texture2D.h"
+#include "prgl/Texture2d.h"
 
-#include <GL/glew.h>
+#include "prgl/glCommon.h"
 
 #include <iostream>
 
@@ -29,14 +29,9 @@ void FrameBufferObject::bind(bool bind)
     }
 }
 
-void FrameBufferObject::attachTexture(const std::shared_ptr<Texture2D>& texture)
+void FrameBufferObject::attachTexture(const std::shared_ptr<Texture2d>& texture)
 {
   mTarget = texture;
-
-  if (!mTarget->isCreated())
-    {
-      mTarget->create(nullptr);
-    }
 
   bind(true);
 
@@ -48,14 +43,9 @@ void FrameBufferObject::attachTexture(const std::shared_ptr<Texture2D>& texture)
   checkStatus();
 }
 
-void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2D>& texture)
+void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2d>& texture)
 {
   mDepth = texture;
-
-  if (!mDepth->isCreated())
-    {
-      mDepth->create(nullptr);
-    }
 
   bind(true);
 
@@ -69,19 +59,20 @@ void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2D>& texture)
 
 void FrameBufferObject::attachDepth(uint32_t width, uint32_t height)
 {
-  std::shared_ptr<Texture2D> depth = std::make_shared<Texture2D>(
-    width, height, TextureFormatInternal::DEPTH_COMPONENT,
-    TextureFormat::DEPTH_COMPONENT, TextureDataType::UNSIGNED_SHORT, GL_LINEAR,
-    GL_LINEAR, GL_REPLACE, GL_REPEAT);
+  std::shared_ptr<Texture2d> depth = std::make_shared<Texture2d>(
+    width, height, TextureFormatInternal::DepthComponent,
+    TextureFormat::DepthComponent, TextureDataType::UnsignedShort,
+    TextureMinFilter::Linear, TextureMagFilter::Linear, TextureEnvMode::Replace,
+    TextureWrapMode::Repeat);
   attachDepth(depth);
 }
 
-const std::shared_ptr<Texture2D>& FrameBufferObject::getTarget() const
+const std::shared_ptr<Texture2d>& FrameBufferObject::getTarget() const
 {
   return mTarget;
 }
 
-const std::shared_ptr<Texture2D>& FrameBufferObject::getDepth() const
+const std::shared_ptr<Texture2d>& FrameBufferObject::getDepth() const
 {
   return mDepth;
 }

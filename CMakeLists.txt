@@ -30,15 +30,15 @@ endif (UNIX)
 
 add_library(${PROJECT_NAME} STATIC      
   include/prgl/Window.h
-  include/prgl/Texture2D.h
+  include/prgl/Texture2d.h
   include/prgl/GlslProgram.h
   include/prgl/FrameBufferObject.h
   include/prgl/ShaderStorageBuffer.h 	
-  src/glCommon.h
+  include/prgl/glCommon.h
   src/ContextImplementation.h
   src/ContextImplementation.cpp
   src/Window.cpp
-  src/Texture2D.cpp
+  src/Texture2d.cpp
   src/GlslProgram.cpp
   src/FrameBufferObject.cpp
   src/ShaderStorageBuffer.cpp

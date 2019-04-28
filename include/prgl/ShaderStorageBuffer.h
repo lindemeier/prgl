@@ -15,14 +15,14 @@ namespace prgl
 
 class Context;
 
-class SSBO
+class ShaderStorageBuffer
 {
   uint32_t mHandle;
 
 public:
-  SSBO();
+  ShaderStorageBuffer();
 
-  ~SSBO();
+  ~ShaderStorageBuffer();
 
   // retun current buffer size in bytes
   int32_t getSizeInBytes() const;
@@ -41,7 +41,7 @@ public:
   // bind to location to address it in a shader
   void bindBase(uint32_t location) const;
 
-  void copyTo(SSBO& other) const;
+  void copyTo(ShaderStorageBuffer& other) const;
 
   uint32_t getHandle() const;
 };

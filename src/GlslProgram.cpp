@@ -270,12 +270,12 @@ void GlslVertFrag::attachFragmentShader(const std::string& source)
 }
 
 void GlslVertFrag::addSampler(const std::string&                name,
-                              const std::shared_ptr<Texture2D>& input)
+                              const std::shared_ptr<Texture2d>& input)
 {
   mAttachments[name] = input;
 }
 
-void GlslVertFrag::execute2D(const std::shared_ptr<Texture2D>& target,
+void GlslVertFrag::execute2D(const std::shared_ptr<Texture2d>& target,
                              int32_t x, int32_t y, int32_t w, int32_t h)
 {
   mFbo->attachTexture(target);
@@ -332,7 +332,7 @@ void GlslVertFrag::execute2D(const std::shared_ptr<Texture2D>& target,
   mFbo->bind(false);
 }
 
-void GlslVertFrag::executeCustom(const std::shared_ptr<Texture2D>& target,
+void GlslVertFrag::executeCustom(const std::shared_ptr<Texture2d>& target,
                                  std::function<void()>&&           func)
 {
   mFbo->attachTexture(target);
@@ -436,8 +436,8 @@ void GlslCompute::execute(int32_t x, int32_t y, int32_t w, int32_t h)
  * uniform readonly image2D fromTex;
  */
 void GlslCompute::bindImage2D(uint32_t                          location,
-                              const std::shared_ptr<Texture2D>& texture,
-                              int32_t                           access)
+                              const std::shared_ptr<Texture2d>& texture,
+                              TextureAccess                     access)
 {
   mBindings[location] = texture;
   bind(true);
@@ -445,7 +445,8 @@ void GlslCompute::bindImage2D(uint32_t                          location,
   bind(false);
 }
 
-// void GlslCompute::bindSSBO(uint32_t location, std::shared_ptr<SSBO> &buffer)
+// void GlslCompute::bindSSBO(uint32_t location,
+// std::shared_ptr<ShaderStorageBuffer> &buffer)
 //{
 //  mBindings[location] = buffer;
 //  bind(true);
@@ -454,7 +455,7 @@ void GlslCompute::bindImage2D(uint32_t                          location,
 //}
 
 void GlslCompute::bindSampler(uint32_t location, const std::string& name,
-                              const std::shared_ptr<Texture2D>& sampler)
+                              const std::shared_ptr<Texture2d>& sampler)
 {
   mBindings[location] = sampler;
   bind(true);

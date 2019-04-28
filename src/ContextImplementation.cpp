@@ -40,8 +40,8 @@ void checkGLError(const char* file, const char* function, int line)
 }
 
 // http://blog.nobel-joergensen.com/2013/02/17/debugging-opengl-part-2-using-gldebugmessagecallback/
-void APIENTRY openGlDebugCallback(int32_t source, int32_t type, uint32_t id,
-                                  int32_t severity, uint32_t length,
+void APIENTRY openGlDebugCallback(GLenum source, GLenum type, GLuint id,
+                                  GLenum severity, GLsizei length,
                                   const GLchar* message, const void* userParam)
 {
   if (severity != GL_DEBUG_SEVERITY_MEDIUM &&
@@ -132,7 +132,6 @@ void ContextImplementation::initGLEW(GLFWwindow* window)
       std::cin.get();
       exit(EXIT_FAILURE);
     }
-#ifndef NDEBUG
   // Print out GLFW, OpenGL version and GLEW Version:
   const auto iOpenGLMajor =
     glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MAJOR);
@@ -144,7 +143,6 @@ void ContextImplementation::initGLEW(GLFWwindow* window)
   printf("Status: Using OpenGL Version: %i.%i, Revision: %i\n", iOpenGLMajor,
          iOpenGLMinor, iOpenGLRevision);
   printf("Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
-#endif
 }
 
 GLFWwindow* ContextImplementation::getGLFW() const { return mGlfwWindow; }
