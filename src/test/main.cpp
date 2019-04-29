@@ -78,7 +78,7 @@ int32_t main(int32_t argc, char** args)
     // bind the VertexArrayObject
     vao.bind(true);
     // render the object
-    vao.render();
+    vao.render(prgl::DrawMode::Triangles, 0U, 3U);
     // unbind VertexArrayObject
     vao.bind(false);
     // unbind shader
