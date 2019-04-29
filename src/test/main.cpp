@@ -28,13 +28,13 @@ int32_t main(int32_t argc, char** args)
   // create vertex positions
   std::vector<prgl::vec3> positions = {
     {{-1.0f, -1.0f, 0.0f}, {1.0f, -1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}}};
-  auto vboPosition = std::make_shared<prgl::VertexBufferObject>();
-  vboPosition->create<3U>(positions);
+  auto vboPosition = prgl::VertexBufferObject();
+  vboPosition.create<3U>(positions);
   // create vertex colors
   std::vector<prgl::vec3> colors = {
     {1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}, {1.0, 1.0, 1.0}};
-  auto vboColors = std::make_shared<prgl::VertexBufferObject>();
-  vboColors->create<3U>(colors);
+  auto vboColors = prgl::VertexBufferObject();
+  vboColors.create<3U>(colors);
 
   prgl::VertexArrayObject vao;
   vao.addVertexBufferObject(vboPosition);

@@ -16,36 +16,36 @@ GlslRenderingPipelineProgram::GlslRenderingPipelineProgram()
 
 GlslRenderingPipelineProgram::~GlslRenderingPipelineProgram()
 {
-  if (mProgHandle > INVALID_HANDLE)
+  if (*mProgHandlePtr > INVALID_HANDLE)
     {
       if (mVertProg > INVALID_HANDLE)
         {
-          glDetachShader(mProgHandle, mVertProg);
+          glDetachShader(*mProgHandlePtr, mVertProg);
           glDeleteShader(mVertProg);
           mVertProg = INVALID_HANDLE;
         }
       if (mTesselationControlProg > INVALID_HANDLE)
         {
-          glDetachShader(mProgHandle, mTesselationControlProg);
+          glDetachShader(*mProgHandlePtr, mTesselationControlProg);
           glDeleteShader(mTesselationControlProg);
           mTesselationControlProg = INVALID_HANDLE;
         }
       if (mTesselationEvaluationProg > INVALID_HANDLE)
         {
-          glDetachShader(mProgHandle, mTesselationEvaluationProg);
+          glDetachShader(*mProgHandlePtr, mTesselationEvaluationProg);
           glDeleteShader(mTesselationEvaluationProg);
           mTesselationEvaluationProg = INVALID_HANDLE;
         }
       if (mGeometryProg > INVALID_HANDLE)
         {
-          glDetachShader(mProgHandle, mGeometryProg);
+          glDetachShader(*mProgHandlePtr, mGeometryProg);
           glDeleteShader(mGeometryProg);
           mGeometryProg = INVALID_HANDLE;
         }
 
       if (mFragProg > INVALID_HANDLE)
         {
-          glDetachShader(mProgHandle, mFragProg);
+          glDetachShader(*mProgHandlePtr, mFragProg);
           glDeleteShader(mFragProg);
           mFragProg = INVALID_HANDLE;
         }
@@ -57,11 +57,11 @@ void GlslRenderingPipelineProgram::attachVertexShader(const std::string& source)
 
   if (!source.empty())
     {
-      if (mProgHandle > INVALID_HANDLE)
+      if (*mProgHandlePtr > INVALID_HANDLE)
         {
           if (mVertProg > INVALID_HANDLE)
             {
-              glDetachShader(mProgHandle, mVertProg);
+              glDetachShader(*mProgHandlePtr, mVertProg);
               glDeleteShader(mVertProg);
               mVertProg = INVALID_HANDLE;
             }
@@ -71,8 +71,8 @@ void GlslRenderingPipelineProgram::attachVertexShader(const std::string& source)
 
       if (mVertProg > INVALID_HANDLE)
         {
-          glAttachShader(mProgHandle, mVertProg);
-          glLinkProgram(mProgHandle);
+          glAttachShader(*mProgHandlePtr, mVertProg);
+          glLinkProgram(*mProgHandlePtr);
         }
     }
   else
@@ -88,11 +88,11 @@ void GlslRenderingPipelineProgram::attachTesselationControlShader(
 {
   if (!source.empty())
     {
-      if (mProgHandle > INVALID_HANDLE)
+      if (*mProgHandlePtr > INVALID_HANDLE)
         {
           if (mTesselationControlProg > INVALID_HANDLE)
             {
-              glDetachShader(mProgHandle, mTesselationControlProg);
+              glDetachShader(*mProgHandlePtr, mTesselationControlProg);
               glDeleteShader(mTesselationControlProg);
               mTesselationControlProg = INVALID_HANDLE;
             }
@@ -102,8 +102,8 @@ void GlslRenderingPipelineProgram::attachTesselationControlShader(
 
       if (mTesselationControlProg > INVALID_HANDLE)
         {
-          glAttachShader(mProgHandle, mTesselationControlProg);
-          glLinkProgram(mProgHandle);
+          glAttachShader(*mProgHandlePtr, mTesselationControlProg);
+          glLinkProgram(*mProgHandlePtr);
         }
     }
   else
@@ -120,11 +120,11 @@ void GlslRenderingPipelineProgram::attachTesselationEvaluationShader(
 {
   if (!source.empty())
     {
-      if (mProgHandle > INVALID_HANDLE)
+      if (*mProgHandlePtr > INVALID_HANDLE)
         {
           if (mTesselationEvaluationProg > INVALID_HANDLE)
             {
-              glDetachShader(mProgHandle, mTesselationEvaluationProg);
+              glDetachShader(*mProgHandlePtr, mTesselationEvaluationProg);
               glDeleteShader(mTesselationEvaluationProg);
               mTesselationEvaluationProg = INVALID_HANDLE;
             }
@@ -135,8 +135,8 @@ void GlslRenderingPipelineProgram::attachTesselationEvaluationShader(
 
       if (mTesselationEvaluationProg > INVALID_HANDLE)
         {
-          glAttachShader(mProgHandle, mTesselationEvaluationProg);
-          glLinkProgram(mProgHandle);
+          glAttachShader(*mProgHandlePtr, mTesselationEvaluationProg);
+          glLinkProgram(*mProgHandlePtr);
         }
     }
   else
@@ -153,11 +153,11 @@ void GlslRenderingPipelineProgram::attachGeometryShader(
 {
   if (!source.empty())
     {
-      if (mProgHandle > INVALID_HANDLE)
+      if (*mProgHandlePtr > INVALID_HANDLE)
         {
           if (mGeometryProg > INVALID_HANDLE)
             {
-              glDetachShader(mProgHandle, mGeometryProg);
+              glDetachShader(*mProgHandlePtr, mGeometryProg);
               glDeleteShader(mGeometryProg);
               mGeometryProg = INVALID_HANDLE;
             }
@@ -167,8 +167,8 @@ void GlslRenderingPipelineProgram::attachGeometryShader(
 
       if (mGeometryProg > INVALID_HANDLE)
         {
-          glAttachShader(mProgHandle, mGeometryProg);
-          glLinkProgram(mProgHandle);
+          glAttachShader(*mProgHandlePtr, mGeometryProg);
+          glLinkProgram(*mProgHandlePtr);
         }
     }
   else
@@ -184,11 +184,11 @@ void GlslRenderingPipelineProgram::attachFragmentShader(
 {
   if (!source.empty())
     {
-      if (mProgHandle > INVALID_HANDLE)
+      if (*mProgHandlePtr > INVALID_HANDLE)
         {
           if (mFragProg > INVALID_HANDLE)
             {
-              glDetachShader(mProgHandle, mFragProg);
+              glDetachShader(*mProgHandlePtr, mFragProg);
               glDeleteShader(mFragProg);
               mFragProg = INVALID_HANDLE;
             }
@@ -198,8 +198,8 @@ void GlslRenderingPipelineProgram::attachFragmentShader(
 
       if (mFragProg > INVALID_HANDLE)
         {
-          glAttachShader(mProgHandle, mFragProg);
-          glLinkProgram(mProgHandle);
+          glAttachShader(*mProgHandlePtr, mFragProg);
+          glLinkProgram(*mProgHandlePtr);
         }
     }
   else

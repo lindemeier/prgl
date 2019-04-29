@@ -11,6 +11,7 @@
 #include "glCommon.h"
 
 #include <array>
+#include <memory>
 #include <vector>
 
 namespace prgl
@@ -185,6 +186,7 @@ enum class TextureFormat : uint32_t
 class Texture2d
 {
 public:
+  Texture2d();
   Texture2d(
     uint32_t width, uint32_t height,
     TextureFormatInternal internalFormat = TextureFormatInternal::Rgb32F,
@@ -199,26 +201,26 @@ public:
 
   void bind(bool bind) const;
   // used for binding at shader location for write andor read operations
-  void     bindImageTexture(uint32_t      unit,
-                            TextureAccess access = TextureAccess::ReadWrite,
-                            int32_t level = 0, bool layered = GL_TRUE,
-                            int32_t layer = 0);
-  void     upload(void* data);
-  void     download(std::vector<float>& data) const;
-  void     download(std::vector<std::array<float, 3>>& data) const;
-  void     download(std::vector<std::array<float, 4>>& data) const;
-  void     download(std::vector<uint8_t>& data) const;
-  void     download(std::vector<std::array<uint8_t, 3>>& data) const;
-  void     download(std::vector<std::array<uint8_t, 4>>& data) const;
-  void     setWrapMode(TextureWrapMode wrap);
-  void     setEnvMode(TextureEnvMode envMode);
-  void     setFilter(TextureMinFilter minFilter, TextureMagFilter magFilter);
-  void     setMaxIsotropy(float anisotropy);
-  void     render(float posX, float posY, float width, float height);
-  uint32_t getId() const;
-  uint32_t getWidth() const;
-  uint32_t getHeight() const;
+  void bindImageTexture(uint32_t      unit,
+                        TextureAccess access = TextureAccess::ReadWrite,
+                        int32_t level = 0, bool layered = GL_TRUE,
+                        int32_t layer = 0);
+  void upload(void* data);
+  void download(std::vector<float>& data) const;
+  void download(std::vector<std::array<float, 3>>& data) const;
+  void download(std::vector<std::array<float, 4>>& data) const;
+  void download(std::vector<uint8_t>& data) const;
+  void download(std::vector<std::array<uint8_t, 3>>& data) const;
+  void download(std::vector<std::array<uint8_t, 4>>& data) const;
+  void setWrapMode(TextureWrapMode wrap);
+  void setEnvMode(TextureEnvMode envMode);
+  void setFilter(TextureMinFilter minFilter, TextureMagFilter magFilter);
+  void setMaxIsotropy(float anisotropy);
+  void render(float posX, float posY, float width, float height);
 
+  uint32_t              getId() const;
+  uint32_t              getWidth() const;
+  uint32_t              getHeight() const;
   TextureFormatInternal getInternalFormat() const;
   TextureFormat         getFormat() const;
   int32_t               getBorder() const;
@@ -230,24 +232,21 @@ public:
   void                  copyTo(Texture2d& other) const;
 
 private:
-  void cleanup();
-
-private:
-  uint32_t              mHandle;
-  uint32_t              mWidth;
-  uint32_t              mHeight;
-  uint32_t              mTarget;
-  int32_t               mMipLevel;
-  TextureFormatInternal mInternalFormat;
-  TextureFormat         mFormat;
-  int32_t               mBorder;
-  DataType              mType;
-  TextureMinFilter      mMinFilter;
-  TextureMagFilter      mMagFilter;
-  TextureWrapMode       mWrap;
-  TextureEnvMode        mEnvMode;
-  bool                  mCreateMipMaps;
-  float                 mMaxAnisotropy;
+  std::shared_ptr<uint32_t> mHandlePtr;
+  uint32_t                  mWidth;
+  uint32_t                  mHeight;
+  uint32_t                  mTarget;
+  int32_t                   mMipLevel;
+  TextureFormatInternal     mInternalFormat;
+  TextureFormat             mFormat;
+  int32_t                   mBorder;
+  DataType                  mType;
+  TextureMinFilter          mMinFilter;
+  TextureMagFilter          mMagFilter;
+  TextureWrapMode           mWrap;
+  TextureEnvMode            mEnvMode;
+  bool                      mCreateMipMaps;
+  float                     mMaxAnisotropy;
 };
 
 } // namespace prgl

@@ -24,19 +24,16 @@ public:
   VertexArrayObject();
   ~VertexArrayObject();
 
-  void bind(bool bind);
+  void bind(bool bind) const;
 
-  void addVertexBufferObject(const std::shared_ptr<VertexBufferObject>& vbo);
+  void addVertexBufferObject(const VertexBufferObject& vbo);
 
   void render();
 
 private:
-  void cleanup();
+  std::shared_ptr<uint32_t> mVaoPtr;
 
-private:
-  uint32_t mVao;
-
-  std::vector<std::shared_ptr<VertexBufferObject>> mVboList;
+  std::vector<VertexBufferObject> mVboList;
 };
 } // namespace prgl
 

@@ -12,26 +12,34 @@
 
 #include "prgl/glCommon.h"
 
+#include <iostream>
+
 namespace prgl
 {
 
-VertexBufferObject::~VertexBufferObject() { cleanup(); }
-
-VertexBufferObject::VertexBufferObject() : mVbo(INVALID_HANDLE)
+VertexBufferObject::VertexBufferObject() : mVboPtr(nullptr)
 {
-  glGenBuffers(1, &mVbo);
+  mVboPtr = std::shared_ptr<uint32_t>(new uint32_t, [](uint32_t* ptr) {
+    glDeleteBuffers(1, ptr);
+    *ptr = INVALID_HANDLE;
+    delete ptr;
+    ptr = nullptr;
+  });
+  glGenBuffers(1, mVboPtr.get());
 }
+
+VertexBufferObject::~VertexBufferObject() {}
 
 /**
  * @brief Bind the Vertex Array Object
  *
  * @param bind true if bind
  */
-void VertexBufferObject::bind(bool bind)
+void VertexBufferObject::bind(bool bind) const
 {
   if (bind)
     {
-      glBindBuffer(GL_ARRAY_BUFFER, mVbo);
+      glBindBuffer(GL_ARRAY_BUFFER, *mVboPtr);
     }
   else
     {
@@ -42,17 +50,5 @@ void VertexBufferObject::bind(bool bind)
 DataType VertexBufferObject::getDataType() const { return mDataType; }
 
 uint32_t VertexBufferObject::getDataColumns() const { return mDataColumns; }
-
-/**
- * @brief Delete the Vertex Array Object
- *
- */
-void VertexBufferObject::cleanup()
-{
-  if (mVbo > INVALID_HANDLE)
-    {
-      glDeleteBuffers(1, &mVbo);
-    }
-}
 
 } // namespace prgl

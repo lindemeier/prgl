@@ -15,23 +15,29 @@
 namespace prgl
 {
 
-VertexArrayObject::~VertexArrayObject() { cleanup(); }
-
-VertexArrayObject::VertexArrayObject() : mVao(INVALID_HANDLE)
+VertexArrayObject::VertexArrayObject() : mVaoPtr(nullptr)
 {
-  glGenVertexArrays(1, &mVao);
+  mVaoPtr = std::shared_ptr<uint32_t>(new uint32_t, [](uint32_t* ptr) {
+    glDeleteVertexArrays(1, ptr);
+    *ptr = INVALID_HANDLE;
+    delete ptr;
+    ptr = nullptr;
+  });
+  glGenVertexArrays(1, mVaoPtr.get());
 }
+
+VertexArrayObject::~VertexArrayObject() {}
 
 /**
  * @brief Bind the Vertex Array Object
  *
  * @param bind true if bind
  */
-void VertexArrayObject::bind(bool bind)
+void VertexArrayObject::bind(bool bind) const
 {
   if (bind)
     {
-      glBindVertexArray(mVao);
+      glBindVertexArray(*mVaoPtr);
     }
   else
     {
@@ -59,35 +65,21 @@ void VertexArrayObject::render()
   glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
-void VertexArrayObject::addVertexBufferObject(
-  const std::shared_ptr<VertexBufferObject>& vbo)
+void VertexArrayObject::addVertexBufferObject(const VertexBufferObject& vbo)
 {
   const auto index = mVboList.size();
   // add to the list to keep the reference (unique_ptr and move may bet better )
   mVboList.push_back(vbo);
 
   bind(true);
-  vbo->bind(true);
-  glVertexAttribPointer(index, vbo->getDataColumns(),
-                        static_cast<GLenum>(vbo->getDataType()), GL_FALSE, 0,
-                        0);
+  vbo.bind(true);
+  glVertexAttribPointer(index, vbo.getDataColumns(),
+                        static_cast<GLenum>(vbo.getDataType()), GL_FALSE, 0, 0);
   glEnableVertexAttribArray(index);
-  vbo->bind(false);
+  vbo.bind(false);
 
   // TODO getAttribLocation to find which is color attrib etc.
   // shaders make that obsolete
-}
-
-/**
- * @brief Delete the Vertex Array Object
- *
- */
-void VertexArrayObject::cleanup()
-{
-  if (mVao > INVALID_HANDLE)
-    {
-      glDeleteVertexArrays(1, &mVao);
-    }
 }
 
 } // namespace prgl

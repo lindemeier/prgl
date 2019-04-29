@@ -14,7 +14,7 @@
 #include "prgl/glCommon.h"
 
 #include <array>
-#include <stdint.h>
+#include <memory>
 #include <vector>
 
 namespace prgl
@@ -25,7 +25,7 @@ public:
   VertexBufferObject();
   ~VertexBufferObject();
 
-  void bind(bool bind);
+  void bind(bool bind) const;
 
   template <uint32_t N>
   void create(const std::vector<std::array<float, N>>& data);
@@ -34,10 +34,7 @@ public:
   uint32_t getDataColumns() const;
 
 private:
-  void cleanup();
-
-private:
-  uint32_t mVbo;
+  std::shared_ptr<uint32_t> mVboPtr;
 
   DataType mDataType;
   uint32_t mDataColumns;

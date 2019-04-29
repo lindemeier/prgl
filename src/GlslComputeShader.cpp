@@ -8,38 +8,46 @@ namespace prgl
 {
 
 GlslComputeShader::GlslComputeShader(const std::string& glslSource)
-  : GlslProgram(), mShaderHandle(INVALID_HANDLE)
+  : GlslProgram(), mShaderHandlePtr(create())
 {
   attach(glslSource);
 }
 
-GlslComputeShader::~GlslComputeShader()
+GlslComputeShader::~GlslComputeShader() {}
+
+std::shared_ptr<uint32_t> GlslComputeShader::create()
 {
-  if (mProgHandle > INVALID_HANDLE && mShaderHandle > INVALID_HANDLE)
-    {
-      glDetachShader(mProgHandle, mShaderHandle);
-      glDeleteShader(mShaderHandle);
-      mShaderHandle = INVALID_HANDLE;
-    }
+  auto shaderPtr =
+    std::shared_ptr<uint32_t>(new uint32_t, [this](uint32_t* ptr) {
+      if (*mProgHandlePtr > INVALID_HANDLE && *ptr > INVALID_HANDLE)
+        {
+          glDetachShader(*mProgHandlePtr, *ptr);
+          glDeleteShader(*ptr);
+          *ptr = INVALID_HANDLE;
+          delete ptr;
+          ptr = nullptr;
+        }
+    });
+  return shaderPtr;
 }
 
 void GlslComputeShader::attach(const std::string& source)
 {
   if (!source.empty())
     {
-      mShaderHandle = compile(source.c_str(), GL_COMPUTE_SHADER);
-      glAttachShader(mProgHandle, mShaderHandle);
+      *mShaderHandlePtr = compile(source.c_str(), GL_COMPUTE_SHADER);
+      glAttachShader(*mProgHandlePtr, *mShaderHandlePtr);
 
-      glLinkProgram(mProgHandle);
+      glLinkProgram(*mProgHandlePtr);
       int32_t linkV;
-      glGetProgramiv(mProgHandle, GL_LINK_STATUS, &linkV);
+      glGetProgramiv(*mProgHandlePtr, GL_LINK_STATUS, &linkV);
 
       if (!linkV)
         {
           std::cerr << "Error in linking compute shader program" << std::endl;
           GLchar  log[10240];
           GLsizei length;
-          glGetProgramInfoLog(mProgHandle, 10239, &length, log);
+          glGetProgramInfoLog(*mProgHandlePtr, 10239, &length, log);
           std::cerr << source << "\n" << log << std::endl;
 
           std::stringstream ss;
@@ -60,7 +68,7 @@ void GlslComputeShader::attach(const std::string& source)
 std::array<int32_t, 3U> GlslComputeShader::getWorkGroupSize()
 {
   std::array<int32_t, 3U> size;
-  glGetProgramiv(mProgHandle, GL_COMPUTE_WORK_GROUP_SIZE, &(size[0]));
+  glGetProgramiv(*mProgHandlePtr, GL_COMPUTE_WORK_GROUP_SIZE, &(size[0]));
   return size;
 }
 
