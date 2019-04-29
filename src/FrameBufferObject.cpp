@@ -8,27 +8,27 @@
 namespace prgl
 {
 
-FrameBufferObject::FrameBufferObject() : mTarget(nullptr), mDepth(nullptr)
+FrameBufferObject::FrameBufferObject()
+  : mHandlePtr(nullptr), mTarget(), mDepth()
 {
-  glGenFramebuffers(1, &mHandle);
+  mHandlePtr = std::shared_ptr<uint32_t>(new uint32_t, [](uint32_t* ptr) {
+    glDeleteFramebuffers(1, ptr);
+    *ptr = INVALID_HANDLE;
+    delete ptr;
+    ptr = nullptr;
+  });
+  glGenFramebuffers(1, mHandlePtr.get());
 }
 
-FrameBufferObject::~FrameBufferObject()
-{
-  if (mHandle > INVALID_HANDLE)
-    {
-      glDeleteFramebuffers(1, &mHandle);
-      mHandle = INVALID_HANDLE;
-    }
-}
+FrameBufferObject::~FrameBufferObject() {}
 
-uint32_t FrameBufferObject::id() const { return mHandle; }
+uint32_t FrameBufferObject::getId() const { return *mHandlePtr; }
 
-void FrameBufferObject::bind(bool bind)
+void FrameBufferObject::bind(bool bind) const
 {
   if (bind)
     {
-      glBindFramebuffer(GL_FRAMEBUFFER, mHandle);
+      glBindFramebuffer(GL_FRAMEBUFFER, *mHandlePtr);
     }
   else
     {
@@ -36,28 +36,28 @@ void FrameBufferObject::bind(bool bind)
     }
 }
 
-void FrameBufferObject::attachTexture(const std::shared_ptr<Texture2d>& texture)
+void FrameBufferObject::attachTexture(const Texture2d& texture)
 {
   mTarget = texture;
 
   bind(true);
 
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                         mTarget->getId(), 0);
+                         mTarget.getId(), 0);
 
   bind(false);
 
   checkStatus();
 }
 
-void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2d>& texture)
+void FrameBufferObject::attachDepth(const Texture2d& texture)
 {
   mDepth = texture;
 
   bind(true);
 
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
-                         mDepth->getId(), 0);
+                         mDepth.getId(), 0);
 
   bind(false);
 
@@ -66,23 +66,16 @@ void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2d>& texture)
 
 void FrameBufferObject::attachDepth(uint32_t width, uint32_t height)
 {
-  std::shared_ptr<Texture2d> depth = std::make_shared<Texture2d>(
-    width, height, TextureFormatInternal::DepthComponent,
-    TextureFormat::DepthComponent, TextureDataType::UnsignedShort,
-    TextureMinFilter::Linear, TextureMagFilter::Linear, TextureEnvMode::Replace,
-    TextureWrapMode::Repeat);
+  Texture2d depth(width, height, TextureFormatInternal::DepthComponent,
+                  TextureFormat::DepthComponent, DataType::UnsignedShort,
+                  TextureMinFilter::Linear, TextureMagFilter::Linear,
+                  TextureEnvMode::Replace, TextureWrapMode::Repeat);
   attachDepth(depth);
 }
 
-const std::shared_ptr<Texture2d>& FrameBufferObject::getTarget() const
-{
-  return mTarget;
-}
+const Texture2d& FrameBufferObject::getTarget() const { return mTarget; }
 
-const std::shared_ptr<Texture2d>& FrameBufferObject::getDepth() const
-{
-  return mDepth;
-}
+const Texture2d& FrameBufferObject::getDepth() const { return mDepth; }
 
 bool FrameBufferObject::checkStatus()
 {

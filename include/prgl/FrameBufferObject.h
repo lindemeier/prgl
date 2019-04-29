@@ -15,30 +15,29 @@
 namespace prgl
 {
 
-class Texture2d;
-
 class FrameBufferObject
 {
-  uint32_t                   mHandle;
-  std::shared_ptr<Texture2d> mTarget;
-  std::shared_ptr<Texture2d> mDepth;
-
-  bool checkStatus();
-
 public:
   FrameBufferObject();
   ~FrameBufferObject();
 
-  uint32_t id() const;
+  uint32_t getId() const;
 
-  void bind(bool bind);
+  void bind(bool bind) const;
 
-  void attachTexture(const std::shared_ptr<Texture2d>& texture);
-  void attachDepth(const std::shared_ptr<Texture2d>& texture);
+  void attachTexture(const Texture2d& texture);
+  void attachDepth(const Texture2d& texture);
   void attachDepth(uint32_t width, uint32_t height);
 
-  const std::shared_ptr<Texture2d>& getTarget() const;
-  const std::shared_ptr<Texture2d>& getDepth() const;
+  const Texture2d& getTarget() const;
+  const Texture2d& getDepth() const;
+
+private:
+  bool checkStatus();
+
+  std::shared_ptr<uint32_t> mHandlePtr;
+  Texture2d                 mTarget;
+  Texture2d                 mDepth;
 };
 
 } // namespace prgl

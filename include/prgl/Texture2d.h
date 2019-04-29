@@ -11,26 +11,46 @@
 #include "glCommon.h"
 
 #include <array>
+#include <memory>
 #include <vector>
 
 namespace prgl
 {
 
-/**
- * @brief "Specifies the data type of the pixel data. The following symbolic
- * values are accepted:""
- *
- */
-enum class TextureDataType : uint32_t
+enum class TextureUnit : uint32_t
 {
-  UnsignedByte  = GL_UNSIGNED_BYTE,
-  Byte          = GL_BYTE,
-  UnsignedShort = GL_UNSIGNED_SHORT,
-  Short         = GL_SHORT,
-  UnsignedInt   = GL_UNSIGNED_INT,
-  Int           = GL_INT,
-  HalfFloat     = GL_HALF_FLOAT,
-  Float         = GL_FLOAT
+  Texture00 = GL_TEXTURE0,
+  Texture01 = GL_TEXTURE1,
+  Texture02 = GL_TEXTURE2,
+  Texture03 = GL_TEXTURE3,
+  Texture04 = GL_TEXTURE4,
+  Texture05 = GL_TEXTURE5,
+  Texture06 = GL_TEXTURE6,
+  Texture07 = GL_TEXTURE7,
+  Texture08 = GL_TEXTURE8,
+  Texture09 = GL_TEXTURE9,
+  Texture10 = GL_TEXTURE10,
+  Texture11 = GL_TEXTURE11,
+  Texture12 = GL_TEXTURE12,
+  Texture13 = GL_TEXTURE13,
+  Texture14 = GL_TEXTURE14,
+  Texture15 = GL_TEXTURE15,
+  Texture16 = GL_TEXTURE16,
+  Texture17 = GL_TEXTURE17,
+  Texture18 = GL_TEXTURE18,
+  Texture19 = GL_TEXTURE19,
+  Texture20 = GL_TEXTURE20,
+  Texture21 = GL_TEXTURE21,
+  Texture22 = GL_TEXTURE22,
+  Texture23 = GL_TEXTURE23,
+  Texture24 = GL_TEXTURE24,
+  Texture25 = GL_TEXTURE25,
+  Texture26 = GL_TEXTURE26,
+  Texture27 = GL_TEXTURE27,
+  Texture28 = GL_TEXTURE28,
+  Texture29 = GL_TEXTURE29,
+  Texture30 = GL_TEXTURE30,
+  Texture31 = GL_TEXTURE31
 };
 
 enum class TextureMinFilter : uint32_t
@@ -166,45 +186,45 @@ enum class TextureFormat : uint32_t
 class Texture2d
 {
 public:
+  Texture2d();
   Texture2d(
     uint32_t width, uint32_t height,
     TextureFormatInternal internalFormat = TextureFormatInternal::Rgb32F,
-    TextureFormat         format         = TextureFormat::Rgb,
-    TextureDataType       type           = TextureDataType::Float,
-    TextureMinFilter      minFilter      = TextureMinFilter::Linear,
-    TextureMagFilter      magFilter      = TextureMagFilter::Linear,
-    TextureEnvMode        envMode        = TextureEnvMode::Replace,
-    TextureWrapMode       wrapMode       = TextureWrapMode::Repeat,
-    bool                  createMipMaps  = false);
+    TextureFormat format = TextureFormat::Rgb, DataType type = DataType::Float,
+    TextureMinFilter minFilter     = TextureMinFilter::Linear,
+    TextureMagFilter magFilter     = TextureMagFilter::Linear,
+    TextureEnvMode   envMode       = TextureEnvMode::Replace,
+    TextureWrapMode  wrapMode      = TextureWrapMode::Repeat,
+    bool             createMipMaps = false);
 
   ~Texture2d();
 
   void bind(bool bind) const;
   // used for binding at shader location for write andor read operations
-  void     bindImageTexture(uint32_t      unit,
-                            TextureAccess access = TextureAccess::ReadWrite,
-                            int32_t level = 0, bool layered = GL_TRUE,
-                            int32_t layer = 0);
-  void     upload(void* data);
-  void     download(std::vector<float>& data) const;
-  void     download(std::vector<std::array<float, 3>>& data) const;
-  void     download(std::vector<std::array<float, 4>>& data) const;
-  void     download(std::vector<uint8_t>& data) const;
-  void     download(std::vector<std::array<uint8_t, 3>>& data) const;
-  void     download(std::vector<std::array<uint8_t, 4>>& data) const;
-  void     setWrapMode(TextureWrapMode wrap);
-  void     setEnvMode(TextureEnvMode envMode);
-  void     setFilter(TextureMinFilter minFilter, TextureMagFilter magFilter);
-  void     setMaxIsotropy(float anisotropy);
-  void     render(float posX, float posY, float width, float height);
-  uint32_t getId() const;
-  uint32_t getWidth() const;
-  uint32_t getHeight() const;
+  void bindImageTexture(uint32_t      unit,
+                        TextureAccess access = TextureAccess::ReadWrite,
+                        int32_t level = 0, bool layered = GL_TRUE,
+                        int32_t layer = 0);
+  void upload(void* data);
+  void download(std::vector<float>& data) const;
+  void download(std::vector<std::array<float, 3>>& data) const;
+  void download(std::vector<std::array<float, 4>>& data) const;
+  void download(std::vector<uint8_t>& data) const;
+  void download(std::vector<std::array<uint8_t, 3>>& data) const;
+  void download(std::vector<std::array<uint8_t, 4>>& data) const;
+  void setWrapMode(TextureWrapMode wrap);
+  void setEnvMode(TextureEnvMode envMode);
+  void setFilter(TextureMinFilter minFilter, TextureMagFilter magFilter);
+  void setMaxIsotropy(float anisotropy);
+  void render(float posX, float posY, float width, float height);
 
+  uint32_t              getId() const;
+  uint32_t              getWidth() const;
+  uint32_t              getHeight() const;
   TextureFormatInternal getInternalFormat() const;
   TextureFormat         getFormat() const;
   int32_t               getBorder() const;
-  TextureDataType       getType() const;
+  DataType              getType() const;
   TextureMinFilter      getMinFilter() const;
   TextureMagFilter      getMagFilter() const;
   TextureWrapMode       getWrap() const;
@@ -212,24 +232,21 @@ public:
   void                  copyTo(Texture2d& other) const;
 
 private:
-  void cleanup();
-
-private:
-  uint32_t              mHandle;
-  uint32_t              mWidth;
-  uint32_t              mHeight;
-  uint32_t              mTarget;
-  int32_t               mMipLevel;
-  TextureFormatInternal mInternalFormat;
-  TextureFormat         mFormat;
-  int32_t               mBorder;
-  TextureDataType       mType;
-  TextureMinFilter      mMinFilter;
-  TextureMagFilter      mMagFilter;
-  TextureWrapMode       mWrap;
-  TextureEnvMode        mEnvMode;
-  bool                  mCreateMipMaps;
-  float                 mMaxAnisotropy;
+  std::shared_ptr<uint32_t> mHandlePtr;
+  uint32_t                  mWidth;
+  uint32_t                  mHeight;
+  uint32_t                  mTarget;
+  int32_t                   mMipLevel;
+  TextureFormatInternal     mInternalFormat;
+  TextureFormat             mFormat;
+  int32_t                   mBorder;
+  DataType                  mType;
+  TextureMinFilter          mMinFilter;
+  TextureMagFilter          mMagFilter;
+  TextureWrapMode           mWrap;
+  TextureEnvMode            mEnvMode;
+  bool                      mCreateMipMaps;
+  float                     mMaxAnisotropy;
 };
 
 } // namespace prgl

@@ -8,6 +8,8 @@
 #ifndef PRGL_PROGRAM_H
 #define PRGL_PROGRAM_H
 
+#include <memory>
+
 #include "prgl/glCommon.h"
 
 #define GLSL(version, shader) "#version " #version "\n" #shader
@@ -26,7 +28,7 @@ public:
 
   virtual ~GlslProgram();
 
-  void bind(bool use);
+  void bind(bool use) const;
   void seti(const std::string& label, int32_t arg);
   void setui(const std::string& label, uint32_t arg);
   void setf(const std::string& label, float arg);
@@ -54,7 +56,7 @@ protected:
   uint32_t        getCurrentlyBoundProgram() const;
   static uint32_t compile(const std::string& source, uint32_t type);
 
-  uint32_t mProgHandle;
+  std::shared_ptr<uint32_t> mProgHandlePtr;
 };
 
 } // namespace prgl

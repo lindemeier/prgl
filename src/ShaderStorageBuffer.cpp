@@ -8,16 +8,18 @@
 namespace prgl
 {
 
-ShaderStorageBuffer::ShaderStorageBuffer() : mHandle(INVALID_HANDLE) {}
-
-ShaderStorageBuffer::~ShaderStorageBuffer()
+ShaderStorageBuffer::ShaderStorageBuffer() : mHandlePtr(nullptr)
 {
-  if (mHandle > INVALID_HANDLE)
-    {
-      glDeleteBuffers(1, &mHandle);
-      mHandle = INVALID_HANDLE;
-    }
+  mHandlePtr = std::shared_ptr<uint32_t>(new uint32_t, [](uint32_t* ptr) {
+    glDeleteBuffers(1, ptr);
+    *ptr = INVALID_HANDLE;
+    delete ptr;
+    ptr = nullptr;
+  });
+  glGenBuffers(1, mHandlePtr.get());
 }
+
+ShaderStorageBuffer::~ShaderStorageBuffer() {}
 
 int32_t ShaderStorageBuffer::getSizeInBytes() const
 {
@@ -31,13 +33,6 @@ int32_t ShaderStorageBuffer::getSizeInBytes() const
 
 void ShaderStorageBuffer::create(const void* dataStart, uint32_t nBytes)
 {
-  if (mHandle > INVALID_HANDLE)
-    {
-      glDeleteBuffers(1, &mHandle);
-      mHandle = INVALID_HANDLE;
-    }
-  glGenBuffers(1, &mHandle);
-
   bind(true);
 
   glBufferData(GL_SHADER_STORAGE_BUFFER, nBytes, dataStart, GL_STATIC_DRAW);
@@ -88,7 +83,7 @@ void ShaderStorageBuffer::bind(bool bind) const
 {
   if (bind)
     {
-      glBindBuffer(GL_SHADER_STORAGE_BUFFER, mHandle);
+      glBindBuffer(GL_SHADER_STORAGE_BUFFER, *mHandlePtr);
     }
   else
     {
@@ -98,7 +93,7 @@ void ShaderStorageBuffer::bind(bool bind) const
 
 void ShaderStorageBuffer::bindBase(uint32_t location) const
 {
-  glBindBufferBase(GL_SHADER_STORAGE_BUFFER, location, mHandle);
+  glBindBufferBase(GL_SHADER_STORAGE_BUFFER, location, *mHandlePtr);
 }
 
 void ShaderStorageBuffer::copyTo(ShaderStorageBuffer& other) const
@@ -116,7 +111,7 @@ void ShaderStorageBuffer::copyTo(ShaderStorageBuffer& other) const
       other.create(nullptr, thisSize);
     }
 
-  glBindBuffer(GL_COPY_READ_BUFFER, mHandle);
+  glBindBuffer(GL_COPY_READ_BUFFER, *mHandlePtr);
   glBindBuffer(GL_COPY_WRITE_BUFFER, other.getHandle());
 
   glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0,
@@ -126,6 +121,6 @@ void ShaderStorageBuffer::copyTo(ShaderStorageBuffer& other) const
   glBindBuffer(GL_COPY_WRITE_BUFFER, cWriteBuffer);
 }
 
-uint32_t ShaderStorageBuffer::getHandle() const { return mHandle; }
+uint32_t ShaderStorageBuffer::getHandle() const { return *mHandlePtr; }
 
 } // namespace prgl

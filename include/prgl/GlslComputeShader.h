@@ -44,6 +44,8 @@ public:
                    const std::shared_ptr<Texture2d>& sampler);
 
 private:
+  std::shared_ptr<uint32_t> create();
+
   void attach(const std::string& source);
 
   std::array<int32_t, 3U> getWorkGroupSize();
@@ -54,7 +56,7 @@ private:
 
   std::map<uint32_t, std::shared_ptr<Texture2d>> mBindings;
 
-  uint32_t mShaderHandle;
+  std::shared_ptr<uint32_t> mShaderHandlePtr;
 };
 
 } // namespace prgl

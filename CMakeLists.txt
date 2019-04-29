@@ -37,6 +37,8 @@ add_library(${PROJECT_NAME} STATIC
   include/prgl/glCommon.h
   include/prgl/GlslRenderingPipelineProgram.h
   include/prgl/GlslComputeShader.h
+  include/prgl/VertexBufferObject.h
+  include/prgl/VertexArrayObject.h
 
   src/ContextImplementation.h
   src/ContextImplementation.cpp
@@ -47,6 +49,9 @@ add_library(${PROJECT_NAME} STATIC
   src/ShaderStorageBuffer.cpp
   src/GlslRenderingPipelineProgram.cpp
   src/GlslComputeShader.cpp
+  src/VertexBufferObject.cpp
+  src/VertexArrayObject.cpp
+
 )
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
