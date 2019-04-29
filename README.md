@@ -98,4 +98,4 @@ int32_t main(int32_t argc, char** args)
 ```
 This is what you should see
 
-![](prgl_FirstTriangle.png)
+![](doc/prgl_FirstTriangle.png)
