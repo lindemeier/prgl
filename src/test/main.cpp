@@ -1,4 +1,5 @@
 #include "prgl/GlslProgram.h"
+#include "prgl/GlslRenderingPipelineProgram.h"
 #include "prgl/Texture2d.h"
 #include "prgl/VertexArrayObject.h"
 #include "prgl/VertexBufferObject.h"
@@ -39,14 +40,49 @@ int32_t main(int32_t argc, char** args)
   prgl::VertexArrayObject vao;
   vao.addVertexBufferObject(vboPosition);
   vao.addVertexBufferObject(vboColors);
-  vao.addVertexBufferObject(vboColors);
-  vao.addVertexBufferObject(vboColors);
 
-  gl->setRenderFunction([&tex, &gl, &vao]() {
+  // create shader
+  prgl::GlslRenderingPipelineProgram glsl;
+  glsl.attachVertexShader(R"(
+    #version 330 core
+
+    layout(location = 0) in vec3 vertexPosition;
+    layout(location = 1) in vec3 vertexColor;
+
+    out vec3 vColor;
+
+    void main()
+    {
+      vColor = vertexColor;
+
+      gl_Position = vec4(vertexPosition, 1.0);
+    }
+  )");
+  glsl.attachFragmentShader(R"(
+    #version 330 core
+
+    in vec3 vColor;
+    out vec3 color;
+
+    void main()
+    {
+      color = vColor;
+    }
+  )");
+
+  gl->setRenderFunction([&tex, &gl, &vao, &glsl]() {
+    // render the texture as background
     tex.render(0.0f, 0.0f, gl->getWidth(), gl->getHeight());
+    // bind our shader program
+    glsl.bind(true);
+    // bind the VertexArrayObject
     vao.bind(true);
+    // render the object
     vao.render();
+    // unbind VertexArrayObject
     vao.bind(false);
+    // unbind shader
+    glsl.bind(false);
   });
 
   gl->renderLoop(true);
