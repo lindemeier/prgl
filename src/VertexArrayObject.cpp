@@ -56,7 +56,7 @@ count
 void VertexArrayObject::render()
 {
   // TODO wrap the arguments
-  glDrawArrays(GL_LINES, 0, 4);
+  glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 void VertexArrayObject::addVertexBufferObject(

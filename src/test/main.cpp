@@ -16,21 +16,22 @@ int32_t main(int32_t argc, char** args)
                              prgl::TextureFormatInternal::Rgb32F,
                              prgl::TextureFormat::Rgb, prgl::DataType::Float);
 
-  std::vector<prgl::color3f> buffer(gl->getWidth() * gl->getHeight());
+  std::vector<prgl::vec3> buffer(gl->getWidth() * gl->getHeight());
   // fill the texture with a color
-  prgl::color3f color = {0.25f, 0.1f, 0.3f};
+  prgl::vec3 color = {0.25f, 0.1f, 0.3f};
   for (auto& c : buffer)
     {
       c = color;
     }
   tex.upload(buffer.data());
 
-  // create a mesh
-  std::vector<std::array<float, 2U>> positions = {
-    {0.0, 1.0}, {1.0, 0.0}, {0.0, -1.0}, {-1.0, 0.0}};
+  // create vertex positions
+  std::vector<prgl::vec3> positions = {
+    {{-1.0f, -1.0f, 0.0f}, {1.0f, -1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}}};
   auto vboPosition = std::make_shared<prgl::VertexBufferObject>();
-  vboPosition->create<2U>(positions);
-  std::vector<std::array<float, 3U>> colors = {
+  vboPosition->create<3U>(positions);
+  // create vertex colors
+  std::vector<prgl::vec3> colors = {
     {1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}, {1.0, 1.0, 1.0}};
   auto vboColors = std::make_shared<prgl::VertexBufferObject>();
   vboColors->create<3U>(colors);

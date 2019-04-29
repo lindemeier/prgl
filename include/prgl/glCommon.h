@@ -23,8 +23,12 @@ constexpr uint32_t INVALID_HANDLE = 0U;
  */
 void checkGLError(const char* file, const char* function, int line);
 
-using color3f = std::array<float, 3U>;
-using color4f = std::array<float, 4U>;
+/**
+ * @brief vec types.
+ */
+using vec2 = std::array<float, 2U>;
+using vec3 = std::array<float, 3U>;
+using vec4 = std::array<float, 4U>;
 
 /**
  * @brief "Specifies the data type of the pixel data. The following symbolic
