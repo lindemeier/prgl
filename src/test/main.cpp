@@ -31,7 +31,7 @@ int32_t main(int32_t argc, char** args)
   vboPosition.create<3U>(positions);
   // create vertex colors
   std::vector<prgl::vec3> colors = {
-    {1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}, {1.0, 1.0, 1.0}};
+    {1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}};
   auto vboColors = prgl::VertexBufferObject();
   vboColors.create<3U>(colors);
 
