@@ -8,6 +8,7 @@
 #ifndef PRGL_SHADERSTORAGEBUFFER_H
 #define PRGL_SHADERSTORAGEBUFFER_H
 
+#include <memory>
 #include <stdint.h>
 
 namespace prgl
@@ -17,7 +18,7 @@ class Context;
 
 class ShaderStorageBuffer
 {
-  uint32_t mHandle;
+  std::shared_ptr<uint32_t> mHandlePtr;
 
 public:
   ShaderStorageBuffer();
