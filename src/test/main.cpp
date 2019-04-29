@@ -5,8 +5,6 @@
 #include "prgl/VertexBufferObject.h"
 #include "prgl/Window.h"
 
-#include <random>
-
 int32_t main(int32_t argc, char** args)
 {
   const std::array<int32_t, 4> rgbaBits = {16, 16, 16, 16};
