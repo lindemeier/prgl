@@ -36,7 +36,9 @@ int32_t main(int32_t argc, char** args)
   vboColors.create<3U>(colors);
 
   prgl::VertexArrayObject vao;
+  // add positions first (attrib 0)
   vao.addVertexBufferObject(vboPosition);
+  // add colors (attrib 1)
   vao.addVertexBufferObject(vboColors);
 
   // create shader
@@ -44,8 +46,8 @@ int32_t main(int32_t argc, char** args)
   glsl.attachVertexShader(R"(
     #version 330 core
 
-    layout(location = 0) in vec3 vertexPosition;
-    layout(location = 1) in vec3 vertexColor;
+    layout(location = 0) in vec3 vertexPosition; // 0 since we've added positions first
+    layout(location = 1) in vec3 vertexColor; // 1since we've added colors second
 
     out vec3 vColor;
 
