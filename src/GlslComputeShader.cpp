@@ -35,6 +35,7 @@ void GlslComputeShader::attach(const std::string& source)
 {
   if (!source.empty())
     {
+      // compile the shader
       *mShaderHandlePtr = compile(source.c_str(), GL_COMPUTE_SHADER);
       glAttachShader(*mProgHandlePtr, *mShaderHandlePtr);
 

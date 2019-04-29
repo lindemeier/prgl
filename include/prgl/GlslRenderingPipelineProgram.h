@@ -42,11 +42,14 @@ public:
   void attachFragmentShader(const std::string& source);
 
 private:
-  uint32_t mVertProg;
-  uint32_t mTesselationControlProg;
-  uint32_t mTesselationEvaluationProg;
-  uint32_t mGeometryProg;
-  uint32_t mFragProg;
+  std::shared_ptr<uint32_t> create(const std::string& source,
+                                   GLenum             shaderType);
+
+  std::shared_ptr<uint32_t> mVertProgPtr;
+  std::shared_ptr<uint32_t> mTesselationControlProgPtr;
+  std::shared_ptr<uint32_t> mTesselationEvaluationProgPtr;
+  std::shared_ptr<uint32_t> mGeometryProgPtr;
+  std::shared_ptr<uint32_t> mFragProgPtr;
 };
 
 } // namespace prgl
