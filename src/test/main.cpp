@@ -1,3 +1,4 @@
+#include "prgl/FrameBufferObject.h"
 #include "prgl/GlslProgram.h"
 #include "prgl/GlslRenderingPipelineProgram.h"
 #include "prgl/Texture2d.h"
@@ -15,14 +16,14 @@ int32_t main(int32_t argc, char** args)
                              prgl::TextureFormatInternal::Rgb32F,
                              prgl::TextureFormat::Rgb, prgl::DataType::Float);
 
-  std::vector<prgl::vec3> buffer(gl->getWidth() * gl->getHeight());
+  std::vector<prgl::vec3> colorBuffer(gl->getWidth() * gl->getHeight());
   // fill the texture with a color
   prgl::vec3 color = {0.25f, 0.1f, 0.3f};
-  for (auto& c : buffer)
+  for (auto& c : colorBuffer)
     {
       c = color;
     }
-  tex.upload(buffer.data());
+  tex.upload(colorBuffer.data());
 
   // create vertex positions
   std::vector<prgl::vec3> positions = {
@@ -40,6 +41,10 @@ int32_t main(int32_t argc, char** args)
   vao.addVertexBufferObject(vboPosition);
   // add colors (attrib 1)
   vao.addVertexBufferObject(vboColors);
+
+  // create Frame Buffer Object
+  auto fbo = prgl::FrameBufferObject();
+  fbo.attachTexture(tex);
 
   // create shader
   prgl::GlslRenderingPipelineProgram glsl;
@@ -70,9 +75,9 @@ int32_t main(int32_t argc, char** args)
     }
   )");
 
-  gl->setRenderFunction([&tex, &gl, &vao, &glsl]() {
-    // render the texture as background
-    tex.render(0.0f, 0.0f, gl->getWidth(), gl->getHeight());
+  gl->setRenderFunction([&tex, &gl, &vao, &glsl, &fbo]() {
+    // bind fbo
+    fbo.bind(true);
     // bind our shader program
     glsl.bind(true);
     // bind the VertexArrayObject
@@ -83,6 +88,11 @@ int32_t main(int32_t argc, char** args)
     vao.bind(false);
     // unbind shader
     glsl.bind(false);
+    // unbind fbo
+    fbo.bind(false);
+
+    // render the texture into the main window
+    tex.render(0.0f, 0.0f, gl->getWidth(), gl->getHeight());
   });
 
   gl->renderLoop(true);
