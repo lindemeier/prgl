@@ -33,24 +33,19 @@ public:
 
   void execute(int32_t x, int32_t y, int32_t w, int32_t h);
 
-  /*
-   * GL_READ_ONLY, GL_WRITE_ONLY, GL_READ_WRITE
-   */
-  void bindImage2D(uint32_t location, const std::shared_ptr<Texture2d>& texture,
-                   TextureAccess access);
-  // void bindSSBO(uint32_t location, std::shared_ptr<ShaderStorageBuffer>
-  // &buffer);
+  void bindImage2D(uint32_t location, Texture2d& texture, TextureAccess access);
+  void bindSSBO(uint32_t location, ShaderStorageBuffer& buffer);
 
 private:
   std::shared_ptr<uint32_t> create();
 
   void attach(const std::string& source);
 
-  std::array<int32_t, 3U> getWorkGroupSize();
-  std::array<int32_t, 3U> getMaxWorkGroupSize() const;
-  void dispatchCompute(uint32_t num_groups_x, uint32_t num_groups_y,
-                       uint32_t num_groups_z) const;
-  void memoryBarrier(GLbitfield barrierType = GL_ALL_BARRIER_BITS) const;
+  vec3i getWorkGroupSize();
+  vec3i getMaxWorkGroupSize() const;
+  void  dispatchCompute(uint32_t num_groups_x, uint32_t num_groups_y,
+                        uint32_t num_groups_z) const;
+  void  memoryBarrier(GLbitfield barrierType = GL_ALL_BARRIER_BITS) const;
 
   std::shared_ptr<uint32_t> mShaderHandlePtr;
 };

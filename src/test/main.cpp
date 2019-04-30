@@ -76,20 +76,21 @@ int32_t main(int32_t argc, char** args)
   )");
 
   gl->setRenderFunction([&tex, &gl, &vao, &glsl, &fbo]() {
-    // bind fbo
-    fbo.bind(true);
-    // bind our shader program
-    glsl.bind(true);
-    // bind the VertexArrayObject
-    vao.bind(true);
-    // render the object
-    vao.render(prgl::DrawMode::Triangles, 0U, 3U);
-    // unbind VertexArrayObject
-    vao.bind(false);
-    // unbind shader
-    glsl.bind(false);
-    // unbind fbo
-    fbo.bind(false);
+    {
+      // bind the fbo
+      const auto fboBinder = prgl::Binder(fbo);
+      {
+        // bind the shader program
+        const auto shaderBinder = prgl::Binder(glsl);
+        {
+          // bind the VertexArrayObject
+          const auto vaoBinder = prgl::Binder(vao);
+
+          // render the object
+          vao.render(prgl::DrawMode::Triangles, 0U, 3U);
+        }
+      }
+    }
 
     // render the texture into the main window
     tex.render(0.0f, 0.0f, gl->getWidth(), gl->getHeight());

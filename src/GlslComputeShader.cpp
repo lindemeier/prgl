@@ -66,16 +66,16 @@ void GlslComputeShader::attach(const std::string& source)
     }
 }
 
-std::array<int32_t, 3U> GlslComputeShader::getWorkGroupSize()
+vec3i GlslComputeShader::getWorkGroupSize()
 {
-  std::array<int32_t, 3U> size;
+  vec3i size;
   glGetProgramiv(*mProgHandlePtr, GL_COMPUTE_WORK_GROUP_SIZE, &(size[0]));
   return size;
 }
 
-std::array<int32_t, 3U> GlslComputeShader::getMaxWorkGroupSize() const
+vec3i GlslComputeShader::getMaxWorkGroupSize() const
 {
-  std::array<int32_t, 3U> size;
+  vec3i size;
   glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &(size[0]));
   return size;
 }
@@ -92,6 +92,14 @@ void GlslComputeShader::memoryBarrier(GLbitfield barrierType) const
   glMemoryBarrier(barrierType);
 }
 
+/**
+ * @brief Dispatch shader at region of interest.
+ *
+ * @param x
+ * @param y
+ * @param w
+ * @param h
+ */
 void GlslComputeShader::execute(int32_t x, int32_t y, int32_t w, int32_t h)
 {
   bind(true);
@@ -106,24 +114,31 @@ void GlslComputeShader::execute(int32_t x, int32_t y, int32_t w, int32_t h)
 }
 
 /**
- * uniform readonly image2D fromTex;
+ * @brief Bind texture as image2d.
+ *
+ * @param location
+ * @param texture
+ * @param access
  */
-void GlslComputeShader::bindImage2D(uint32_t                          location,
-                                    const std::shared_ptr<Texture2d>& texture,
-                                    TextureAccess                     access)
+void GlslComputeShader::bindImage2D(uint32_t location, Texture2d& texture,
+                                    TextureAccess access)
 {
   bind(true);
-  texture->bindImageTexture(location, access);
+  texture.bindImageTexture(location, access);
   bind(false);
 }
 
-// void GlslComputeShader::bindSSBO(uint32_t location,
-// std::shared_ptr<ShaderStorageBuffer> &buffer)
-//{
-//  mBindings[location] = buffer;
-//  bind(true);
-//  buffer->bindBase(location);
-//  bind(false);
-//}
+/**
+ * @brief Bind Shader Storage Buffer.
+ *
+ * @param location
+ * @param buffer
+ */
+void GlslComputeShader::bindSSBO(uint32_t location, ShaderStorageBuffer& buffer)
+{
+  bind(true);
+  buffer.bindBase(location);
+  bind(false);
+}
 
 } // namespace prgl

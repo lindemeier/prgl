@@ -31,6 +31,14 @@ using vec2 = std::array<float, 2U>;
 using vec3 = std::array<float, 3U>;
 using vec4 = std::array<float, 4U>;
 
+using vec2i = std::array<int32_t, 2U>;
+using vec3i = std::array<int32_t, 3U>;
+using vec4i = std::array<int32_t, 4U>;
+
+using vec2ui = std::array<uint32_t, 2U>;
+using vec3ui = std::array<uint32_t, 3U>;
+using vec4ui = std::array<uint32_t, 4U>;
+
 /**
  * @brief "Specifies the data type of the pixel data. The following symbolic
  * values are accepted:""
@@ -46,6 +54,31 @@ enum class DataType : uint32_t
   Int           = GL_INT,
   HalfFloat     = GL_HALF_FLOAT,
   Float         = GL_FLOAT
+};
+
+/**
+ * @brief Can be used to bind unbind an OpenGL resource. Similar to how a mutex
+ * locker would work.
+ *
+ * @tparam T the class wrapped: needs to implement bind(bool). C++17/20 Concepts
+ * would be better here?
+ */
+template <class T>
+class Binder final
+{
+  const T& mBindable;
+
+public:
+  // Bind on construction
+  Binder(const T& bindable) : mBindable(bindable) { mBindable.bind(true); }
+  // Unbind on destruction
+  ~Binder() { mBindable.bind(false); }
+
+private:
+  // no need for default constructor, assignment operator and copy constructor
+  Binder()              = delete;
+  Binder(const Binder&) = delete;
+  Binder& operator=(const Binder&) = delete;
 };
 
 } //  namespace prgl
