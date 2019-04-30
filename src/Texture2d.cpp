@@ -18,26 +18,21 @@ Texture2d::Texture2d(uint32_t width, uint32_t height,
                      DataType type, TextureMinFilter minFilter,
                      TextureMagFilter magFilter, TextureEnvMode envMode,
                      TextureWrapMode wrapMode, bool createMipMaps)
-  : mWidth(width), mHeight(height), mTarget(GL_TEXTURE_2D), mMipLevel(0),
-    mInternalFormat(internalFormat), mFormat(format), mBorder(0), mType(type),
-    mMinFilter(minFilter), mMagFilter(magFilter), mWrap(wrapMode),
-    mEnvMode(envMode), mCreateMipMaps(createMipMaps), mMaxAnisotropy(1.0f)
+  : mHandle(INVALID_HANDLE), mWidth(width), mHeight(height),
+    mTarget(GL_TEXTURE_2D), mMipLevel(0), mInternalFormat(internalFormat),
+    mFormat(format), mBorder(0), mType(type), mMinFilter(minFilter),
+    mMagFilter(magFilter), mWrap(wrapMode), mEnvMode(envMode),
+    mCreateMipMaps(createMipMaps), mMaxAnisotropy(1.0f)
 {
-  mHandlePtr = std::shared_ptr<uint32_t>(new uint32_t, [](uint32_t* ptr) {
-    glDeleteTextures(1, ptr);
-    *ptr = INVALID_HANDLE;
-    delete ptr;
-    ptr = nullptr;
-  });
-  glGenTextures(1, mHandlePtr.get());
-  if (*mHandlePtr == INVALID_HANDLE)
-    {
-      std::cerr << "invalid texture handle: " << std::endl;
-      checkGLError(__FILE__, __FUNCTION__, __LINE__);
-    }
+
+  glGenTextures(1, &mHandle);
 }
 
-Texture2d::~Texture2d() {}
+Texture2d::~Texture2d()
+{
+  glDeleteTextures(1, &mHandle);
+  mHandle = INVALID_HANDLE;
+}
 
 void Texture2d::upload(void* data)
 {
@@ -122,7 +117,7 @@ void Texture2d::bind(bool bind) const
 {
   if (bind)
     {
-      glBindTexture(mTarget, *mHandlePtr);
+      glBindTexture(mTarget, mHandle);
     }
   else
     {
@@ -133,12 +128,12 @@ void Texture2d::bind(bool bind) const
 void Texture2d::bindImageTexture(uint32_t unit, TextureAccess access,
                                  int32_t level, bool layered, int32_t layer)
 {
-  glBindImageTexture(unit, *mHandlePtr, level, layered, layer,
+  glBindImageTexture(unit, mHandle, level, layered, layer,
                      static_cast<uint32_t>(access),
                      static_cast<uint32_t>(mInternalFormat));
 }
 
-uint32_t Texture2d::getId() const { return *mHandlePtr; }
+uint32_t Texture2d::getId() const { return mHandle; }
 
 uint32_t Texture2d::getWidth() const { return mWidth; }
 
@@ -288,8 +283,8 @@ void Texture2d::render(float posX, float posY, float width, float height)
 
 void Texture2d::copyTo(Texture2d& other) const
 {
-  glCopyImageSubData(*mHandlePtr, mTarget, 0, 0, 0, 0, *other.mHandlePtr,
-                     other.mTarget, 0, 0, 0, 0, mWidth, mHeight, 1);
+  glCopyImageSubData(mHandle, mTarget, 0, 0, 0, 0, other.mHandle, other.mTarget,
+                     0, 0, 0, 0, mWidth, mHeight, 1);
 }
 
 } // namespace prgl

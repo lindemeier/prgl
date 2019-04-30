@@ -186,6 +186,12 @@ enum class TextureFormat : uint32_t
 class Texture2d
 {
 public:
+  template <typename... T>
+  static std::shared_ptr<Texture2d> Create(T&&... args)
+  {
+    return std::make_shared<Texture2d>(std::forward<T>(args)...);
+  }
+
   Texture2d();
   Texture2d(
     uint32_t width, uint32_t height,
@@ -232,21 +238,24 @@ public:
   void                  copyTo(Texture2d& other) const;
 
 private:
-  std::shared_ptr<uint32_t> mHandlePtr;
-  uint32_t                  mWidth;
-  uint32_t                  mHeight;
-  uint32_t                  mTarget;
-  int32_t                   mMipLevel;
-  TextureFormatInternal     mInternalFormat;
-  TextureFormat             mFormat;
-  int32_t                   mBorder;
-  DataType                  mType;
-  TextureMinFilter          mMinFilter;
-  TextureMagFilter          mMagFilter;
-  TextureWrapMode           mWrap;
-  TextureEnvMode            mEnvMode;
-  bool                      mCreateMipMaps;
-  float                     mMaxAnisotropy;
+  Texture2d(const Texture2d&) = delete;
+  Texture2d& operator=(const Texture2d&) = delete;
+
+  uint32_t              mHandle;
+  uint32_t              mWidth;
+  uint32_t              mHeight;
+  uint32_t              mTarget;
+  int32_t               mMipLevel;
+  TextureFormatInternal mInternalFormat;
+  TextureFormat         mFormat;
+  int32_t               mBorder;
+  DataType              mType;
+  TextureMinFilter      mMinFilter;
+  TextureMagFilter      mMagFilter;
+  TextureWrapMode       mWrap;
+  TextureEnvMode        mEnvMode;
+  bool                  mCreateMipMaps;
+  float                 mMaxAnisotropy;
 };
 
 } // namespace prgl

@@ -27,12 +27,11 @@ public:
 
   void bind(bool bind) const;
 
-  void attachTexture(const Texture2d& texture);
-  void attachDepth(const Texture2d& texture);
-  void attachDepth(uint32_t width, uint32_t height);
+  void attachTexture(const std::shared_ptr<Texture2d>& texture);
+  void attachDepth(const std::shared_ptr<Texture2d>& texture);
 
-  const Texture2d& getTarget() const;
-  const Texture2d& getDepth() const;
+  const std::shared_ptr<Texture2d>& getTarget() const;
+  const std::shared_ptr<Texture2d>& getDepth() const;
 
 private:
   FrameBufferObject(const FrameBufferObject&) = delete;
@@ -40,9 +39,9 @@ private:
 
   bool checkStatus();
 
-  uint32_t  mHandle;
-  Texture2d mTarget;
-  Texture2d mDepth;
+  uint32_t                   mHandle;
+  std::shared_ptr<Texture2d> mTarget;
+  std::shared_ptr<Texture2d> mDepth;
 };
 
 } // namespace prgl

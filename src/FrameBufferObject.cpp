@@ -1,7 +1,4 @@
 #include "prgl/FrameBufferObject.h"
-#include "prgl/Texture2d.h"
-
-#include "prgl/glCommon.h"
 
 #include <iostream>
 
@@ -39,46 +36,43 @@ void FrameBufferObject::bind(bool bind) const
     }
 }
 
-void FrameBufferObject::attachTexture(const Texture2d& texture)
+void FrameBufferObject::attachTexture(const std::shared_ptr<Texture2d>& texture)
 {
   mTarget = texture;
 
   bind(true);
 
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                         mTarget.getId(), 0);
+                         mTarget->getId(), 0);
 
   bind(false);
 
   checkStatus();
 }
 
-void FrameBufferObject::attachDepth(const Texture2d& texture)
+void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2d>& texture)
 {
   mDepth = texture;
 
   bind(true);
 
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
-                         mDepth.getId(), 0);
+                         mDepth->getId(), 0);
 
   bind(false);
 
   checkStatus();
 }
 
-void FrameBufferObject::attachDepth(uint32_t width, uint32_t height)
+const std::shared_ptr<Texture2d>& FrameBufferObject::getTarget() const
 {
-  Texture2d depth(width, height, TextureFormatInternal::DepthComponent,
-                  TextureFormat::DepthComponent, DataType::UnsignedShort,
-                  TextureMinFilter::Linear, TextureMagFilter::Linear,
-                  TextureEnvMode::Replace, TextureWrapMode::Repeat);
-  attachDepth(depth);
+  return mTarget;
 }
 
-const Texture2d& FrameBufferObject::getTarget() const { return mTarget; }
-
-const Texture2d& FrameBufferObject::getDepth() const { return mDepth; }
+const std::shared_ptr<Texture2d>& FrameBufferObject::getDepth() const
+{
+  return mDepth;
+}
 
 bool FrameBufferObject::checkStatus()
 {
