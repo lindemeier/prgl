@@ -79,13 +79,13 @@ int32_t main(int32_t argc, char** args)
   gl->setRenderFunction([&tex, &gl, &vao, &glsl, &fbo]() {
     {
       // bind the fbo
-      const auto fboBinder = prgl::Binder(*fbo);
+      const auto fboBinder = prgl::Binder(fbo);
       {
         // bind the shader program
-        const auto shaderBinder = prgl::Binder(*glsl);
+        const auto shaderBinder = prgl::Binder(glsl);
         {
           // bind the VertexArrayObject
-          const auto vaoBinder = prgl::Binder(*vao);
+          const auto vaoBinder = prgl::Binder(vao);
 
           // render the object
           vao->render(prgl::DrawMode::Triangles, 0U, 3U);

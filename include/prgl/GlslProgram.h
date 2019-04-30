@@ -54,7 +54,7 @@ public:
   void setMatrix(const std::string& label, const double* m, bool transpose);
 
   void bindSampler(const std::string& name, const TextureUnit unit,
-                   const Texture2d& texture);
+                   const std::shared_ptr<Texture2d>& texture);
 
   static std::string ReadShaderFromFile(const std::string& filename);
 

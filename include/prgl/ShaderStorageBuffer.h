@@ -16,13 +16,13 @@ namespace prgl
 
 class Context;
 
-class ShaderStorageBuffer
+class ShaderStorageBuffer final
 {
-  std::shared_ptr<uint32_t> mHandlePtr;
 
 public:
-  ShaderStorageBuffer();
+  static std::shared_ptr<ShaderStorageBuffer> Create();
 
+  ShaderStorageBuffer();
   ~ShaderStorageBuffer();
 
   // retun current buffer size in bytes
@@ -45,6 +45,12 @@ public:
   void copyTo(ShaderStorageBuffer& other) const;
 
   uint32_t getHandle() const;
+
+private:
+  ShaderStorageBuffer(const ShaderStorageBuffer&) = delete;
+  ShaderStorageBuffer& operator=(const ShaderStorageBuffer&) = delete;
+
+  uint32_t mHandle;
 };
 
 } // namespace prgl

@@ -124,11 +124,12 @@ void GlslComputeShader::execute(int32_t x, int32_t y, int32_t w, int32_t h)
  * @param texture
  * @param access
  */
-void GlslComputeShader::bindImage2D(uint32_t location, Texture2d& texture,
-                                    TextureAccess access)
+void GlslComputeShader::bindImage2D(uint32_t                          location,
+                                    const std::shared_ptr<Texture2d>& texture,
+                                    TextureAccess                     access)
 {
   bind(true);
-  texture.bindImageTexture(location, access);
+  texture->bindImageTexture(location, access);
   bind(false);
 }
 
@@ -138,10 +139,11 @@ void GlslComputeShader::bindImage2D(uint32_t location, Texture2d& texture,
  * @param location
  * @param buffer
  */
-void GlslComputeShader::bindSSBO(uint32_t location, ShaderStorageBuffer& buffer)
+void GlslComputeShader::bindSSBO(
+  uint32_t location, const std::shared_ptr<ShaderStorageBuffer>& buffer)
 {
   bind(true);
-  buffer.bindBase(location);
+  buffer->bindBase(location);
   bind(false);
 }
 

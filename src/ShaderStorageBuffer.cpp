@@ -8,18 +8,22 @@
 namespace prgl
 {
 
-ShaderStorageBuffer::ShaderStorageBuffer() : mHandlePtr(nullptr)
+std::shared_ptr<ShaderStorageBuffer> ShaderStorageBuffer::Create()
 {
-  mHandlePtr = std::shared_ptr<uint32_t>(new uint32_t, [](uint32_t* ptr) {
-    glDeleteBuffers(1, ptr);
-    *ptr = INVALID_HANDLE;
-    delete ptr;
-    ptr = nullptr;
-  });
-  glGenBuffers(1, mHandlePtr.get());
+  return std::make_shared<ShaderStorageBuffer>();
 }
 
-ShaderStorageBuffer::~ShaderStorageBuffer() {}
+ShaderStorageBuffer::ShaderStorageBuffer() : mHandle(INVALID_HANDLE)
+{
+
+  glGenBuffers(1, &mHandle);
+}
+
+ShaderStorageBuffer::~ShaderStorageBuffer()
+{
+  glDeleteBuffers(1, &mHandle);
+  mHandle = INVALID_HANDLE;
+}
 
 int32_t ShaderStorageBuffer::getSizeInBytes() const
 {
@@ -83,7 +87,7 @@ void ShaderStorageBuffer::bind(bool bind) const
 {
   if (bind)
     {
-      glBindBuffer(GL_SHADER_STORAGE_BUFFER, *mHandlePtr);
+      glBindBuffer(GL_SHADER_STORAGE_BUFFER, mHandle);
     }
   else
     {
@@ -93,7 +97,7 @@ void ShaderStorageBuffer::bind(bool bind) const
 
 void ShaderStorageBuffer::bindBase(uint32_t location) const
 {
-  glBindBufferBase(GL_SHADER_STORAGE_BUFFER, location, *mHandlePtr);
+  glBindBufferBase(GL_SHADER_STORAGE_BUFFER, location, mHandle);
 }
 
 void ShaderStorageBuffer::copyTo(ShaderStorageBuffer& other) const
@@ -111,7 +115,7 @@ void ShaderStorageBuffer::copyTo(ShaderStorageBuffer& other) const
       other.create(nullptr, thisSize);
     }
 
-  glBindBuffer(GL_COPY_READ_BUFFER, *mHandlePtr);
+  glBindBuffer(GL_COPY_READ_BUFFER, mHandle);
   glBindBuffer(GL_COPY_WRITE_BUFFER, other.getHandle());
 
   glCopyBufferSubData(GL_COPY_READ_BUFFER, GL_COPY_WRITE_BUFFER, 0, 0,
@@ -121,6 +125,6 @@ void ShaderStorageBuffer::copyTo(ShaderStorageBuffer& other) const
   glBindBuffer(GL_COPY_WRITE_BUFFER, cWriteBuffer);
 }
 
-uint32_t ShaderStorageBuffer::getHandle() const { return *mHandlePtr; }
+uint32_t ShaderStorageBuffer::getHandle() const { return mHandle; }
 
 } // namespace prgl

@@ -36,8 +36,10 @@ public:
 
   void execute(int32_t x, int32_t y, int32_t w, int32_t h);
 
-  void bindImage2D(uint32_t location, Texture2d& texture, TextureAccess access);
-  void bindSSBO(uint32_t location, ShaderStorageBuffer& buffer);
+  void bindImage2D(uint32_t location, const std::shared_ptr<Texture2d>& texture,
+                   TextureAccess access);
+  void bindSSBO(uint32_t                                    location,
+                const std::shared_ptr<ShaderStorageBuffer>& buffer);
 
 private:
   GlslComputeShader(const GlslComputeShader&) = delete;

@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 
 #include <array>
+#include <memory>
 #include <stdint.h>
 
 namespace prgl
@@ -66,13 +67,13 @@ enum class DataType : uint32_t
 template <class T>
 class Binder final
 {
-  const T& mBindable;
+  const std::shared_ptr<T>& mBindable;
 
 public:
   // Bind on construction
-  Binder(const T& bindable) : mBindable(bindable) { mBindable.bind(true); }
+  Binder(const std::shared_ptr<T>& bindable);
   // Unbind on destruction
-  ~Binder() { mBindable.bind(false); }
+  ~Binder();
 
 private:
   // no need for default constructor, assignment operator and copy constructor
@@ -80,6 +81,18 @@ private:
   Binder(const Binder&) = delete;
   Binder& operator=(const Binder&) = delete;
 };
+
+template <class T>
+Binder<T>::Binder(const std::shared_ptr<T>& bindable) : mBindable(bindable)
+{
+  mBindable->bind(true);
+}
+
+template <class T>
+Binder<T>::~Binder()
+{
+  mBindable->bind(false);
+}
 
 } //  namespace prgl
 

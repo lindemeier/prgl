@@ -70,14 +70,15 @@ void VertexArrayObject::addVertexBufferObject(
   // add to the list to keep the reference (unique_ptr and move may be better )
   mVboList.push_back(vbo);
 
-  Binder binderVao(*this);
+  bind(true);
   {
-    Binder binderVbo(*vbo);
+    Binder binderVbo(vbo);
     glVertexAttribPointer(
       index, vbo->getVertexComponentDataColumns(),
       static_cast<GLenum>(vbo->getVertexComponentDataType()), GL_FALSE, 0, 0);
     glEnableVertexAttribArray(index);
   }
+  bind(false);
 }
 
 } // namespace prgl
