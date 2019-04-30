@@ -17,19 +17,29 @@
 namespace prgl
 {
 
-VertexBufferObject::VertexBufferObject()
-  : mVboPtr(nullptr), mDataType(), mDataColumns(0), mVerticesCount(0)
+std::shared_ptr<VertexBufferObject> VertexBufferObject::Create()
 {
-  mVboPtr = std::shared_ptr<uint32_t>(new uint32_t, [](uint32_t* ptr) {
-    glDeleteBuffers(1, ptr);
-    *ptr = INVALID_HANDLE;
-    delete ptr;
-    ptr = nullptr;
-  });
-  glGenBuffers(1, mVboPtr.get());
+  // make shared not usable due to private constructor
+  struct MakeSharedEnabler : public VertexBufferObject
+  {
+  };
+
+  return std::make_shared<MakeSharedEnabler>();
 }
 
-VertexBufferObject::~VertexBufferObject() {}
+VertexBufferObject::VertexBufferObject()
+  : mVbo(INVALID_HANDLE), mDataType(DataType::Float), mDataColumns(0U),
+    mVerticesCount(0U)
+{
+
+  glGenBuffers(1, &mVbo);
+}
+
+VertexBufferObject::~VertexBufferObject()
+{
+  glDeleteBuffers(1, &mVbo);
+  mVbo = INVALID_HANDLE;
+}
 
 /**
  * @brief Bind the Vertex Array Object
@@ -40,7 +50,7 @@ void VertexBufferObject::bind(bool bind) const
 {
   if (bind)
     {
-      glBindBuffer(GL_ARRAY_BUFFER, *mVboPtr);
+      glBindBuffer(GL_ARRAY_BUFFER, mVbo);
     }
   else
     {

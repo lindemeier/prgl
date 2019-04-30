@@ -47,14 +47,14 @@ public:
 
   void bind(bool bind) const;
 
-  void addVertexBufferObject(const VertexBufferObject& vbo);
+  void addVertexBufferObject(const std::shared_ptr<VertexBufferObject>& vbo);
 
   void render(const DrawMode& mode, const uint32_t first, const uint32_t count);
 
 private:
   std::shared_ptr<uint32_t> mVaoPtr;
 
-  std::vector<VertexBufferObject> mVboList;
+  std::vector<std::shared_ptr<VertexBufferObject>> mVboList;
 };
 } // namespace prgl
 

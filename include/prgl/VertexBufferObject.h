@@ -41,7 +41,8 @@ public:
     DynamicDraw = GL_DYNAMIC_DRAW
   };
 
-  VertexBufferObject();
+  static std::shared_ptr<VertexBufferObject> Create();
+
   ~VertexBufferObject();
 
   void bind(bool bind) const;
@@ -74,7 +75,11 @@ public:
   size_t   getVerticesCount() const;
 
 private:
-  std::shared_ptr<uint32_t> mVboPtr;
+  VertexBufferObject(const VertexBufferObject&) = delete;
+  VertexBufferObject& operator=(const VertexBufferObject&) = delete;
+  VertexBufferObject();
+
+  uint32_t mVbo;
 
   DataType mDataType;
   uint32_t mDataColumns;

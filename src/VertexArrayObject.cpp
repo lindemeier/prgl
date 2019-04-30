@@ -60,7 +60,8 @@ void VertexArrayObject::render(const DrawMode& mode, const uint32_t first,
   glDrawArrays(static_cast<GLenum>(mode), first, count);
 }
 
-void VertexArrayObject::addVertexBufferObject(const VertexBufferObject& vbo)
+void VertexArrayObject::addVertexBufferObject(
+  const std::shared_ptr<VertexBufferObject>& vbo)
 {
   const auto index = mVboList.size();
   // add to the list to keep the reference (unique_ptr and move may be better )
@@ -68,10 +69,10 @@ void VertexArrayObject::addVertexBufferObject(const VertexBufferObject& vbo)
 
   Binder binderVao(*this);
   {
-    Binder binderVbo(vbo);
-    glVertexAttribPointer(index, vbo.getVertexComponentDataColumns(),
-                          static_cast<GLenum>(vbo.getVertexComponentDataType()),
-                          GL_FALSE, 0, 0);
+    Binder binderVbo(*vbo);
+    glVertexAttribPointer(
+      index, vbo->getVertexComponentDataColumns(),
+      static_cast<GLenum>(vbo->getVertexComponentDataType()), GL_FALSE, 0, 0);
     glEnableVertexAttribArray(index);
   }
 }
