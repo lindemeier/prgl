@@ -25,8 +25,8 @@ namespace prgl
 class GlslRenderingPipelineProgram final : public GlslProgram
 {
 public:
+  static std::shared_ptr<GlslRenderingPipelineProgram> Create();
   GlslRenderingPipelineProgram();
-
   ~GlslRenderingPipelineProgram() override;
 
   void attachVertexShader(const std::string& source);
@@ -36,14 +36,18 @@ public:
   void attachFragmentShader(const std::string& source);
 
 private:
-  std::shared_ptr<uint32_t> create(const std::string& source,
-                                   GLenum             shaderType);
+  GlslRenderingPipelineProgram(const GlslRenderingPipelineProgram&) = delete;
+  GlslRenderingPipelineProgram&
+  operator=(const GlslRenderingPipelineProgram&) = delete;
 
-  std::shared_ptr<uint32_t> mVertProgPtr;
-  std::shared_ptr<uint32_t> mTesselationControlProgPtr;
-  std::shared_ptr<uint32_t> mTesselationEvaluationProgPtr;
-  std::shared_ptr<uint32_t> mGeometryProgPtr;
-  std::shared_ptr<uint32_t> mFragProgPtr;
+  uint32_t createShader(const std::string& source, GLenum shaderType);
+  void     cleanupShader(uint32_t& shader);
+
+  uint32_t mVertProg;
+  uint32_t mTesselationControlProg;
+  uint32_t mTesselationEvaluationProg;
+  uint32_t mGeometryProg;
+  uint32_t mFragProg;
 };
 
 } // namespace prgl

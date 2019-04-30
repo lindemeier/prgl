@@ -7,28 +7,32 @@
 namespace prgl
 {
 
+std::shared_ptr<GlslComputeShader>
+GlslComputeShader::Create(const std::string& glslSource)
+{
+  return std::make_shared<GlslComputeShader>(glslSource);
+}
+
 GlslComputeShader::GlslComputeShader(const std::string& glslSource)
-  : GlslProgram(), mShaderHandlePtr(create())
+  : GlslProgram(), mShaderHandle(INVALID_HANDLE)
 {
   attach(glslSource);
 }
 
-GlslComputeShader::~GlslComputeShader() {}
-
-std::shared_ptr<uint32_t> GlslComputeShader::create()
+GlslComputeShader::~GlslComputeShader()
 {
-  auto shaderPtr =
-    std::shared_ptr<uint32_t>(new uint32_t, [this](uint32_t* ptr) {
-      if (*mProgHandlePtr > INVALID_HANDLE && *ptr > INVALID_HANDLE)
+  if (mProgHandle > INVALID_HANDLE)
+    {
+      if (mShaderHandle > INVALID_HANDLE)
         {
-          glDetachShader(*mProgHandlePtr, *ptr);
-          glDeleteShader(*ptr);
-          *ptr = INVALID_HANDLE;
-          delete ptr;
-          ptr = nullptr;
+          glDetachShader(mProgHandle, mShaderHandle);
         }
-    });
-  return shaderPtr;
+    }
+  if (mShaderHandle > INVALID_HANDLE)
+    {
+      glDeleteShader(mShaderHandle);
+      mShaderHandle = INVALID_HANDLE;
+    }
 }
 
 void GlslComputeShader::attach(const std::string& source)
@@ -36,19 +40,19 @@ void GlslComputeShader::attach(const std::string& source)
   if (!source.empty())
     {
       // compile the shader
-      *mShaderHandlePtr = compile(source.c_str(), GL_COMPUTE_SHADER);
-      glAttachShader(*mProgHandlePtr, *mShaderHandlePtr);
+      mShaderHandle = compile(source.c_str(), GL_COMPUTE_SHADER);
+      glAttachShader(mProgHandle, mShaderHandle);
 
-      glLinkProgram(*mProgHandlePtr);
+      glLinkProgram(mProgHandle);
       int32_t linkV;
-      glGetProgramiv(*mProgHandlePtr, GL_LINK_STATUS, &linkV);
+      glGetProgramiv(mProgHandle, GL_LINK_STATUS, &linkV);
 
       if (!linkV)
         {
           std::cerr << "Error in linking compute shader program" << std::endl;
           GLchar  log[10240];
           GLsizei length;
-          glGetProgramInfoLog(*mProgHandlePtr, 10239, &length, log);
+          glGetProgramInfoLog(mProgHandle, 10239, &length, log);
           std::cerr << source << "\n" << log << std::endl;
 
           std::stringstream ss;
@@ -69,7 +73,7 @@ void GlslComputeShader::attach(const std::string& source)
 vec3i GlslComputeShader::getWorkGroupSize()
 {
   vec3i size;
-  glGetProgramiv(*mProgHandlePtr, GL_COMPUTE_WORK_GROUP_SIZE, &(size[0]));
+  glGetProgramiv(mProgHandle, GL_COMPUTE_WORK_GROUP_SIZE, &(size[0]));
   return size;
 }
 

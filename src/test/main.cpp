@@ -48,8 +48,8 @@ int32_t main(int32_t argc, char** args)
   fbo->attachTexture(tex);
 
   // create shader
-  prgl::GlslRenderingPipelineProgram glsl;
-  glsl.attachVertexShader(R"(
+  auto glsl = prgl::GlslRenderingPipelineProgram::Create();
+  glsl->attachVertexShader(R"(
     #version 330 core
 
     layout(location = 0) in vec3 vertexPosition; // 0 since we've added positions first
@@ -64,7 +64,7 @@ int32_t main(int32_t argc, char** args)
       gl_Position = vec4(vertexPosition, 1.0);
     }
   )");
-  glsl.attachFragmentShader(R"(
+  glsl->attachFragmentShader(R"(
     #version 330 core
 
     in vec3 vColor;
@@ -82,7 +82,7 @@ int32_t main(int32_t argc, char** args)
       const auto fboBinder = prgl::Binder(*fbo);
       {
         // bind the shader program
-        const auto shaderBinder = prgl::Binder(glsl);
+        const auto shaderBinder = prgl::Binder(*glsl);
         {
           // bind the VertexArrayObject
           const auto vaoBinder = prgl::Binder(*vao);

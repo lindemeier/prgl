@@ -25,6 +25,8 @@ namespace prgl
 class GlslProgram
 {
 public:
+  static std::shared_ptr<GlslProgram> Create();
+
   GlslProgram();
 
   virtual ~GlslProgram();
@@ -60,7 +62,11 @@ protected:
   uint32_t        getCurrentlyBoundProgram() const;
   static uint32_t compile(const std::string& source, uint32_t type);
 
-  std::shared_ptr<uint32_t> mProgHandlePtr;
+  uint32_t mProgHandle;
+
+private:
+  GlslProgram(const GlslProgram&) = delete;
+  GlslProgram& operator=(const GlslProgram&) = delete;
 };
 
 } // namespace prgl

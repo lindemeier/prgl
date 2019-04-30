@@ -27,6 +27,9 @@ namespace prgl
 class GlslComputeShader final : public GlslProgram
 {
 public:
+  static std::shared_ptr<GlslComputeShader>
+  Create(const std::string& glslSource);
+
   GlslComputeShader(const std::string& glslSource);
 
   ~GlslComputeShader() override;
@@ -37,7 +40,8 @@ public:
   void bindSSBO(uint32_t location, ShaderStorageBuffer& buffer);
 
 private:
-  std::shared_ptr<uint32_t> create();
+  GlslComputeShader(const GlslComputeShader&) = delete;
+  GlslComputeShader& operator=(const GlslComputeShader&) = delete;
 
   void attach(const std::string& source);
 
@@ -47,7 +51,7 @@ private:
                         uint32_t num_groups_z) const;
   void  memoryBarrier(GLbitfield barrierType = GL_ALL_BARRIER_BITS) const;
 
-  std::shared_ptr<uint32_t> mShaderHandlePtr;
+  uint32_t mShaderHandle;
 };
 
 } // namespace prgl

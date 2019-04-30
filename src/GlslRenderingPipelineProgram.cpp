@@ -6,35 +6,30 @@
 namespace prgl
 {
 
+std::shared_ptr<GlslRenderingPipelineProgram>
+GlslRenderingPipelineProgram::Create()
+{
+  return std::make_shared<GlslRenderingPipelineProgram>();
+}
+
 GlslRenderingPipelineProgram::GlslRenderingPipelineProgram()
-  : GlslProgram(), mVertProgPtr(nullptr), mTesselationControlProgPtr(nullptr),
-    mTesselationEvaluationProgPtr(nullptr), mGeometryProgPtr(nullptr),
-    mFragProgPtr(nullptr)
+  : GlslProgram(), mVertProg(INVALID_HANDLE),
+    mTesselationControlProg(INVALID_HANDLE),
+    mTesselationEvaluationProg(INVALID_HANDLE), mGeometryProg(INVALID_HANDLE),
+    mFragProg(INVALID_HANDLE)
 {
 }
 
-std::shared_ptr<uint32_t>
-GlslRenderingPipelineProgram::create(const std::string& source,
-                                     GLenum             shaderType)
+uint32_t GlslRenderingPipelineProgram::createShader(const std::string& source,
+                                                    GLenum shaderType)
 {
-  auto shaderPtr =
-    std::shared_ptr<uint32_t>(new uint32_t, [this](uint32_t* ptr) {
-      if (*mProgHandlePtr > INVALID_HANDLE && *ptr > INVALID_HANDLE)
-        {
-          glDetachShader(*mProgHandlePtr, *ptr);
-          glDeleteShader(*ptr);
-          *ptr = INVALID_HANDLE;
-          delete ptr;
-          ptr = nullptr;
-        }
-    });
-  *shaderPtr = compile(source.c_str(), shaderType);
+  uint32_t shader = compile(source.c_str(), shaderType);
 
-  glAttachShader(*mProgHandlePtr, *shaderPtr);
+  glAttachShader(mProgHandle, shader);
 
-  glLinkProgram(*mProgHandlePtr);
+  glLinkProgram(mProgHandle);
   int32_t linkV;
-  glGetProgramiv(*mProgHandlePtr, GL_LINK_STATUS, &linkV);
+  glGetProgramiv(mProgHandle, GL_LINK_STATUS, &linkV);
 
   if (!linkV)
     {
@@ -42,7 +37,7 @@ GlslRenderingPipelineProgram::create(const std::string& source,
                 << std::endl;
       GLchar  log[10240];
       GLsizei length;
-      glGetProgramInfoLog(*mProgHandlePtr, 10239, &length, log);
+      glGetProgramInfoLog(mProgHandle, 10239, &length, log);
       std::cerr << source << "\n" << log << std::endl;
 
       std::stringstream ss;
@@ -52,18 +47,41 @@ GlslRenderingPipelineProgram::create(const std::string& source,
       throw std::runtime_error(ss.str());
     }
 
-  return shaderPtr;
+  return shader;
 }
 
-GlslRenderingPipelineProgram::~GlslRenderingPipelineProgram() {}
+void GlslRenderingPipelineProgram::cleanupShader(uint32_t& shader)
+{
+  if (mProgHandle > INVALID_HANDLE)
+    {
+      if (shader > INVALID_HANDLE)
+        {
+          glDetachShader(mProgHandle, shader);
+        }
+    }
+  if (shader > INVALID_HANDLE)
+    {
+      glDeleteShader(shader);
+      shader = INVALID_HANDLE;
+    }
+}
+
+GlslRenderingPipelineProgram::~GlslRenderingPipelineProgram()
+{
+  cleanupShader(mVertProg);
+  cleanupShader(mTesselationControlProg);
+  cleanupShader(mTesselationEvaluationProg);
+  cleanupShader(mGeometryProg);
+  cleanupShader(mFragProg);
+}
 
 void GlslRenderingPipelineProgram::attachVertexShader(const std::string& source)
 {
-
   if (!source.empty())
     {
+      cleanupShader(mVertProg);
 
-      mVertProgPtr = create(source.c_str(), GL_VERTEX_SHADER);
+      mVertProg = createShader(source.c_str(), GL_VERTEX_SHADER);
     }
   else
     {
@@ -78,8 +96,10 @@ void GlslRenderingPipelineProgram::attachTesselationControlShader(
 {
   if (!source.empty())
     {
-      mTesselationControlProgPtr =
-        create(source.c_str(), GL_TESS_CONTROL_SHADER);
+      cleanupShader(mTesselationControlProg);
+
+      mTesselationControlProg =
+        createShader(source.c_str(), GL_TESS_CONTROL_SHADER);
     }
   else
     {
@@ -95,9 +115,10 @@ void GlslRenderingPipelineProgram::attachTesselationEvaluationShader(
 {
   if (!source.empty())
     {
+      cleanupShader(mTesselationEvaluationProg);
 
-      mTesselationEvaluationProgPtr =
-        create(source.c_str(), GL_TESS_EVALUATION_SHADER);
+      mTesselationEvaluationProg =
+        createShader(source.c_str(), GL_TESS_EVALUATION_SHADER);
     }
   else
     {
@@ -113,7 +134,9 @@ void GlslRenderingPipelineProgram::attachGeometryShader(
 {
   if (!source.empty())
     {
-      mGeometryProgPtr = create(source.c_str(), GL_GEOMETRY_SHADER);
+      cleanupShader(mGeometryProg);
+
+      mGeometryProg = createShader(source.c_str(), GL_GEOMETRY_SHADER);
     }
   else
     {
@@ -128,7 +151,9 @@ void GlslRenderingPipelineProgram::attachFragmentShader(
 {
   if (!source.empty())
     {
-      mFragProgPtr = create(source.c_str(), GL_FRAGMENT_SHADER);
+      cleanupShader(mFragProg);
+
+      mFragProg = createShader(source.c_str(), GL_FRAGMENT_SHADER);
     }
   else
     {

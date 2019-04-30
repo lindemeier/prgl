@@ -183,7 +183,7 @@ enum class TextureFormat : uint32_t
  * @brief Represents a 2d texture.
  *
  */
-class Texture2d
+class Texture2d final
 {
 public:
   template <typename... T>
