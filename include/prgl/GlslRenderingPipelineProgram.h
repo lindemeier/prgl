@@ -29,12 +29,6 @@ public:
 
   ~GlslRenderingPipelineProgram() override;
 
-  void bindSampler(const std::string& name, const TextureUnit unit,
-                   const std::shared_ptr<Texture2d>& texture);
-
-  void execute2D(const std::shared_ptr<Texture2d>& target, int32_t x, int32_t y,
-                 int32_t w, int32_t h);
-
   void attachVertexShader(const std::string& source);
   void attachTesselationControlShader(const std::string& source);
   void attachTesselationEvaluationShader(const std::string& source);

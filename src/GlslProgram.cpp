@@ -191,4 +191,21 @@ uint32_t GlslProgram::getCurrentlyBoundProgram() const
   return (uint32_t)id;
 }
 
+/**
+ * @brief Bind texture to shader
+ *
+ * @param name Label in the shader
+ * @param unit texture unit
+ * @param texture the texture
+ */
+void GlslProgram::bindSampler(const std::string& name, const TextureUnit unit,
+                              const Texture2d& texture)
+{
+  bind(true);
+  glActiveTexture(static_cast<uint32_t>(unit));
+  texture.bind(true);
+  seti(name.c_str(), static_cast<uint32_t>(unit));
+  bind(false);
+}
+
 } // namespace prgl

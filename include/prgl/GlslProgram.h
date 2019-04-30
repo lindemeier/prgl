@@ -10,6 +10,7 @@
 
 #include <memory>
 
+#include "prgl/Texture2d.h"
 #include "prgl/glCommon.h"
 
 #define GLSL(version, shader) "#version " #version "\n" #shader
@@ -49,6 +50,9 @@ public:
   void set4fv(const std::string& label, const float* args);
   void setMatrix(const std::string& label, const float* m, bool transpose);
   void setMatrix(const std::string& label, const double* m, bool transpose);
+
+  void bindSampler(const std::string& name, const TextureUnit unit,
+                   const Texture2d& texture);
 
   static std::string ReadShaderFromFile(const std::string& filename);
 

@@ -112,7 +112,6 @@ void GlslComputeShader::bindImage2D(uint32_t                          location,
                                     const std::shared_ptr<Texture2d>& texture,
                                     TextureAccess                     access)
 {
-  mBindings[location] = texture;
   bind(true);
   texture->bindImageTexture(location, access);
   bind(false);
@@ -126,16 +125,5 @@ void GlslComputeShader::bindImage2D(uint32_t                          location,
 //  buffer->bindBase(location);
 //  bind(false);
 //}
-
-void GlslComputeShader::bindSampler(uint32_t location, const std::string& name,
-                                    const std::shared_ptr<Texture2d>& sampler)
-{
-  mBindings[location] = sampler;
-  bind(true);
-  glActiveTexture(GL_TEXTURE0 + location);
-  sampler->bind(true);
-  seti(name.data(), location);
-  bind(false);
-}
 
 } // namespace prgl

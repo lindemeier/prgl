@@ -40,8 +40,6 @@ public:
                    TextureAccess access);
   // void bindSSBO(uint32_t location, std::shared_ptr<ShaderStorageBuffer>
   // &buffer);
-  void bindSampler(uint32_t location, const std::string& name,
-                   const std::shared_ptr<Texture2d>& sampler);
 
 private:
   std::shared_ptr<uint32_t> create();
@@ -53,8 +51,6 @@ private:
   void dispatchCompute(uint32_t num_groups_x, uint32_t num_groups_y,
                        uint32_t num_groups_z) const;
   void memoryBarrier(GLbitfield barrierType = GL_ALL_BARRIER_BITS) const;
-
-  std::map<uint32_t, std::shared_ptr<Texture2d>> mBindings;
 
   std::shared_ptr<uint32_t> mShaderHandlePtr;
 };

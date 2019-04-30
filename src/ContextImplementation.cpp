@@ -217,7 +217,13 @@ ContextImplementation::ContextImplementation(
     }
   glViewport(0, 0, width, height);
 
+  // disable any sRGB conversion. Should not be needed as long as no sRGB
+  // textures are used.
   glDisable(GL_FRAMEBUFFER_SRGB);
+  // disable any clamping
+  glClampColor(GL_CLAMP_VERTEX_COLOR_ARB, GL_FALSE);
+  glClampColor(GL_CLAMP_READ_COLOR_ARB, GL_FALSE);
+  glClampColor(GL_CLAMP_FRAGMENT_COLOR_ARB, GL_FALSE);
 }
 
 void ContextImplementation::makeCurrent() const
