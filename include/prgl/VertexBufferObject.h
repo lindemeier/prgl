@@ -46,8 +46,28 @@ public:
 
   void bind(bool bind) const;
 
-  template <class Type, size_t N, template <class, size_t> class Vec>
-  void create(const std::vector<Vec<Type, N>>& data, const Usage usage);
+  /**
+   * @brief Create Vertex Buffer object from data. Only floats supported for
+   * now.
+   *
+   * @tparam N the number of components of each vertex data.
+   * @tparam Vec The vec type storing vertex data.
+   *
+   * @param data the vector storing the vertices data.
+   * @param usage Usage pattern of the data.
+   */
+  template <size_t N, template <class, size_t> class Vec>
+  void create(const std::vector<Vec<float, N>>& data, const Usage usage)
+  {
+    mDataType      = DataType::Float;
+    mDataColumns   = N;
+    mVerticesCount = data.size();
+
+    bind(true);
+    glBufferData(GL_ARRAY_BUFFER, (N * sizeof(float)) * mVerticesCount,
+                 data.data(), static_cast<GLenum>(usage));
+    bind(false);
+  }
 
   DataType getVertexComponentDataType() const;
   uint32_t getVertexComponentDataColumns() const;
@@ -60,30 +80,6 @@ private:
   uint32_t mDataColumns;
   size_t   mVerticesCount;
 };
-
-/**
- * @brief Create Vertex Buffer object from data.
- *
- * @tparam Type The data type of each component pf a vertex data.
- * @tparam N the number of components of each vertex data.
- * @tparam Vec The vec type storing vertex data.
- *
- * @param data the vector sotring the vertices data.
- * @param usage Usage pattern of the data.
- */
-template <class Type, size_t N, template <class, size_t> class Vec>
-void VertexBufferObject::create(const std::vector<Vec<Type, N>>& data,
-                                const Usage                      usage)
-{
-  mDataType      = DataType::Float;
-  mDataColumns   = N;
-  mVerticesCount = data.size();
-
-  bind(true);
-  glBufferData(GL_ARRAY_BUFFER, (N * sizeof(Type)) * mVerticesCount,
-               data.data(), static_cast<GLenum>(usage));
-  bind(false);
-}
 
 } // namespace prgl
 

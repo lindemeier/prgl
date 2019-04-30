@@ -63,19 +63,17 @@ void VertexArrayObject::render(const DrawMode& mode, const uint32_t first,
 void VertexArrayObject::addVertexBufferObject(const VertexBufferObject& vbo)
 {
   const auto index = mVboList.size();
-  // add to the list to keep the reference (unique_ptr and move may bet better )
+  // add to the list to keep the reference (unique_ptr and move may be better )
   mVboList.push_back(vbo);
 
-  bind(true);
-  vbo.bind(true);
-  glVertexAttribPointer(index, vbo.getVertexComponentDataColumns(),
-                        static_cast<GLenum>(vbo.getVertexComponentDataType()),
-                        GL_FALSE, 0, 0);
-  glEnableVertexAttribArray(index);
-  vbo.bind(false);
-
-  // TODO getAttribLocation to find which is color attrib etc.
-  // shaders make that obsolete
+  Binder binderVao(*this);
+  {
+    Binder binderVbo(vbo);
+    glVertexAttribPointer(index, vbo.getVertexComponentDataColumns(),
+                          static_cast<GLenum>(vbo.getVertexComponentDataType()),
+                          GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(index);
+  }
 }
 
 } // namespace prgl
