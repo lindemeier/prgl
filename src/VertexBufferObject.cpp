@@ -17,17 +17,16 @@
 namespace prgl
 {
 
-std::shared_ptr<VertexBufferObject> VertexBufferObject::Create()
-{
-  return std::make_shared<VertexBufferObject>();
-}
-
-VertexBufferObject::VertexBufferObject()
+VertexBufferObject::VertexBufferObject(const Usage usage)
   : mVbo(INVALID_HANDLE), mDataType(DataType::Float), mDataColumns(0U),
-    mVerticesCount(0U)
+    mVerticesCount(0U), mUsage(usage)
 {
 
   glGenBuffers(1, &mVbo);
+}
+
+VertexBufferObject::VertexBufferObject() : VertexBufferObject(Usage::StaticDraw)
+{
 }
 
 VertexBufferObject::~VertexBufferObject()

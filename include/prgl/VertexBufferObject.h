@@ -41,8 +41,13 @@ public:
     DynamicDraw = GL_DYNAMIC_DRAW
   };
 
-  static std::shared_ptr<VertexBufferObject> Create();
+  template <typename... T>
+  static std::shared_ptr<VertexBufferObject> Create(T&&... args)
+  {
+    return std::make_shared<VertexBufferObject>(std::forward<T>(args)...);
+  }
 
+  VertexBufferObject(const Usage usage);
   VertexBufferObject();
   ~VertexBufferObject();
 
@@ -59,7 +64,7 @@ public:
    * @param usage Usage pattern of the data.
    */
   template <size_t N, template <class, size_t> class Vec>
-  void createBuffer(const std::vector<Vec<float, N>>& data, const Usage usage)
+  void createBuffer(const std::vector<Vec<float, N>>& data)
   {
     mDataType      = DataType::Float;
     mDataColumns   = N;
@@ -67,8 +72,34 @@ public:
 
     bind(true);
     glBufferData(GL_ARRAY_BUFFER, (N * sizeof(float)) * mVerticesCount,
-                 data.data(), static_cast<GLenum>(usage));
+                 data.data(), static_cast<GLenum>(mUsage));
     bind(false);
+  }
+
+  /**
+   * @brief CreaUpdatete Vertex Buffer object from data. Only floats supported
+   * for now.
+   *
+   * @tparam N the number of components of each vertex data.
+   * @tparam Vec The vec type storing vertex data.
+   *
+   * @param data the vector storing the vertices data.
+   */
+  template <size_t N, template <class, size_t> class Vec>
+  void updateBuffer(const std::vector<Vec<float, N>>& data, uint32_t offset,
+                    uint32_t size)
+  {
+    if ((mDataColumns != N) || (mDataType != DataType::Float) ||
+        (mVerticesCount < (offset + size)))
+      {
+        createBuffer(data);
+      }
+    else
+      {
+        bind(true);
+        glBufferSubData(GL_ARRAY_BUFFER, offset, size, data.data());
+        bind(false);
+      }
   }
 
   DataType getVertexComponentDataType() const;
@@ -84,6 +115,8 @@ private:
   DataType mDataType;
   uint32_t mDataColumns;
   size_t   mVerticesCount;
+
+  Usage mUsage;
 };
 
 } // namespace prgl
