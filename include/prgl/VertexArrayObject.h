@@ -11,6 +11,7 @@
 #ifndef PRGL_VERTEX_ARRAY_OBJECT_H
 #define PRGL_VERTEX_ARRAY_OBJECT_H
 
+#include <map>
 #include <memory>
 #include <stdint.h>
 
@@ -49,7 +50,8 @@ public:
 
   void bind(bool bind) const;
 
-  void addVertexBufferObject(const std::shared_ptr<VertexBufferObject>& vbo);
+  void addVertexBufferObject(uint32_t location,
+                             const std::shared_ptr<VertexBufferObject>& vbo);
 
   void render(const DrawMode& mode, const uint32_t first, const uint32_t count);
 
@@ -59,7 +61,7 @@ private:
 
   uint32_t mVao;
 
-  std::vector<std::shared_ptr<VertexBufferObject>> mVboList;
+  std::map<uint32_t, std::shared_ptr<VertexBufferObject>> mVboMap;
 };
 } // namespace prgl
 

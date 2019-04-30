@@ -64,19 +64,18 @@ void VertexArrayObject::render(const DrawMode& mode, const uint32_t first,
 }
 
 void VertexArrayObject::addVertexBufferObject(
-  const std::shared_ptr<VertexBufferObject>& vbo)
+  uint32_t location, const std::shared_ptr<VertexBufferObject>& vbo)
 {
-  const auto index = mVboList.size();
-  // add to the list to keep the reference (unique_ptr and move may be better )
-  mVboList.push_back(vbo);
+  // add to the map to keep the reference (consider move)
+  mVboMap[location] = vbo;
 
   bind(true);
   {
     Binder binderVbo(vbo);
     glVertexAttribPointer(
-      index, vbo->getVertexComponentDataColumns(),
+      location, vbo->getVertexComponentDataColumns(),
       static_cast<GLenum>(vbo->getVertexComponentDataType()), GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(index);
+    glEnableVertexAttribArray(location);
   }
   bind(false);
 }

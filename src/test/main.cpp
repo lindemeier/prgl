@@ -8,22 +8,12 @@
 
 int32_t main(int32_t argc, char** args)
 {
+  // depth
   const std::array<int32_t, 4> rgbaBits = {16, 16, 16, 16};
+
+  // create window and context
   auto gl = std::make_unique<prgl::Window>(1024, 768, "window", rgbaBits, 16, 8,
                                            4, true);
-
-  auto tex = prgl::Texture2d::Create(
-    gl->getWidth(), gl->getHeight(), prgl::TextureFormatInternal::Rgb32F,
-    prgl::TextureFormat::Rgb, prgl::DataType::Float);
-
-  std::vector<prgl::vec3> colorBuffer(gl->getWidth() * gl->getHeight());
-  // fill the texture with a color
-  prgl::vec3 color = {0.25f, 0.1f, 0.3f};
-  for (auto& c : colorBuffer)
-    {
-      c = color;
-    }
-  tex->upload(colorBuffer.data());
 
   // create vertex positions
   std::vector<prgl::vec3> positions = {
@@ -38,23 +28,38 @@ int32_t main(int32_t argc, char** args)
     prgl::VertexBufferObject::Usage::StaticDraw);
   vboColors->createBuffer(colors);
 
+  // create Vertex Array Object
   auto vao = prgl::VertexArrayObject::Create();
   // add positions first (attrib 0)
-  vao->addVertexBufferObject(vboPosition);
+  vao->addVertexBufferObject(0U, vboPosition);
   // add colors (attrib 1)
-  vao->addVertexBufferObject(vboColors);
+  vao->addVertexBufferObject(1U, vboColors);
 
-  // create Frame Buffer Object
+  // create Frame Buffer Object and Texture target
   auto fbo = prgl::FrameBufferObject::Create();
-  fbo->attachTexture(tex);
+  auto tex = prgl::Texture2d::Create(
+    gl->getWidth(), gl->getHeight(), prgl::TextureFormatInternal::Rgb32F,
+    prgl::TextureFormat::Rgb, prgl::DataType::Float);
+  {
+
+    std::vector<prgl::vec3> colorBuffer(gl->getWidth() * gl->getHeight());
+    // fill the texture with a color
+    prgl::vec3 color = {0.25f, 0.1f, 0.3f};
+    for (auto& c : colorBuffer)
+      {
+        c = color;
+      }
+    tex->upload(colorBuffer.data());
+    fbo->attachTexture(tex);
+  }
 
   // create shader
   auto glsl = prgl::GlslRenderingPipelineProgram::Create();
   glsl->attachVertexShader(R"(
     #version 330 core
 
-    layout(location = 0) in vec3 vertexPosition; // 0 since we've added positions first
-    layout(location = 1) in vec3 vertexColor; // 1since we've added colors second
+    layout(location = 0) in vec3 vertexPosition; 
+    layout(location = 1) in vec3 vertexColor;
 
     out vec3 vColor;
 
