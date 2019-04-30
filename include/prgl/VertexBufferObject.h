@@ -57,7 +57,7 @@ public:
    * @param usage Usage pattern of the data.
    */
   template <size_t N, template <class, size_t> class Vec>
-  void create(const std::vector<Vec<float, N>>& data, const Usage usage)
+  void createBuffer(const std::vector<Vec<float, N>>& data, const Usage usage)
   {
     mDataType      = DataType::Float;
     mDataColumns   = N;
