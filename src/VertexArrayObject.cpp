@@ -68,8 +68,9 @@ void VertexArrayObject::addVertexBufferObject(const VertexBufferObject& vbo)
 
   bind(true);
   vbo.bind(true);
-  glVertexAttribPointer(index, vbo.getDataColumns(),
-                        static_cast<GLenum>(vbo.getDataType()), GL_FALSE, 0, 0);
+  glVertexAttribPointer(index, vbo.getVertexComponentDataColumns(),
+                        static_cast<GLenum>(vbo.getVertexComponentDataType()),
+                        GL_FALSE, 0, 0);
   glEnableVertexAttribArray(index);
   vbo.bind(false);
 

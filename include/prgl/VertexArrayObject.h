@@ -28,7 +28,7 @@ enum class DrawMode : uint32_t
   Points                 = GL_POINTS,
   LineStrip              = GL_LINE_STRIP,
   LineLoop               = GL_LINE_LOOP,
-  Line                   = GL_LINES,
+  Lines                  = GL_LINES,
   LineStripAdjacency     = GL_LINE_STRIP_ADJACENCY,
   LinesAdjacency         = GL_LINES_ADJACENCY,
   TriangleStrip          = GL_TRIANGLE_STRIP,

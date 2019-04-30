@@ -19,43 +19,70 @@
 
 namespace prgl
 {
+
 class VertexBufferObject
 {
 public:
+  /**
+   * @brief
+   * https://www.khronos.org/registry/OpenGL-Refpages/es1.1/xhtml/glBufferData.xml
+   */
+  enum class Usage : uint32_t
+  {
+    /**
+     * @brief The data store contents will be modified once and used many times
+     * as the source for GL drawing commands.
+     */
+    StaticDraw = GL_STATIC_DRAW,
+    /**
+     * @brief The data store contents will be modified repeatedly and used many
+     * times as the source for GL drawing commands.
+     */
+    DynamicDraw = GL_DYNAMIC_DRAW
+  };
+
   VertexBufferObject();
   ~VertexBufferObject();
 
   void bind(bool bind) const;
 
-  template <uint32_t N>
-  void create(const std::vector<std::array<float, N>>& data);
+  template <class Type, size_t N, template <class, size_t> class Vec>
+  void create(const std::vector<Vec<Type, N>>& data, const Usage usage);
 
-  DataType getDataType() const;
-  uint32_t getDataColumns() const;
+  DataType getVertexComponentDataType() const;
+  uint32_t getVertexComponentDataColumns() const;
+  size_t   getVerticesCount() const;
 
 private:
   std::shared_ptr<uint32_t> mVboPtr;
 
   DataType mDataType;
   uint32_t mDataColumns;
+  size_t   mVerticesCount;
 };
 
 /**
- * @brief Create Vertex Buffer Object from data. Only float vectors supported
- * currently.
+ * @brief Create Vertex Buffer object from data.
  *
- * @tparam N
- * @param data
+ * @tparam Type The data type of each component pf a vertex data.
+ * @tparam N the number of components of each vertex data.
+ * @tparam Vec The vec type storing vertex data.
+ *
+ * @param data the vector sotring the vertices data.
+ * @param usage Usage pattern of the data.
  */
-template <uint32_t N>
-void VertexBufferObject::create(const std::vector<std::array<float, N>>& data)
+template <class Type, size_t N, template <class, size_t> class Vec>
+void VertexBufferObject::create(const std::vector<Vec<Type, N>>& data,
+                                const Usage                      usage)
 {
-  bind(true);
-  glBufferData(GL_ARRAY_BUFFER, (N * sizeof(float)) * data.size(), data.data(),
-               GL_STATIC_DRAW);
+  mDataType      = DataType::Float;
+  mDataColumns   = N;
+  mVerticesCount = data.size();
 
-  mDataType    = DataType::Float;
-  mDataColumns = N;
+  bind(true);
+  glBufferData(GL_ARRAY_BUFFER, (N * sizeof(Type)) * mVerticesCount,
+               data.data(), static_cast<GLenum>(usage));
+  bind(false);
 }
 
 } // namespace prgl

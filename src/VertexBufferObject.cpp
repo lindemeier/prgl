@@ -17,7 +17,8 @@
 namespace prgl
 {
 
-VertexBufferObject::VertexBufferObject() : mVboPtr(nullptr)
+VertexBufferObject::VertexBufferObject()
+  : mVboPtr(nullptr), mDataType(), mDataColumns(0), mVerticesCount(0)
 {
   mVboPtr = std::shared_ptr<uint32_t>(new uint32_t, [](uint32_t* ptr) {
     glDeleteBuffers(1, ptr);
@@ -47,8 +48,16 @@ void VertexBufferObject::bind(bool bind) const
     }
 }
 
-DataType VertexBufferObject::getDataType() const { return mDataType; }
+DataType VertexBufferObject::getVertexComponentDataType() const
+{
+  return mDataType;
+}
 
-uint32_t VertexBufferObject::getDataColumns() const { return mDataColumns; }
+uint32_t VertexBufferObject::getVertexComponentDataColumns() const
+{
+  return mDataColumns;
+}
+
+size_t VertexBufferObject::getVerticesCount() const { return mVerticesCount; }
 
 } // namespace prgl
