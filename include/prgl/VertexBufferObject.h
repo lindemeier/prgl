@@ -20,7 +20,7 @@
 namespace prgl
 {
 
-class VertexBufferObject
+class VertexBufferObject final
 {
 public:
   /**
@@ -43,6 +43,7 @@ public:
 
   static std::shared_ptr<VertexBufferObject> Create();
 
+  VertexBufferObject();
   ~VertexBufferObject();
 
   void bind(bool bind) const;
@@ -77,7 +78,6 @@ public:
 private:
   VertexBufferObject(const VertexBufferObject&) = delete;
   VertexBufferObject& operator=(const VertexBufferObject&) = delete;
-  VertexBufferObject();
 
   uint32_t mVbo;
 

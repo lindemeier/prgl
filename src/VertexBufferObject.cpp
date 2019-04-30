@@ -19,12 +19,7 @@ namespace prgl
 
 std::shared_ptr<VertexBufferObject> VertexBufferObject::Create()
 {
-  // make shared not usable due to private constructor
-  struct MakeSharedEnabler : public VertexBufferObject
-  {
-  };
-
-  return std::make_shared<MakeSharedEnabler>();
+  return std::make_shared<VertexBufferObject>();
 }
 
 VertexBufferObject::VertexBufferObject()

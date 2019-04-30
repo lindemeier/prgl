@@ -15,18 +15,21 @@
 namespace prgl
 {
 
-VertexArrayObject::VertexArrayObject() : mVaoPtr(nullptr)
+std::shared_ptr<VertexArrayObject> VertexArrayObject::Create()
 {
-  mVaoPtr = std::shared_ptr<uint32_t>(new uint32_t, [](uint32_t* ptr) {
-    glDeleteVertexArrays(1, ptr);
-    *ptr = INVALID_HANDLE;
-    delete ptr;
-    ptr = nullptr;
-  });
-  glGenVertexArrays(1, mVaoPtr.get());
+  return std::make_shared<VertexArrayObject>();
 }
 
-VertexArrayObject::~VertexArrayObject() {}
+VertexArrayObject::VertexArrayObject() : mVao(INVALID_HANDLE)
+{
+  glGenVertexArrays(1, &mVao);
+}
+
+VertexArrayObject::~VertexArrayObject()
+{
+  glDeleteVertexArrays(1, &mVao);
+  mVao = INVALID_HANDLE;
+}
 
 /**
  * @brief Bind the Vertex Array Object
@@ -37,7 +40,7 @@ void VertexArrayObject::bind(bool bind) const
 {
   if (bind)
     {
-      glBindVertexArray(*mVaoPtr);
+      glBindVertexArray(mVao);
     }
   else
     {

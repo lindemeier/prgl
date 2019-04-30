@@ -39,9 +39,11 @@ enum class DrawMode : uint32_t
   Patches                = GL_PATCHES
 };
 
-class VertexArrayObject
+class VertexArrayObject final
 {
 public:
+  static std::shared_ptr<VertexArrayObject> Create();
+
   VertexArrayObject();
   ~VertexArrayObject();
 
@@ -52,7 +54,10 @@ public:
   void render(const DrawMode& mode, const uint32_t first, const uint32_t count);
 
 private:
-  std::shared_ptr<uint32_t> mVaoPtr;
+  VertexArrayObject(const VertexArrayObject&) = delete;
+  VertexArrayObject& operator=(const VertexArrayObject&) = delete;
+
+  uint32_t mVao;
 
   std::vector<std::shared_ptr<VertexBufferObject>> mVboList;
 };

@@ -37,11 +37,11 @@ int32_t main(int32_t argc, char** args)
   auto vboColors = prgl::VertexBufferObject::Create();
   vboColors->createBuffer(colors, prgl::VertexBufferObject::Usage::StaticDraw);
 
-  prgl::VertexArrayObject vao;
+  auto vao = prgl::VertexArrayObject::Create();
   // add positions first (attrib 0)
-  vao.addVertexBufferObject(vboPosition);
+  vao->addVertexBufferObject(vboPosition);
   // add colors (attrib 1)
-  vao.addVertexBufferObject(vboColors);
+  vao->addVertexBufferObject(vboColors);
 
   // create Frame Buffer Object
   auto fbo = prgl::FrameBufferObject();
@@ -85,10 +85,10 @@ int32_t main(int32_t argc, char** args)
         const auto shaderBinder = prgl::Binder(glsl);
         {
           // bind the VertexArrayObject
-          const auto vaoBinder = prgl::Binder(vao);
+          const auto vaoBinder = prgl::Binder(*vao);
 
           // render the object
-          vao.render(prgl::DrawMode::Triangles, 0U, 3U);
+          vao->render(prgl::DrawMode::Triangles, 0U, 3U);
         }
       }
     }
