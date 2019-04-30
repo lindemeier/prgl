@@ -15,9 +15,11 @@
 namespace prgl
 {
 
-class FrameBufferObject
+class FrameBufferObject final
 {
 public:
+  static std::shared_ptr<FrameBufferObject> Create();
+
   FrameBufferObject();
   ~FrameBufferObject();
 
@@ -33,11 +35,14 @@ public:
   const Texture2d& getDepth() const;
 
 private:
+  FrameBufferObject(const FrameBufferObject&) = delete;
+  FrameBufferObject& operator=(const FrameBufferObject&) = delete;
+
   bool checkStatus();
 
-  std::shared_ptr<uint32_t> mHandlePtr;
-  Texture2d                 mTarget;
-  Texture2d                 mDepth;
+  uint32_t  mHandle;
+  Texture2d mTarget;
+  Texture2d mDepth;
 };
 
 } // namespace prgl

@@ -44,8 +44,8 @@ int32_t main(int32_t argc, char** args)
   vao->addVertexBufferObject(vboColors);
 
   // create Frame Buffer Object
-  auto fbo = prgl::FrameBufferObject();
-  fbo.attachTexture(tex);
+  auto fbo = prgl::FrameBufferObject::Create();
+  fbo->attachTexture(tex);
 
   // create shader
   prgl::GlslRenderingPipelineProgram glsl;
@@ -79,7 +79,7 @@ int32_t main(int32_t argc, char** args)
   gl->setRenderFunction([&tex, &gl, &vao, &glsl, &fbo]() {
     {
       // bind the fbo
-      const auto fboBinder = prgl::Binder(fbo);
+      const auto fboBinder = prgl::Binder(*fbo);
       {
         // bind the shader program
         const auto shaderBinder = prgl::Binder(glsl);

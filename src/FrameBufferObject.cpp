@@ -7,28 +7,31 @@
 
 namespace prgl
 {
-
-FrameBufferObject::FrameBufferObject()
-  : mHandlePtr(nullptr), mTarget(), mDepth()
+std::shared_ptr<FrameBufferObject> FrameBufferObject::Create()
 {
-  mHandlePtr = std::shared_ptr<uint32_t>(new uint32_t, [](uint32_t* ptr) {
-    glDeleteFramebuffers(1, ptr);
-    *ptr = INVALID_HANDLE;
-    delete ptr;
-    ptr = nullptr;
-  });
-  glGenFramebuffers(1, mHandlePtr.get());
+  return std::make_shared<FrameBufferObject>();
 }
 
-FrameBufferObject::~FrameBufferObject() {}
+FrameBufferObject::FrameBufferObject()
+  : mHandle(INVALID_HANDLE), mTarget(), mDepth()
+{
 
-uint32_t FrameBufferObject::getId() const { return *mHandlePtr; }
+  glGenFramebuffers(1, &mHandle);
+}
+
+FrameBufferObject::~FrameBufferObject()
+{
+  glDeleteFramebuffers(1, &mHandle);
+  mHandle = INVALID_HANDLE;
+}
+
+uint32_t FrameBufferObject::getId() const { return mHandle; }
 
 void FrameBufferObject::bind(bool bind) const
 {
   if (bind)
     {
-      glBindFramebuffer(GL_FRAMEBUFFER, *mHandlePtr);
+      glBindFramebuffer(GL_FRAMEBUFFER, mHandle);
     }
   else
     {
