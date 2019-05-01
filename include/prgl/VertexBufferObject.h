@@ -14,6 +14,7 @@
 #include "prgl/glCommon.h"
 
 #include <array>
+#include <iostream>
 #include <memory>
 #include <vector>
 
@@ -72,34 +73,72 @@ public:
 
     bind(true);
     glBufferData(GL_ARRAY_BUFFER, (N * sizeof(float)) * mVerticesCount,
-                 data.data(), static_cast<GLenum>(mUsage));
+                 static_cast<const void*>(data.data()),
+                 static_cast<GLenum>(mUsage));
     bind(false);
   }
 
   /**
-   * @brief CreaUpdatete Vertex Buffer object from data. Only floats supported
+   * @brief Update Vertex Buffer object from data. Only floats supported
    * for now.
    *
    * @tparam N the number of components of each vertex data.
    * @tparam Vec The vec type storing vertex data.
    *
-   * @param data the vector storing the vertices data.
+   * @param data the vector storing the vertices data (of the same size as the
+   * vector used when VertexBufferObject::createBuffer was called).
+   *
+   * @param startIndex The inde to data where to start updating.
+   * @param nrElements The number of elements to update starting from
+   * startIndex.
    */
   template <size_t N, template <class, size_t> class Vec>
-  void updateBuffer(const std::vector<Vec<float, N>>& data, uint32_t offset,
-                    uint32_t size)
+  void updateBuffer(const std::vector<Vec<float, N>>& data,
+                    const uint32_t startIndex, uint32_t nrElements)
   {
-    if ((mDataColumns != N) || (mDataType != DataType::Float) ||
-        (mVerticesCount < (offset + size)))
+    // only updating the data allowed for now, since resizing results in
+    // attribute change, which must be caught by any VertexArrayObject
+    // referencing this VertexBufferObject.
+
+    // if ((mDataColumns != N) || (mDataType != DataType::Float) ||
+    //     (mVerticesCount < (offset + size)))
+    //   {
+    //     createBuffer(data);
+    //   }
+    // else
+    //   {
+    //     update
+    //   }
+    if (startIndex < 0U)
       {
-        createBuffer(data);
+        std::cerr << "VertexBufferObject::updateBuffer: startIndex < 0, "
+                     "Ignoring update..."
+                  << std::endl;
+        return;
       }
-    else
+    if (startIndex >= mVerticesCount)
       {
-        bind(true);
-        glBufferSubData(GL_ARRAY_BUFFER, offset, size, data.data());
-        bind(false);
+        std::cerr
+          << "VertexBufferObject::updateBuffer: startIndex >= mVerticesCount, "
+             "Ignoring update..."
+          << std::endl;
+        return;
       }
+    if (mVerticesCount < (startIndex + nrElements))
+      {
+        std::cerr << "VertexBufferObject::updateBuffer: Update exceeds the "
+                     "originally allocated data. Ignoring update..."
+                  << std::endl;
+        return;
+      }
+
+    const auto nrBytes    = (N * sizeof(float)) * nrElements;
+    const auto byteOffset = (N * sizeof(float)) * startIndex;
+
+    bind(true);
+    glBufferSubData(GL_ARRAY_BUFFER, byteOffset, nrBytes,
+                    static_cast<const void*>(&(data[startIndex])));
+    bind(false);
   }
 
   DataType getVertexComponentDataType() const;
