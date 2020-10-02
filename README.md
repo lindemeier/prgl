@@ -1,4 +1,4 @@
-# prgl
+# prgl ![CMake build](https://github.com/lindemeier/prgl/workflows/CMake-build/badge.svg) ![clang-format](https://github.com/lindemeier/prgl/workflows/clang-format/badge.svg)
 Simple C++ OpenGL wrapper optimized for 2d/3d NPR rendering
 
 **Currently supporting:**
