@@ -51,8 +51,7 @@ class VertexBufferObject final {
   void bind(bool bind) const;
 
   /**
-   * @brief Create Vertex Buffer object from data. Only floats supported for
-   * now.
+   * @brief Create Vertex Buffer object from data.
    *
    * @tparam N the number of components of each vertex data.
    * @tparam Vec The vec type storing vertex data.
@@ -60,22 +59,21 @@ class VertexBufferObject final {
    * @param data the vector storing the vertices data.
    * @param usage Usage pattern of the data.
    */
-  template <size_t N, template <class, size_t> class Vec>
-  void createBuffer(const std::vector<Vec<float, N>>& data) {
-    mDataType      = DataType::Float;
+  template <size_t N, class Type, template <class, size_t> class VecType>
+  void createBuffer(const std::vector<VecType<Type, N>>& data) {
+    mDataType      = DataTypeTr<Type>::dataType;
     mDataColumns   = N;
     mVerticesCount = data.size();
 
     bind(true);
-    glBufferData(GL_ARRAY_BUFFER, (N * sizeof(float)) * mVerticesCount,
+    glBufferData(GL_ARRAY_BUFFER, (N * sizeof(Type)) * mVerticesCount,
                  static_cast<const void*>(data.data()),
                  static_cast<GLenum>(mUsage));
     bind(false);
   }
 
   /**
-   * @brief Update Vertex Buffer object from data. Only floats supported
-   * for now.
+   * @brief Update Vertex Buffer object from data.
    *
    * @tparam N the number of components of each vertex data.
    * @tparam Vec The vec type storing vertex data.
@@ -87,8 +85,8 @@ class VertexBufferObject final {
    * @param nrElements The number of elements to update starting from
    * startIndex.
    */
-  template <size_t N, template <class, size_t> class Vec>
-  void updateBuffer(const std::vector<Vec<float, N>>& data,
+  template <size_t N, class Type, template <class, size_t> class VecType>
+  void updateBuffer(const std::vector<VecType<Type, N>>& data,
                     const uint32_t startIndex, uint32_t nrElements) {
     // only updating the data allowed for now, since resizing results in
     // attribute change, which must be caught by any VertexArrayObject
@@ -123,8 +121,8 @@ class VertexBufferObject final {
       return;
     }
 
-    const auto nrBytes    = (N * sizeof(float)) * nrElements;
-    const auto byteOffset = (N * sizeof(float)) * startIndex;
+    const auto nrBytes    = (N * sizeof(Type)) * nrElements;
+    const auto byteOffset = (N * sizeof(Type)) * startIndex;
 
     bind(true);
     glBufferSubData(GL_ARRAY_BUFFER, byteOffset, nrBytes,

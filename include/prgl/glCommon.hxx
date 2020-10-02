@@ -52,7 +52,59 @@ enum class DataType : uint32_t {
   UnsignedInt   = GL_UNSIGNED_INT,
   Int           = GL_INT,
   HalfFloat     = GL_HALF_FLOAT,
-  Float         = GL_FLOAT
+  Float         = GL_FLOAT,
+  Double        = GL_DOUBLE
+};
+
+template <typename T>
+class DataTypeTr {};
+
+template <>
+class DataTypeTr<float> {
+ public:
+  static constexpr DataType dataType = DataType::Float;
+};
+
+template <>
+class DataTypeTr<double> {
+ public:
+  static constexpr DataType dataType = DataType::Double;
+};
+
+template <>
+class DataTypeTr<int32_t> {
+ public:
+  static constexpr DataType dataType = DataType::Int;
+};
+
+template <>
+class DataTypeTr<uint32_t> {
+ public:
+  static constexpr DataType dataType = DataType::UnsignedInt;
+};
+
+template <>
+class DataTypeTr<int16_t> {
+ public:
+  static constexpr DataType dataType = DataType::Short;
+};
+
+template <>
+class DataTypeTr<uint16_t> {
+ public:
+  static constexpr DataType dataType = DataType::UnsignedShort;
+};
+
+template <>
+class DataTypeTr<int8_t> {
+ public:
+  static constexpr DataType dataType = DataType::Byte;
+};
+
+template <>
+class DataTypeTr<uint8_t> {
+ public:
+  static constexpr DataType dataType = DataType::UnsignedByte;
 };
 
 /**
