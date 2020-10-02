@@ -1,5 +1,5 @@
 /**
- * @file ShaderStorageBuffer.h
+ * @file ShaderStorageBuffer.hxx
  * @author Thomas Lindemeier
  * @brief
  * @date 2019-01-02
@@ -8,18 +8,16 @@
 #ifndef PRGL_SHADERSTORAGEBUFFER_H
 #define PRGL_SHADERSTORAGEBUFFER_H
 
-#include <memory>
 #include <stdint.h>
 
-namespace prgl
-{
+#include <memory>
+
+namespace prgl {
 
 class Context;
 
-class ShaderStorageBuffer final
-{
-
-public:
+class ShaderStorageBuffer final {
+ public:
   static std::shared_ptr<ShaderStorageBuffer> Create();
 
   ShaderStorageBuffer();
@@ -46,13 +44,13 @@ public:
 
   uint32_t getHandle() const;
 
-private:
+ private:
   ShaderStorageBuffer(const ShaderStorageBuffer&) = delete;
   ShaderStorageBuffer& operator=(const ShaderStorageBuffer&) = delete;
 
   uint32_t mHandle;
 };
 
-} // namespace prgl
+}  // namespace prgl
 
-#endif // PRGL_SHADERSTORAGEBUFFER_H
+#endif  // PRGL_SHADERSTORAGEBUFFER_H

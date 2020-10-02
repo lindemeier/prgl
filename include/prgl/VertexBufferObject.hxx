@@ -1,5 +1,5 @@
 /**
- * @file VertexBufferObject.h
+ * @file VertexBufferObject.hxx
  *
  * @author Thomas Lindemeier
  *
@@ -11,25 +11,22 @@
 #ifndef PRGL_VERTEX_BUFFER_OBJECT_H
 #define PRGL_VERTEX_BUFFER_OBJECT_H
 
-#include "prgl/glCommon.h"
-
 #include <array>
 #include <iostream>
 #include <memory>
 #include <vector>
 
-namespace prgl
-{
+#include "prgl/glCommon.hxx"
 
-class VertexBufferObject final
-{
-public:
+namespace prgl {
+
+class VertexBufferObject final {
+ public:
   /**
    * @brief
    * https://www.khronos.org/registry/OpenGL-Refpages/es1.1/xhtml/glBufferData.xml
    */
-  enum class Usage : uint32_t
-  {
+  enum class Usage : uint32_t {
     /**
      * @brief The data store contents will be modified once and used many times
      * as the source for GL drawing commands.
@@ -43,8 +40,7 @@ public:
   };
 
   template <typename... T>
-  static std::shared_ptr<VertexBufferObject> Create(T&&... args)
-  {
+  static std::shared_ptr<VertexBufferObject> Create(T&&... args) {
     return std::make_shared<VertexBufferObject>(std::forward<T>(args)...);
   }
 
@@ -65,8 +61,7 @@ public:
    * @param usage Usage pattern of the data.
    */
   template <size_t N, template <class, size_t> class Vec>
-  void createBuffer(const std::vector<Vec<float, N>>& data)
-  {
+  void createBuffer(const std::vector<Vec<float, N>>& data) {
     mDataType      = DataType::Float;
     mDataColumns   = N;
     mVerticesCount = data.size();
@@ -94,8 +89,7 @@ public:
    */
   template <size_t N, template <class, size_t> class Vec>
   void updateBuffer(const std::vector<Vec<float, N>>& data,
-                    const uint32_t startIndex, uint32_t nrElements)
-  {
+                    const uint32_t startIndex, uint32_t nrElements) {
     // only updating the data allowed for now, since resizing results in
     // attribute change, which must be caught by any VertexArrayObject
     // referencing this VertexBufferObject.
@@ -109,28 +103,25 @@ public:
     //   {
     //     update
     //   }
-    if (startIndex < 0U)
-      {
-        std::cerr << "VertexBufferObject::updateBuffer: startIndex < 0, "
-                     "Ignoring update..."
-                  << std::endl;
-        return;
-      }
-    if (startIndex >= mVerticesCount)
-      {
-        std::cerr
-          << "VertexBufferObject::updateBuffer: startIndex >= mVerticesCount, "
-             "Ignoring update..."
-          << std::endl;
-        return;
-      }
-    if (mVerticesCount < (startIndex + nrElements))
-      {
-        std::cerr << "VertexBufferObject::updateBuffer: Update exceeds the "
-                     "originally allocated data. Ignoring update..."
-                  << std::endl;
-        return;
-      }
+    if (startIndex < 0U) {
+      std::cerr << "VertexBufferObject::updateBuffer: startIndex < 0, "
+                   "Ignoring update..."
+                << std::endl;
+      return;
+    }
+    if (startIndex >= mVerticesCount) {
+      std::cerr
+        << "VertexBufferObject::updateBuffer: startIndex >= mVerticesCount, "
+           "Ignoring update..."
+        << std::endl;
+      return;
+    }
+    if (mVerticesCount < (startIndex + nrElements)) {
+      std::cerr << "VertexBufferObject::updateBuffer: Update exceeds the "
+                   "originally allocated data. Ignoring update..."
+                << std::endl;
+      return;
+    }
 
     const auto nrBytes    = (N * sizeof(float)) * nrElements;
     const auto byteOffset = (N * sizeof(float)) * startIndex;
@@ -143,9 +134,9 @@ public:
 
   DataType getVertexComponentDataType() const;
   uint32_t getVertexComponentDataColumns() const;
-  size_t   getVerticesCount() const;
+  size_t getVerticesCount() const;
 
-private:
+ private:
   VertexBufferObject(const VertexBufferObject&) = delete;
   VertexBufferObject& operator=(const VertexBufferObject&) = delete;
 
@@ -153,11 +144,11 @@ private:
 
   DataType mDataType;
   uint32_t mDataColumns;
-  size_t   mVerticesCount;
+  size_t mVerticesCount;
 
   Usage mUsage;
 };
 
-} // namespace prgl
+}  // namespace prgl
 
-#endif // PRGL_VERTEX_BUFFER_OBJECT_H
+#endif  // PRGL_VERTEX_BUFFER_OBJECT_H

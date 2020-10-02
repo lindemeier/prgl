@@ -21,13 +21,13 @@ Simple C++ OpenGL wrapper optimized for 2d/3d NPR rendering
 ## Example usage, Hello World, first triangle:
 
 ```C++
-#include "prgl/FrameBufferObject.h"
-#include "prgl/GlslProgram.h"
-#include "prgl/GlslRenderingPipelineProgram.h"
-#include "prgl/Texture2d.h"
-#include "prgl/VertexArrayObject.h"
-#include "prgl/VertexBufferObject.h"
-#include "prgl/Window.h"
+#include "prgl/FrameBufferObject.hxx"
+#include "prgl/GlslProgram.hxx"
+#include "prgl/GlslRenderingPipelineProgram.hxx"
+#include "prgl/Texture2d.hxx"
+#include "prgl/VertexArrayObject.hxx"
+#include "prgl/VertexBufferObject.hxx"
+#include "prgl/Window.hxx"
 
 int32_t main(int32_t argc, char** args)
 {
@@ -81,7 +81,7 @@ int32_t main(int32_t argc, char** args)
   glsl->attachVertexShader(R"(
     #version 330 core
 
-    layout(location = 0) in vec3 vertexPosition; 
+    layout(location = 0) in vec3 vertexPosition;
     layout(location = 1) in vec3 vertexColor;
 
     out vec3 vColor;

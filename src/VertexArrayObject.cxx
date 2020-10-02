@@ -8,25 +8,21 @@
  * @date 2019-04-28
  *
  */
-#include "prgl/VertexArrayObject.h"
+#include "prgl/VertexArrayObject.hxx"
 
-#include "prgl/glCommon.h"
+#include "prgl/glCommon.hxx"
 
-namespace prgl
-{
+namespace prgl {
 
-std::shared_ptr<VertexArrayObject> VertexArrayObject::Create()
-{
+std::shared_ptr<VertexArrayObject> VertexArrayObject::Create() {
   return std::make_shared<VertexArrayObject>();
 }
 
-VertexArrayObject::VertexArrayObject() : mVao(INVALID_HANDLE)
-{
+VertexArrayObject::VertexArrayObject() : mVao(INVALID_HANDLE) {
   glGenVertexArrays(1, &mVao);
 }
 
-VertexArrayObject::~VertexArrayObject()
-{
+VertexArrayObject::~VertexArrayObject() {
   glDeleteVertexArrays(1, &mVao);
   mVao = INVALID_HANDLE;
 }
@@ -36,16 +32,12 @@ VertexArrayObject::~VertexArrayObject()
  *
  * @param bind true if bind
  */
-void VertexArrayObject::bind(bool bind) const
-{
-  if (bind)
-    {
-      glBindVertexArray(mVao);
-    }
-  else
-    {
-      glBindVertexArray(0);
-    }
+void VertexArrayObject::bind(bool bind) const {
+  if (bind) {
+    glBindVertexArray(mVao);
+  } else {
+    glBindVertexArray(0);
+  }
 }
 
 /**
@@ -57,15 +49,12 @@ void VertexArrayObject::bind(bool bind) const
  * @param count Specifies the number of indices to be rendered.
  */
 void VertexArrayObject::render(const DrawMode& mode, const uint32_t first,
-                               const uint32_t count)
-{
-
+                               const uint32_t count) {
   glDrawArrays(static_cast<GLenum>(mode), first, count);
 }
 
 void VertexArrayObject::addVertexBufferObject(
-  uint32_t location, const std::shared_ptr<VertexBufferObject>& vbo)
-{
+  uint32_t location, const std::shared_ptr<VertexBufferObject>& vbo) {
   // add to the map to keep the reference (consider move)
   mVboMap[location] = vbo;
 
@@ -80,4 +69,4 @@ void VertexArrayObject::addVertexBufferObject(
   bind(false);
 }
 
-} // namespace prgl
+}  // namespace prgl

@@ -1,5 +1,5 @@
 /**
- * @file Window.h
+ * @file Window.hxx
  * @author Thomas Lindemeier
  * @brief
  * @date 2019-01-02
@@ -14,22 +14,20 @@
 
 struct GLFWwindow;
 
-namespace prgl
-{
+namespace prgl {
 class ContextImplementation;
 
-class Window
-{
-  std::function<void()>                                   mRenderFunction;
+class Window {
+  std::function<void()> mRenderFunction;
   std::function<void(int32_t, int32_t, int32_t, int32_t)> mOnKeyFunction;
-  std::function<void(int32_t, int32_t, int32_t)>          mOnMouseFunction;
-  std::function<void(double, double)>                     mOnMouseMoveFunction;
-  std::function<void(double, double)>                     mOnScrollFunction;
-  std::function<void(int32_t, int32_t)>                   mOnResizeFunction;
+  std::function<void(int32_t, int32_t, int32_t)> mOnMouseFunction;
+  std::function<void(double, double)> mOnMouseMoveFunction;
+  std::function<void(double, double)> mOnScrollFunction;
+  std::function<void(int32_t, int32_t)> mOnResizeFunction;
 
   std::unique_ptr<ContextImplementation> mContext;
 
-public:
+ public:
   Window(uint32_t width, uint32_t height, const std::string& title,
          bool resizable);
 
@@ -44,7 +42,7 @@ public:
 
   virtual ~Window();
 
-private:
+ private:
   static void glfw_onKey(GLFWwindow* window, int32_t key, int32_t scancode,
                          int32_t action, int32_t mods);
   static void glfw_onMouse(GLFWwindow* window, int32_t button, int32_t action,
@@ -63,7 +61,7 @@ private:
   void waitEvents() const;
   void swapBuffers() const;
 
-public:
+ public:
   // only poll and process events from the OS
   void pollEvents() const;
   // swap buffers, processing events
@@ -81,8 +79,8 @@ public:
   // setting a custom onScroll function
   void setOnScrollFunction(const std::function<void(double, double)>& onScroll);
   // setting a custom onResize function
-  void
-  setOnResizeFunction(const std::function<void(int32_t, int32_t)>& onResize);
+  void setOnResizeFunction(
+    const std::function<void(int32_t, int32_t)>& onResize);
   // setting the render function to be called by renderOnce
   void setRenderFunction(const std::function<void()>& renderStep);
 
@@ -108,6 +106,6 @@ public:
 
   bool shouldClose();
 };
-} // namespace prgl
+}  // namespace prgl
 
-#endif // PRGL_WINDOW_H
+#endif  // PRGL_WINDOW_H

@@ -1,43 +1,38 @@
-#include "prgl/FrameBufferObject.h"
+#include "prgl/FrameBufferObject.hxx"
 
 #include <iostream>
 
-namespace prgl
-{
-std::shared_ptr<FrameBufferObject> FrameBufferObject::Create()
-{
+namespace prgl {
+std::shared_ptr<FrameBufferObject> FrameBufferObject::Create() {
   return std::make_shared<FrameBufferObject>();
 }
 
 FrameBufferObject::FrameBufferObject()
-  : mHandle(INVALID_HANDLE), mTarget(), mDepth()
-{
-
+    : mHandle(INVALID_HANDLE),
+      mTarget(),
+      mDepth() {
   glGenFramebuffers(1, &mHandle);
 }
 
-FrameBufferObject::~FrameBufferObject()
-{
+FrameBufferObject::~FrameBufferObject() {
   glDeleteFramebuffers(1, &mHandle);
   mHandle = INVALID_HANDLE;
 }
 
-uint32_t FrameBufferObject::getId() const { return mHandle; }
-
-void FrameBufferObject::bind(bool bind) const
-{
-  if (bind)
-    {
-      glBindFramebuffer(GL_FRAMEBUFFER, mHandle);
-    }
-  else
-    {
-      glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    }
+uint32_t FrameBufferObject::getId() const {
+  return mHandle;
 }
 
-void FrameBufferObject::attachTexture(const std::shared_ptr<Texture2d>& texture)
-{
+void FrameBufferObject::bind(bool bind) const {
+  if (bind) {
+    glBindFramebuffer(GL_FRAMEBUFFER, mHandle);
+  } else {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  }
+}
+
+void FrameBufferObject::attachTexture(
+  const std::shared_ptr<Texture2d>& texture) {
   mTarget = texture;
 
   bind(true);
@@ -50,8 +45,7 @@ void FrameBufferObject::attachTexture(const std::shared_ptr<Texture2d>& texture)
   checkStatus();
 }
 
-void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2d>& texture)
-{
+void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2d>& texture) {
   mDepth = texture;
 
   bind(true);
@@ -64,27 +58,23 @@ void FrameBufferObject::attachDepth(const std::shared_ptr<Texture2d>& texture)
   checkStatus();
 }
 
-const std::shared_ptr<Texture2d>& FrameBufferObject::getTarget() const
-{
+const std::shared_ptr<Texture2d>& FrameBufferObject::getTarget() const {
   return mTarget;
 }
 
-const std::shared_ptr<Texture2d>& FrameBufferObject::getDepth() const
-{
+const std::shared_ptr<Texture2d>& FrameBufferObject::getDepth() const {
   return mDepth;
 }
 
-bool FrameBufferObject::checkStatus()
-{
+bool FrameBufferObject::checkStatus() {
   bind(true);
 
   // glReadBuffer(GL_NONE);
 
   int32_t status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
-  bool    result = false;
+  bool result    = false;
 
-  switch (status)
-    {
+  switch (status) {
     case GL_FRAMEBUFFER_COMPLETE_EXT:
       // std::cerr << "FRAMEBUFFER::Complete" << std::endl;
       result = true;
@@ -128,11 +118,11 @@ bool FrameBufferObject::checkStatus()
       std::cerr << "[ERROR]FRAMEBUFFER::Unknow error" << std::endl;
       result = false;
       break;
-    }
+  }
 
   bind(false);
 
   return result;
 }
 
-} // namespace prgl
+}  // namespace prgl

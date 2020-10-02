@@ -1,5 +1,5 @@
 /**
- * @file FrameBufferObject.h
+ * @file FrameBufferObject.hxx
  * @author Thomas Lindemeier
  * @brief
  * @date 2019-01-02
@@ -8,16 +8,14 @@
 #ifndef PRGL_FRAMEBUFFEROBJECT_H
 #define PRGL_FRAMEBUFFEROBJECT_H
 
-#include "prgl/Texture2d.h"
-
 #include <memory>
 
-namespace prgl
-{
+#include "prgl/Texture2d.hxx"
 
-class FrameBufferObject final
-{
-public:
+namespace prgl {
+
+class FrameBufferObject final {
+ public:
   static std::shared_ptr<FrameBufferObject> Create();
 
   FrameBufferObject();
@@ -33,17 +31,17 @@ public:
   const std::shared_ptr<Texture2d>& getTarget() const;
   const std::shared_ptr<Texture2d>& getDepth() const;
 
-private:
+ private:
   FrameBufferObject(const FrameBufferObject&) = delete;
   FrameBufferObject& operator=(const FrameBufferObject&) = delete;
 
   bool checkStatus();
 
-  uint32_t                   mHandle;
+  uint32_t mHandle;
   std::shared_ptr<Texture2d> mTarget;
   std::shared_ptr<Texture2d> mDepth;
 };
 
-} // namespace prgl
+}  // namespace prgl
 
-#endif // PRGL_FRAMEBUFFEROBJECT_H
+#endif  // PRGL_FRAMEBUFFEROBJECT_H

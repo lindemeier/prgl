@@ -1,5 +1,5 @@
 /**
- * @file VertexArrayObject.h
+ * @file VertexArrayObject.hxx
  *
  * @author Thomas Lindemeier
  *
@@ -11,21 +11,20 @@
 #ifndef PRGL_VERTEX_ARRAY_OBJECT_H
 #define PRGL_VERTEX_ARRAY_OBJECT_H
 
-#include <map>
-#include <memory>
 #include <stdint.h>
 
-#include "prgl/VertexBufferObject.h"
+#include <map>
+#include <memory>
 
-namespace prgl
-{
+#include "prgl/VertexBufferObject.hxx"
+
+namespace prgl {
 
 /**
  * @brief "Specifies what kind of primitives to render."
  * (https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDrawArrays.xhtml)
  */
-enum class DrawMode : uint32_t
-{
+enum class DrawMode : uint32_t {
   Points                 = GL_POINTS,
   LineStrip              = GL_LINE_STRIP,
   LineLoop               = GL_LINE_LOOP,
@@ -40,9 +39,8 @@ enum class DrawMode : uint32_t
   Patches                = GL_PATCHES
 };
 
-class VertexArrayObject final
-{
-public:
+class VertexArrayObject final {
+ public:
   static std::shared_ptr<VertexArrayObject> Create();
 
   VertexArrayObject();
@@ -55,7 +53,7 @@ public:
 
   void render(const DrawMode& mode, const uint32_t first, const uint32_t count);
 
-private:
+ private:
   VertexArrayObject(const VertexArrayObject&) = delete;
   VertexArrayObject& operator=(const VertexArrayObject&) = delete;
 
@@ -63,6 +61,6 @@ private:
 
   std::map<uint32_t, std::shared_ptr<VertexBufferObject>> mVboMap;
 };
-} // namespace prgl
+}  // namespace prgl
 
-#endif // PRGL_VERTEX_ARRAY_OBJECT_H
+#endif  // PRGL_VERTEX_ARRAY_OBJECT_H

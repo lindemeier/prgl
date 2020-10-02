@@ -1,5 +1,5 @@
 /**
- * @file Context.h
+ * @file Context.hxx
  * @author Thomas Lindemeier
  * @brief
  * @date 2019-01-02
@@ -11,20 +11,18 @@
 #include <memory>
 #include <string>
 
-#include "prgl/glCommon.h"
+#include "prgl/glCommon.hxx"
 
-namespace prgl
-{
+namespace prgl {
 
-class ContextImplementation
-{
+class ContextImplementation {
   GLFWwindow* mGlfwWindow;
 
   void initGLFW();
 
   void initGLEW(GLFWwindow* window);
 
-public:
+ public:
   ContextImplementation(uint32_t width, uint32_t height,
                         const std::string& name, int32_t redBits,
                         int32_t greenBits, int32_t blueBits, int32_t alphaBits,
@@ -44,6 +42,6 @@ public:
   void makeCurrent() const;
 };
 
-} // namespace prgl
+}  // namespace prgl
 
-#endif // PRGL_CONTEXT_IMPLEMENTATION_H
+#endif  // PRGL_CONTEXT_IMPLEMENTATION_H

@@ -3,13 +3,12 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <stdint.h>
 
 #include <array>
 #include <memory>
-#include <stdint.h>
 
-namespace prgl
-{
+namespace prgl {
 /**
  * @brief Shader, texture handles that are not yet initl
  */
@@ -45,8 +44,7 @@ using vec4ui = std::array<uint32_t, 4U>;
  * values are accepted:""
  *
  */
-enum class DataType : uint32_t
-{
+enum class DataType : uint32_t {
   UnsignedByte  = GL_UNSIGNED_BYTE,
   Byte          = GL_BYTE,
   UnsignedShort = GL_UNSIGNED_SHORT,
@@ -65,17 +63,16 @@ enum class DataType : uint32_t
  * would be better here?
  */
 template <class T>
-class Binder final
-{
+class Binder final {
   const std::shared_ptr<T>& mBindable;
 
-public:
+ public:
   // Bind on construction
   Binder(const std::shared_ptr<T>& bindable);
   // Unbind on destruction
   ~Binder();
 
-private:
+ private:
   // no need for default constructor, assignment operator and copy constructor
   Binder()              = delete;
   Binder(const Binder&) = delete;
@@ -83,17 +80,15 @@ private:
 };
 
 template <class T>
-Binder<T>::Binder(const std::shared_ptr<T>& bindable) : mBindable(bindable)
-{
+Binder<T>::Binder(const std::shared_ptr<T>& bindable) : mBindable(bindable) {
   mBindable->bind(true);
 }
 
 template <class T>
-Binder<T>::~Binder()
-{
+Binder<T>::~Binder() {
   mBindable->bind(false);
 }
 
-} //  namespace prgl
+}  //  namespace prgl
 
-#endif // !PRGL_OPENGL_HEADER
+#endif  // !PRGL_OPENGL_HEADER

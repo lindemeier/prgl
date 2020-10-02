@@ -1,5 +1,5 @@
 /**
- * @file Texture2d.h
+ * @file Texture2d.hxx
  * @author Thomas Lindemeier
  * @brief
  * @date 2019-01-02
@@ -8,17 +8,15 @@
 #ifndef PRGL_TEXTURE_H
 #define PRGL_TEXTURE_H
 
-#include "glCommon.h"
-
 #include <array>
 #include <memory>
 #include <vector>
 
-namespace prgl
-{
+#include "glCommon.hxx"
 
-enum class TextureUnit : uint32_t
-{
+namespace prgl {
+
+enum class TextureUnit : uint32_t {
   Texture00 = GL_TEXTURE0,
   Texture01 = GL_TEXTURE1,
   Texture02 = GL_TEXTURE2,
@@ -53,8 +51,7 @@ enum class TextureUnit : uint32_t
   Texture31 = GL_TEXTURE31
 };
 
-enum class TextureMinFilter : uint32_t
-{
+enum class TextureMinFilter : uint32_t {
   Nearest              = GL_NEAREST,
   Linear               = GL_LINEAR,
   NearestMipMapNearest = GL_NEAREST_MIPMAP_NEAREST,
@@ -63,14 +60,12 @@ enum class TextureMinFilter : uint32_t
   LinearMipMapLinear   = GL_LINEAR_MIPMAP_LINEAR
 };
 
-enum class TextureMagFilter : uint32_t
-{
+enum class TextureMagFilter : uint32_t {
   Nearest = GL_NEAREST,
   Linear  = GL_LINEAR
 };
 
-enum class TextureEnvMode : uint32_t
-{
+enum class TextureEnvMode : uint32_t {
   Replace     = GL_REPLACE,
   Modulate    = GL_MODULATE,
   Add         = GL_ADD,
@@ -79,16 +74,14 @@ enum class TextureEnvMode : uint32_t
   Subtract    = GL_SUBTRACT
 };
 
-enum class TextureWrapMode : uint32_t
-{
+enum class TextureWrapMode : uint32_t {
   Repeat         = GL_REPEAT,
   MirroredRepeat = GL_MIRRORED_REPEAT,
   ClampToEdge    = GL_CLAMP_TO_EDGE,
   ClampToBorder  = GL_CLAMP_TO_BORDER
 };
 
-enum class TextureAccess : uint32_t
-{
+enum class TextureAccess : uint32_t {
   ReadOnly  = GL_READ_ONLY,
   WriteOnly = GL_WRITE_ONLY,
   ReadWrite = GL_READ_WRITE
@@ -103,8 +96,7 @@ enum class TextureAccess : uint32_t
  * "internalFormat (2nd argument) defines the format that OpenGL should use to
  * store the data internally."
  */
-enum class TextureFormatInternal : uint32_t
-{
+enum class TextureFormatInternal : uint32_t {
   DepthComponent = GL_DEPTH_COMPONENT,
   DepthStencil   = GL_DEPTH_STENCIL,
   Red            = GL_RED,
@@ -160,8 +152,7 @@ enum class TextureFormatInternal : uint32_t
  * data you pass in as the last argument. So the format/type combination defines
  * the memory layout of the data you pass in."
  */
-enum class TextureFormat : uint32_t
-{
+enum class TextureFormat : uint32_t {
   Red            = GL_RED,
   Rg             = GL_RG,
   Rgb            = GL_RGB,
@@ -183,12 +174,10 @@ enum class TextureFormat : uint32_t
  * @brief Represents a 2d texture.
  *
  */
-class Texture2d final
-{
-public:
+class Texture2d final {
+ public:
   template <typename... T>
-  static std::shared_ptr<Texture2d> Create(T&&... args)
-  {
+  static std::shared_ptr<Texture2d> Create(T&&... args) {
     return std::make_shared<Texture2d>(std::forward<T>(args)...);
   }
 
@@ -197,17 +186,17 @@ public:
     uint32_t width, uint32_t height,
     TextureFormatInternal internalFormat = TextureFormatInternal::Rgb32F,
     TextureFormat format = TextureFormat::Rgb, DataType type = DataType::Float,
-    TextureMinFilter minFilter     = TextureMinFilter::Linear,
-    TextureMagFilter magFilter     = TextureMagFilter::Linear,
-    TextureEnvMode   envMode       = TextureEnvMode::Replace,
-    TextureWrapMode  wrapMode      = TextureWrapMode::Repeat,
-    bool             createMipMaps = false);
+    TextureMinFilter minFilter = TextureMinFilter::Linear,
+    TextureMagFilter magFilter = TextureMagFilter::Linear,
+    TextureEnvMode envMode     = TextureEnvMode::Replace,
+    TextureWrapMode wrapMode   = TextureWrapMode::Repeat,
+    bool createMipMaps         = false);
 
   ~Texture2d();
 
   void bind(bool bind) const;
   // used for binding at shader location for write andor read operations
-  void bindImageTexture(uint32_t      unit,
+  void bindImageTexture(uint32_t unit,
                         TextureAccess access = TextureAccess::ReadWrite,
                         int32_t level = 0, bool layered = GL_TRUE,
                         int32_t layer = 0);
@@ -224,40 +213,40 @@ public:
   void setMaxIsotropy(float anisotropy);
   void render(float posX, float posY, float width, float height);
 
-  uint32_t              getId() const;
-  uint32_t              getWidth() const;
-  uint32_t              getHeight() const;
+  uint32_t getId() const;
+  uint32_t getWidth() const;
+  uint32_t getHeight() const;
   TextureFormatInternal getInternalFormat() const;
-  TextureFormat         getFormat() const;
-  int32_t               getBorder() const;
-  DataType              getType() const;
-  TextureMinFilter      getMinFilter() const;
-  TextureMagFilter      getMagFilter() const;
-  TextureWrapMode       getWrap() const;
-  TextureEnvMode        getEnvMode() const;
-  void                  copyTo(Texture2d& other) const;
+  TextureFormat getFormat() const;
+  int32_t getBorder() const;
+  DataType getType() const;
+  TextureMinFilter getMinFilter() const;
+  TextureMagFilter getMagFilter() const;
+  TextureWrapMode getWrap() const;
+  TextureEnvMode getEnvMode() const;
+  void copyTo(Texture2d& other) const;
 
-private:
+ private:
   Texture2d(const Texture2d&) = delete;
   Texture2d& operator=(const Texture2d&) = delete;
 
-  uint32_t              mHandle;
-  uint32_t              mWidth;
-  uint32_t              mHeight;
-  uint32_t              mTarget;
-  int32_t               mMipLevel;
+  uint32_t mHandle;
+  uint32_t mWidth;
+  uint32_t mHeight;
+  uint32_t mTarget;
+  int32_t mMipLevel;
   TextureFormatInternal mInternalFormat;
-  TextureFormat         mFormat;
-  int32_t               mBorder;
-  DataType              mType;
-  TextureMinFilter      mMinFilter;
-  TextureMagFilter      mMagFilter;
-  TextureWrapMode       mWrap;
-  TextureEnvMode        mEnvMode;
-  bool                  mCreateMipMaps;
-  float                 mMaxAnisotropy;
+  TextureFormat mFormat;
+  int32_t mBorder;
+  DataType mType;
+  TextureMinFilter mMinFilter;
+  TextureMagFilter mMagFilter;
+  TextureWrapMode mWrap;
+  TextureEnvMode mEnvMode;
+  bool mCreateMipMaps;
+  float mMaxAnisotropy;
 };
 
-} // namespace prgl
+}  // namespace prgl
 
-#endif // PRGL_TEXTURE_H
+#endif  // PRGL_TEXTURE_H

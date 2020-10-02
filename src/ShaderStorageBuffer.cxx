@@ -1,32 +1,26 @@
-#include "prgl/ShaderStorageBuffer.h"
+#include "prgl/ShaderStorageBuffer.hxx"
 
 #include <cstring>
 #include <iostream>
 
-#include "prgl/glCommon.h"
+#include "prgl/glCommon.hxx"
 
-namespace prgl
-{
+namespace prgl {
 
-std::shared_ptr<ShaderStorageBuffer> ShaderStorageBuffer::Create()
-{
+std::shared_ptr<ShaderStorageBuffer> ShaderStorageBuffer::Create() {
   return std::make_shared<ShaderStorageBuffer>();
 }
 
-ShaderStorageBuffer::ShaderStorageBuffer() : mHandle(INVALID_HANDLE)
-{
-
+ShaderStorageBuffer::ShaderStorageBuffer() : mHandle(INVALID_HANDLE) {
   glGenBuffers(1, &mHandle);
 }
 
-ShaderStorageBuffer::~ShaderStorageBuffer()
-{
+ShaderStorageBuffer::~ShaderStorageBuffer() {
   glDeleteBuffers(1, &mHandle);
   mHandle = INVALID_HANDLE;
 }
 
-int32_t ShaderStorageBuffer::getSizeInBytes() const
-{
+int32_t ShaderStorageBuffer::getSizeInBytes() const {
   int32_t size;
   bind(true);
   glGetBufferParameteriv(GL_SHADER_STORAGE_BUFFER, GL_BUFFER_SIZE, &size);
@@ -35,8 +29,7 @@ int32_t ShaderStorageBuffer::getSizeInBytes() const
   return size;
 }
 
-void ShaderStorageBuffer::create(const void* dataStart, uint32_t nBytes)
-{
+void ShaderStorageBuffer::create(const void* dataStart, uint32_t nBytes) {
   bind(true);
 
   glBufferData(GL_SHADER_STORAGE_BUFFER, nBytes, dataStart, GL_STATIC_DRAW);
@@ -46,16 +39,14 @@ void ShaderStorageBuffer::create(const void* dataStart, uint32_t nBytes)
   bind(false);
 }
 
-void ShaderStorageBuffer::upload(const void* dataStart, uint32_t nBytes)
-{
+void ShaderStorageBuffer::upload(const void* dataStart, uint32_t nBytes) {
   // check if enough bytes allocated
-  if (nBytes != (uint32_t)getSizeInBytes())
-    {
-      std::cout << "ShaderStorageBuffer::reallocated:size: " << nBytes
-                << std::endl;
-      create(dataStart, nBytes);
-      return;
-    }
+  if (nBytes != (uint32_t)getSizeInBytes()) {
+    std::cout << "ShaderStorageBuffer::reallocated:size: " << nBytes
+              << std::endl;
+    create(dataStart, nBytes);
+    return;
+  }
 
   bind(true);
 
@@ -68,8 +59,7 @@ void ShaderStorageBuffer::upload(const void* dataStart, uint32_t nBytes)
   bind(false);
 }
 
-void ShaderStorageBuffer::download(void* dataStart, uint32_t nBytes) const
-{
+void ShaderStorageBuffer::download(void* dataStart, uint32_t nBytes) const {
   bind(true);
 
   void* data = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
@@ -83,25 +73,19 @@ void ShaderStorageBuffer::download(void* dataStart, uint32_t nBytes) const
   bind(false);
 }
 
-void ShaderStorageBuffer::bind(bool bind) const
-{
-  if (bind)
-    {
-      glBindBuffer(GL_SHADER_STORAGE_BUFFER, mHandle);
-    }
-  else
-    {
-      glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
-    }
+void ShaderStorageBuffer::bind(bool bind) const {
+  if (bind) {
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, mHandle);
+  } else {
+    glBindBuffer(GL_SHADER_STORAGE_BUFFER, 0);
+  }
 }
 
-void ShaderStorageBuffer::bindBase(uint32_t location) const
-{
+void ShaderStorageBuffer::bindBase(uint32_t location) const {
   glBindBufferBase(GL_SHADER_STORAGE_BUFFER, location, mHandle);
 }
 
-void ShaderStorageBuffer::copyTo(ShaderStorageBuffer& other) const
-{
+void ShaderStorageBuffer::copyTo(ShaderStorageBuffer& other) const {
   int32_t otherSize = other.getSizeInBytes();
   int32_t thisSize  = getSizeInBytes();
 
@@ -110,10 +94,9 @@ void ShaderStorageBuffer::copyTo(ShaderStorageBuffer& other) const
   int32_t cWriteBuffer;
   glGetIntegerv(GL_COPY_WRITE_BUFFER, &cWriteBuffer);
 
-  if (thisSize != otherSize)
-    {
-      other.create(nullptr, thisSize);
-    }
+  if (thisSize != otherSize) {
+    other.create(nullptr, thisSize);
+  }
 
   glBindBuffer(GL_COPY_READ_BUFFER, mHandle);
   glBindBuffer(GL_COPY_WRITE_BUFFER, other.getHandle());
@@ -125,6 +108,8 @@ void ShaderStorageBuffer::copyTo(ShaderStorageBuffer& other) const
   glBindBuffer(GL_COPY_WRITE_BUFFER, cWriteBuffer);
 }
 
-uint32_t ShaderStorageBuffer::getHandle() const { return mHandle; }
+uint32_t ShaderStorageBuffer::getHandle() const {
+  return mHandle;
+}
 
-} // namespace prgl
+}  // namespace prgl

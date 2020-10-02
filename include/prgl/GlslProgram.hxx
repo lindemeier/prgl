@@ -1,5 +1,5 @@
 /**
- * @file GlslProgram.h
+ * @file GlslProgram.hxx
  * @author Thomas Lindemeier
  * @brief
  * @date 2019-01-02
@@ -10,21 +10,19 @@
 
 #include <memory>
 
-#include "prgl/Texture2d.h"
-#include "prgl/glCommon.h"
+#include "prgl/Texture2d.hxx"
+#include "prgl/glCommon.hxx"
 
 #define GLSL(version, shader) "#version " #version "\n" #shader
 
-namespace prgl
-{
+namespace prgl {
 
 /**
  * @brief Abstract class for shader programs.
  *
  */
-class GlslProgram
-{
-public:
+class GlslProgram {
+ public:
   static std::shared_ptr<GlslProgram> Create();
 
   GlslProgram();
@@ -58,17 +56,17 @@ public:
 
   static std::string ReadShaderFromFile(const std::string& filename);
 
-protected:
-  uint32_t        getCurrentlyBoundProgram() const;
+ protected:
+  uint32_t getCurrentlyBoundProgram() const;
   static uint32_t compile(const std::string& source, uint32_t type);
 
   uint32_t mProgHandle;
 
-private:
+ private:
   GlslProgram(const GlslProgram&) = delete;
   GlslProgram& operator=(const GlslProgram&) = delete;
 };
 
-} // namespace prgl
+}  // namespace prgl
 
-#endif // PRGL_PROGRAM_H
+#endif  // PRGL_PROGRAM_H

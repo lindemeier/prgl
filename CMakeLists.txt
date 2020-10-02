@@ -1,21 +1,10 @@
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.17)
 
 project(prgl)
 
-# GLFW
-if (WIN32)
-  file(TO_CMAKE_PATH "$ENV{GLFW_HOME}" GLFW_HOME)
-  set(GLFW_INCLUDE_DIR "$ENV{GLFW_HOME}/include")
-  find_library(GLFW_LIBRARY NAMES glfw3dll glfw glfw3 libglfw libglfw3 PATHS "${GLFW_HOME}/lib" NO_DEFAULT_PATH)
-  set(GLFW_LIBS ${GLFW_LIBRARY})
-else ()
-  find_package(PkgConfig REQUIRED)
-  pkg_search_module(GLFW REQUIRED glfw3)
-  set(GLFW_LIBS ${GLFW_LIBRARIES}) 
-endif ()
-
-#OpenGL
+find_package(glfw3 REQUIRED)
 find_package(OpenGL REQUIRED)
+find_package (Threads REQUIRED)
 
 # glew
 if (UNIX)
@@ -28,29 +17,29 @@ else ()
   set(GLEW_LIBRARIES ${GLEW_LIBRARY})
 endif (UNIX)
 
-add_library(${PROJECT_NAME} STATIC      
-  include/prgl/Window.h
-  include/prgl/Texture2d.h
-  include/prgl/GlslProgram.h
-  include/prgl/FrameBufferObject.h
-  include/prgl/ShaderStorageBuffer.h 	
-  include/prgl/glCommon.h
-  include/prgl/GlslRenderingPipelineProgram.h
-  include/prgl/GlslComputeShader.h
-  include/prgl/VertexBufferObject.h
-  include/prgl/VertexArrayObject.h
+add_library(${PROJECT_NAME} STATIC
+  include/prgl/Window.hxx
+  include/prgl/Texture2d.hxx
+  include/prgl/GlslProgram.hxx
+  include/prgl/FrameBufferObject.hxx
+  include/prgl/ShaderStorageBuffer.hxx
+  include/prgl/glCommon.hxx
+  include/prgl/GlslRenderingPipelineProgram.hxx
+  include/prgl/GlslComputeShader.hxx
+  include/prgl/VertexBufferObject.hxx
+  include/prgl/VertexArrayObject.hxx
 
-  src/ContextImplementation.h
-  src/ContextImplementation.cpp
-  src/Window.cpp
-  src/Texture2d.cpp
-  src/GlslProgram.cpp
-  src/FrameBufferObject.cpp
-  src/ShaderStorageBuffer.cpp
-  src/GlslRenderingPipelineProgram.cpp
-  src/GlslComputeShader.cpp
-  src/VertexBufferObject.cpp
-  src/VertexArrayObject.cpp
+  src/ContextImplementation.hxx
+  src/ContextImplementation.cxx
+  src/Window.cxx
+  src/Texture2d.cxx
+  src/GlslProgram.cxx
+  src/FrameBufferObject.cxx
+  src/ShaderStorageBuffer.cxx
+  src/GlslRenderingPipelineProgram.cxx
+  src/GlslComputeShader.cxx
+  src/VertexBufferObject.cxx
+  src/VertexArrayObject.cxx
 
 )
 
@@ -69,9 +58,10 @@ target_include_directories(${PROJECT_NAME}
 
 
 target_link_libraries(${PROJECT_NAME}
-  ${OPENGL_gl_LIBRARY}
-  ${GLFW_LIBS}
+  OpenGL::GL
+  glfw
   ${GLEW_LIBRARIES}
+  ${CMAKE_THREAD_LIBS_INIT}
 )
 
 
@@ -79,7 +69,7 @@ target_link_libraries(${PROJECT_NAME}
 
 # executable
 add_executable(${PROJECT_NAME}_test
-  src/test/main.cpp
+  src/test/main.cxx
 )
 
 target_link_libraries(${PROJECT_NAME}_test
