@@ -49,9 +49,11 @@ void checkGLError(const char* file, const char* function, int line) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunused-function"
 // http://blog.nobel-joergensen.com/2013/02/17/debugging-opengl-part-2-using-gldebugmessagecallback/
-static void APIENTRY openGlDebugCallback(GLenum, GLenum type, GLuint id,
-                                         GLenum severity, GLsizei,
-                                         const GLchar* message, const void*) {
+static void APIENTRY openGlDebugCallback(GLenum /*unused*/, GLenum type,
+                                         GLuint id, GLenum severity,
+                                         GLsizei /*unused*/,
+                                         const GLchar* message,
+                                         const void* /*unused*/) {
   if (severity != GL_DEBUG_SEVERITY_MEDIUM &&
       severity != GL_DEBUG_SEVERITY_HIGH) {
     return;
@@ -108,20 +110,21 @@ ContextImplementation::ContextImplementation()
                             true, nullptr, nullptr) {}
 
 ContextImplementation::~ContextImplementation() {
-  if (getGLFW()) {
+  if (getGLFW() != nullptr) {
     glfwDestroyWindow(getGLFW());
     glfwTerminate();
   }
 }
 
-void ContextImplementation::onError(int32_t, const char* errorMessage) {
+void ContextImplementation::onError(int32_t /*unused*/,
+                                    const char* errorMessage) {
   std::stringstream ss;
   ss << "GLWindow::ERROR_GLFW:\t" << errorMessage;
   throw std::runtime_error(ss.str());
 }
 
 void ContextImplementation::initGLFW() {
-  bool error = glfwInit();
+  bool error = glfwInit() != 0;
   if (!error) {
     std::cerr << "could not init GLFW:" << std::endl;
     std::cout << "press enter to exit";
@@ -192,7 +195,7 @@ ContextImplementation::ContextImplementation(
     glfwCreateWindow(static_cast<int32_t>(width), static_cast<int32_t>(height),
                      name.c_str(), monitor, shareContext);
 
-  if (!mGlfwWindow) {
+  if (mGlfwWindow == nullptr) {
     glfwTerminate();
     return;
   }
@@ -215,7 +218,7 @@ ContextImplementation::ContextImplementation(
 #endif
 
   // check viewport size
-  int32_t dims;
+  int32_t dims = 0;
   glGetIntegerv(GL_MAX_RENDERBUFFER_SIZE, &dims);
   if (width > static_cast<uint32_t>(dims) ||
       height > static_cast<uint32_t>(dims)) {

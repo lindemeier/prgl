@@ -18,7 +18,7 @@ namespace prgl {
 class ContextImplementation {
   GLFWwindow* mGlfwWindow;
 
-  void initGLFW();
+  static void initGLFW();
 
   void initGLEW(GLFWwindow* window);
 

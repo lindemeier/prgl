@@ -21,7 +21,7 @@ ShaderStorageBuffer::~ShaderStorageBuffer() {
 }
 
 uint32_t ShaderStorageBuffer::getSizeInBytes() const {
-  GLint64 size;
+  GLint64 size = 0;
   bind(true);
   glGetBufferParameteri64v(GL_SHADER_STORAGE_BUFFER, GL_BUFFER_SIZE, &size);
 
@@ -89,9 +89,9 @@ void ShaderStorageBuffer::copyTo(ShaderStorageBuffer& other) const {
   const auto otherSize = other.getSizeInBytes();
   const auto thisSize  = getSizeInBytes();
 
-  int32_t cReadBuffer;
+  int32_t cReadBuffer = 0;
   glGetIntegerv(GL_COPY_READ_BUFFER, &cReadBuffer);
-  int32_t cWriteBuffer;
+  int32_t cWriteBuffer = 0;
   glGetIntegerv(GL_COPY_WRITE_BUFFER, &cWriteBuffer);
 
   if (thisSize != otherSize) {

@@ -45,11 +45,11 @@ class GlslComputeShader final : public GlslProgram {
 
   void attach(const std::string& source);
 
-  vec3ui getWorkGroupSize();
-  vec3ui getMaxWorkGroupSize() const;
+  vec3ui getWorkGroupSize() const;
+  static vec3ui getMaxWorkGroupSize();
   void dispatchCompute(uint32_t num_groups_x, uint32_t num_groups_y,
-                       uint32_t num_groups_z) const;
-  void memoryBarrier(GLbitfield barrierType = GL_ALL_BARRIER_BITS) const;
+                       uint32_t num_groups_z);
+  void memoryBarrier(GLbitfield barrierType = GL_ALL_BARRIER_BITS);
 
   uint32_t mShaderHandle;
 };

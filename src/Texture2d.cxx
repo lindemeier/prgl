@@ -119,8 +119,8 @@ void Texture2d::bind(bool bind) const {
 
 void Texture2d::bindImageTexture(uint32_t unit, TextureAccess access,
                                  int32_t level, bool layered, int32_t layer) {
-  glBindImageTexture(unit, mHandle, level, layered, layer,
-                     static_cast<uint32_t>(access),
+  glBindImageTexture(unit, mHandle, level, static_cast<GLboolean>(layered),
+                     layer, static_cast<uint32_t>(access),
                      static_cast<uint32_t>(mInternalFormat));
 }
 
@@ -215,7 +215,8 @@ void Texture2d::setMaxIsotropy(float anisotropy) {
   bind(false);
 }
 
-void Texture2d::render(float posX, float posY, float width, float height) {
+void Texture2d::render(float posX, float posY, float width,
+                       float height) const {
   glPushAttrib(GL_ALL_ATTRIB_BITS);
 
   // deactivate color clamping

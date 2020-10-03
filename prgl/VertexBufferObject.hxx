@@ -44,7 +44,7 @@ class VertexBufferObject final {
     return std::make_shared<VertexBufferObject>(std::forward<T>(args)...);
   }
 
-  VertexBufferObject(const Usage usage);
+  VertexBufferObject(Usage usage);
   VertexBufferObject();
   ~VertexBufferObject();
 

@@ -37,8 +37,8 @@ class Window {
           uint32_t samples, bool resizable, bool visible, bool sRGB_capable,
           GLFWmonitor *monitor, GLFWwindow *shareContext*/
   Window(uint32_t width, uint32_t height, const std::string& title,
-         const std::array<int32_t, 4>& rgbaBits, const int32_t depthBits,
-         const int32_t stencilBits, const int32_t samples, bool resizable);
+         const std::array<int32_t, 4>& rgbaBits, int32_t depthBits,
+         int32_t stencilBits, int32_t samples, bool resizable);
 
   virtual ~Window();
 

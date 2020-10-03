@@ -49,7 +49,7 @@ uint32_t GlslProgram::compile(const std::string& source, uint32_t type) {
 
   glGetShaderiv(id, GL_COMPILE_STATUS, &c);
 
-  if (!c) {
+  if (c == 0) {
     std::unique_ptr<GLchar[]> logstr(new GLchar[2048]);
     glGetShaderInfoLog(id, 2048, nullptr, logstr.get());
     std::stringstream ss;
@@ -139,13 +139,13 @@ void GlslProgram::set4fv(const std::string& label, const float* args) {
 void GlslProgram::setMatrix(const std::string& label, const float* m,
                             bool transpose) {
   glUniformMatrix4fv(glGetUniformLocation(mProgHandle, label.c_str()), 1,
-                     transpose, m);
+                     static_cast<GLboolean>(transpose), m);
 }
 
 void GlslProgram::setMatrix(const std::string& label, const double* m,
                             bool transpose) {
   glUniformMatrix4dv(glGetUniformLocation(mProgHandle, label.c_str()), 1,
-                     transpose, m);
+                     static_cast<GLboolean>(transpose), m);
 }
 
 void GlslProgram::bind(bool use) const {
@@ -158,8 +158,8 @@ void GlslProgram::bind(bool use) const {
   }
 }
 
-uint32_t GlslProgram::getCurrentlyBoundProgram() const {
-  int32_t id;
+uint32_t GlslProgram::getCurrentlyBoundProgram() {
+  int32_t id = 0;
   glGetIntegerv(GL_CURRENT_PROGRAM, &id);
 
   return static_cast<uint32_t>(id);
@@ -177,7 +177,7 @@ void GlslProgram::bindSampler(const std::string& name, const TextureUnit unit,
   bind(true);
   glActiveTexture(static_cast<uint32_t>(unit));
   texture->bind(true);
-  setui(name.c_str(), static_cast<uint32_t>(unit));
+  setui(name, static_cast<uint32_t>(unit));
   bind(false);
 }
 

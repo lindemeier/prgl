@@ -6,7 +6,7 @@
 #include "prgl/VertexBufferObject.hxx"
 #include "prgl/Window.hxx"
 
-int32_t main(int32_t argc, char** args) {
+int32_t main(int32_t /*argc*/, char** /*args*/) {
   // depth
   const std::array<int32_t, 4> rgbaBits = {16, 16, 16, 16};
 
@@ -42,7 +42,7 @@ int32_t main(int32_t argc, char** args) {
   {
     std::vector<prgl::vec3> colorBuffer(gl->getWidth() * gl->getHeight());
     // fill the texture with a color
-    prgl::vec3 color = {0.25f, 0.1f, 0.3f};
+    prgl::vec3 color = {0.25F, 0.1F, 0.3F};
     for (auto& c : colorBuffer) {
       c = color;
     }

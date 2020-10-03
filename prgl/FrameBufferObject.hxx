@@ -35,7 +35,7 @@ class FrameBufferObject final {
   FrameBufferObject(const FrameBufferObject&) = delete;
   FrameBufferObject& operator=(const FrameBufferObject&) = delete;
 
-  bool checkStatus();
+  bool checkStatus() const;
 
   uint32_t mHandle;
   std::shared_ptr<Texture2d> mTarget;

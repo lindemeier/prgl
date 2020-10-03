@@ -11,8 +11,7 @@ GlslRenderingPipelineProgram::Create() {
 }
 
 GlslRenderingPipelineProgram::GlslRenderingPipelineProgram()
-    : GlslProgram(),
-      mVertProg(INVALID_HANDLE),
+    : mVertProg(INVALID_HANDLE),
       mTesselationControlProg(INVALID_HANDLE),
       mTesselationEvaluationProg(INVALID_HANDLE),
       mGeometryProg(INVALID_HANDLE),
@@ -20,19 +19,19 @@ GlslRenderingPipelineProgram::GlslRenderingPipelineProgram()
 
 uint32_t GlslRenderingPipelineProgram::createShader(const std::string& source,
                                                     GLenum shaderType) {
-  uint32_t shader = compile(source.c_str(), shaderType);
+  uint32_t shader = compile(source, shaderType);
 
   glAttachShader(mProgHandle, shader);
 
   glLinkProgram(mProgHandle);
-  int32_t linkV;
+  int32_t linkV = 0;
   glGetProgramiv(mProgHandle, GL_LINK_STATUS, &linkV);
 
-  if (!linkV) {
+  if (linkV == 0) {
     std::cerr << "Error in linking GlslRenderingPipelineProgram program"
               << std::endl;
     GLchar log[10240];
-    GLsizei length;
+    GLsizei length = 0;
     glGetProgramInfoLog(mProgHandle, 10239, &length, log);
     std::cerr << source << "\n" << log << std::endl;
 
@@ -71,7 +70,7 @@ void GlslRenderingPipelineProgram::attachVertexShader(
   if (!source.empty()) {
     cleanupShader(mVertProg);
 
-    mVertProg = createShader(source.c_str(), GL_VERTEX_SHADER);
+    mVertProg = createShader(source, GL_VERTEX_SHADER);
   } else {
     std::stringstream ss;
     ss << "VertexShader() : source empty: " << source << std::endl;
@@ -84,8 +83,7 @@ void GlslRenderingPipelineProgram::attachTesselationControlShader(
   if (!source.empty()) {
     cleanupShader(mTesselationControlProg);
 
-    mTesselationControlProg =
-      createShader(source.c_str(), GL_TESS_CONTROL_SHADER);
+    mTesselationControlProg = createShader(source, GL_TESS_CONTROL_SHADER);
   } else {
     std::stringstream ss;
     ss << "TesselationControlShader() : source empty: " << source << std::endl;
@@ -99,7 +97,7 @@ void GlslRenderingPipelineProgram::attachTesselationEvaluationShader(
     cleanupShader(mTesselationEvaluationProg);
 
     mTesselationEvaluationProg =
-      createShader(source.c_str(), GL_TESS_EVALUATION_SHADER);
+      createShader(source, GL_TESS_EVALUATION_SHADER);
   } else {
     std::stringstream ss;
     ss << "TesselationEvaluationShader() : source empty: " << source
@@ -113,7 +111,7 @@ void GlslRenderingPipelineProgram::attachGeometryShader(
   if (!source.empty()) {
     cleanupShader(mGeometryProg);
 
-    mGeometryProg = createShader(source.c_str(), GL_GEOMETRY_SHADER);
+    mGeometryProg = createShader(source, GL_GEOMETRY_SHADER);
   } else {
     std::stringstream ss;
     ss << "GeometryShader() : source empty: " << source << std::endl;
@@ -126,7 +124,7 @@ void GlslRenderingPipelineProgram::attachFragmentShader(
   if (!source.empty()) {
     cleanupShader(mFragProg);
 
-    mFragProg = createShader(source.c_str(), GL_FRAGMENT_SHADER);
+    mFragProg = createShader(source, GL_FRAGMENT_SHADER);
   } else {
     std::stringstream ss;
     ss << "FragmentShader() : source empty: " << source << std::endl;
