@@ -71,29 +71,34 @@ void Window::glfw_onResize(GLFWwindow* window, int32_t width, int32_t height) {
 
 void Window::internalOnKey(int32_t key, int32_t scancode, int32_t action,
                            int32_t mods) {
-  if (mOnKeyFunction)
+  if (mOnKeyFunction) {
     mOnKeyFunction(key, scancode, action, mods);
+  }
 }
 
 void Window::internalOnMouse(int32_t button, int32_t action, int32_t mods) {
-  if (mOnMouseFunction)
+  if (mOnMouseFunction) {
     mOnMouseFunction(button, action, mods);
+  }
 }
 
 void Window::internalOnMouseMove(double x, double y) {
-  if (mOnMouseMoveFunction)
+  if (mOnMouseMoveFunction) {
     mOnMouseMoveFunction(x, y);
+  }
 }
 
 void Window::internalOnScroll(double xo, double yo) {
-  if (mOnScrollFunction)
+  if (mOnScrollFunction) {
     mOnScrollFunction(xo, yo);
+  }
 }
 
 void Window::internalOnResize(int32_t width, int32_t height) {
   glViewport(0, 0, width, height);
-  if (mOnResizeFunction)
+  if (mOnResizeFunction) {
     mOnResizeFunction(width, height);
+  }
 }
 
 void Window::update(bool waitForEvents) {
@@ -148,20 +153,22 @@ int32_t Window::renderLoop(bool waitForEvents) {
 }
 
 void Window::setVisible(bool show) {
-  if (show)
+  if (show) {
     glfwShowWindow(mContext->getGLFW());
-  else
+  } else {
     glfwHideWindow(mContext->getGLFW());
+  }
 }
 
 void Window::close() {
-  glfwSetWindowShouldClose(mContext->getGLFW(), true);
+  glfwSetWindowShouldClose(mContext->getGLFW(), 1);
   setVisible(false);
 }
 
 void Window::resize(uint32_t width, uint32_t height) {
-  glfwSetWindowSize(mContext->getGLFW(), width, height);
-  internalOnResize(width, height);
+  glfwSetWindowSize(mContext->getGLFW(), static_cast<int32_t>(width),
+                    static_cast<int32_t>(height));
+  internalOnResize(static_cast<int32_t>(width), static_cast<int32_t>(height));
 }
 
 void Window::setTitle(const std::string& title) {
@@ -185,13 +192,15 @@ bool Window::shouldClose() {
 }
 
 int32_t Window::getWidth() const {
-  int32_t width, height;
+  int32_t width  = 0;
+  int32_t height = 0;
   glfwGetWindowSize(mContext->getGLFW(), &width, &height);
   return width;
 }
 
 int32_t Window::getHeight() const {
-  int32_t width, height;
+  int32_t width  = 0;
+  int32_t height = 0;
   glfwGetWindowSize(mContext->getGLFW(), &width, &height);
   return height;
 }
@@ -201,7 +210,7 @@ void Window::getSize(int32_t& width, int32_t& height) const {
 }
 
 std::array<double, 2> Window::getCursorPos() const {
-  std::array<double, 2> pos;
+  std::array<double, 2> pos{};
   glfwGetCursorPos(mContext->getGLFW(), &(pos[0]), &(pos[1]));
   return pos;
 }

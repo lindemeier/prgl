@@ -7,10 +7,7 @@ std::shared_ptr<FrameBufferObject> FrameBufferObject::Create() {
   return std::make_shared<FrameBufferObject>();
 }
 
-FrameBufferObject::FrameBufferObject()
-    : mHandle(INVALID_HANDLE),
-      mTarget(),
-      mDepth() {
+FrameBufferObject::FrameBufferObject() : mHandle(INVALID_HANDLE) {
   glGenFramebuffers(1, &mHandle);
 }
 
@@ -66,12 +63,12 @@ const std::shared_ptr<Texture2d>& FrameBufferObject::getDepth() const {
   return mDepth;
 }
 
-bool FrameBufferObject::checkStatus() {
+bool FrameBufferObject::checkStatus() const {
   bind(true);
 
   // glReadBuffer(GL_NONE);
 
-  int32_t status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+  const auto status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
   bool result    = false;
 
   switch (status) {

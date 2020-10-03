@@ -51,13 +51,13 @@ class GlslProgram {
   void setMatrix(const std::string& label, const float* m, bool transpose);
   void setMatrix(const std::string& label, const double* m, bool transpose);
 
-  void bindSampler(const std::string& name, const TextureUnit unit,
+  void bindSampler(const std::string& name, TextureUnit unit,
                    const std::shared_ptr<Texture2d>& texture);
 
   static std::string ReadShaderFromFile(const std::string& filename);
 
  protected:
-  uint32_t getCurrentlyBoundProgram() const;
+  static uint32_t getCurrentlyBoundProgram();
   static uint32_t compile(const std::string& source, uint32_t type);
 
   uint32_t mProgHandle;

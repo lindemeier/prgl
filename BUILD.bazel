@@ -1,9 +1,19 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
 
 cc_library(
     name = "prgl",
     srcs = glob(["src/*.cxx"]),
     hdrs = glob(["prgl/*.hxx"]),
-    visibility = ["//visibility:public"],
+    copts = [
+        "-Wall",
+        "-Werror",
+        "-Weverything",
+        "-Wno-c++98-compat",
+        "-Wno-padded",
+        "-Wno-documentation",
+        "-Wno-global-constructors",
+        "-Wno-exit-time-destructors",
+    ],
     linkopts = [
         "-lGL",
         "-lGLEW",
@@ -17,5 +27,6 @@ cc_library(
         "/usr/lib/x86_64-linux-gnu/librt.so",
         "/usr/lib/x86_64-linux-gnu/libglfw.so",
     ],
-    deps = []
+    visibility = ["//visibility:public"],
+    deps = [],
 )

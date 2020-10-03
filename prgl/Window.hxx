@@ -18,14 +18,14 @@ namespace prgl {
 class ContextImplementation;
 
 class Window {
+  std::unique_ptr<ContextImplementation> mContext;
+
   std::function<void()> mRenderFunction;
   std::function<void(int32_t, int32_t, int32_t, int32_t)> mOnKeyFunction;
   std::function<void(int32_t, int32_t, int32_t)> mOnMouseFunction;
   std::function<void(double, double)> mOnMouseMoveFunction;
   std::function<void(double, double)> mOnScrollFunction;
   std::function<void(int32_t, int32_t)> mOnResizeFunction;
-
-  std::unique_ptr<ContextImplementation> mContext;
 
  public:
   Window(uint32_t width, uint32_t height, const std::string& title,
@@ -37,8 +37,8 @@ class Window {
           uint32_t samples, bool resizable, bool visible, bool sRGB_capable,
           GLFWmonitor *monitor, GLFWwindow *shareContext*/
   Window(uint32_t width, uint32_t height, const std::string& title,
-         const std::array<int32_t, 4>& rgbaBits, const int32_t depthBits,
-         const int32_t stencilBits, const int32_t samples, bool resizable);
+         const std::array<int32_t, 4>& rgbaBits, int32_t depthBits,
+         int32_t stencilBits, int32_t samples, bool resizable);
 
   virtual ~Window();
 

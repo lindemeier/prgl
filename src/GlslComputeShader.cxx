@@ -12,8 +12,7 @@ std::shared_ptr<GlslComputeShader> GlslComputeShader::Create(
 }
 
 GlslComputeShader::GlslComputeShader(const std::string& glslSource)
-    : GlslProgram(),
-      mShaderHandle(INVALID_HANDLE) {
+    : mShaderHandle(INVALID_HANDLE) {
   attach(glslSource);
 }
 
@@ -32,17 +31,17 @@ GlslComputeShader::~GlslComputeShader() {
 void GlslComputeShader::attach(const std::string& source) {
   if (!source.empty()) {
     // compile the shader
-    mShaderHandle = compile(source.c_str(), GL_COMPUTE_SHADER);
+    mShaderHandle = compile(source, GL_COMPUTE_SHADER);
     glAttachShader(mProgHandle, mShaderHandle);
 
     glLinkProgram(mProgHandle);
-    int32_t linkV;
+    int32_t linkV = 0;
     glGetProgramiv(mProgHandle, GL_LINK_STATUS, &linkV);
 
-    if (!linkV) {
+    if (linkV == 0) {
       std::cerr << "Error in linking compute shader program" << std::endl;
       GLchar log[10240];
-      GLsizei length;
+      GLsizei length = 0;
       glGetProgramInfoLog(mProgHandle, 10239, &length, log);
       std::cerr << source << "\n" << log << std::endl;
 
@@ -59,25 +58,27 @@ void GlslComputeShader::attach(const std::string& source) {
   }
 }
 
-vec3i GlslComputeShader::getWorkGroupSize() {
+vec3ui GlslComputeShader::getWorkGroupSize() const {
   vec3i size;
   glGetProgramiv(mProgHandle, GL_COMPUTE_WORK_GROUP_SIZE, &(size[0]));
-  return size;
+  return {static_cast<uint32_t>(size[0U]), static_cast<uint32_t>(size[1U]),
+          static_cast<uint32_t>(size[2U])};
 }
 
-vec3i GlslComputeShader::getMaxWorkGroupSize() const {
+vec3ui GlslComputeShader::getMaxWorkGroupSize() {
   vec3i size;
   glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &(size[0]));
-  return size;
+  return {static_cast<uint32_t>(size[0U]), static_cast<uint32_t>(size[1U]),
+          static_cast<uint32_t>(size[2U])};
 }
 
 void GlslComputeShader::dispatchCompute(uint32_t num_groups_x,
                                         uint32_t num_groups_y,
-                                        uint32_t num_groups_z) const {
+                                        uint32_t num_groups_z) {
   glDispatchCompute(num_groups_x, num_groups_y, num_groups_z);
 }
 
-void GlslComputeShader::memoryBarrier(GLbitfield barrierType) const {
+void GlslComputeShader::memoryBarrier(GLbitfield barrierType) {
   glMemoryBarrier(barrierType);
 }
 
@@ -95,7 +96,8 @@ void GlslComputeShader::execute(int32_t x, int32_t y, int32_t w, int32_t h) {
   set2i("offset", x, y);
 
   const auto workSize = getWorkGroupSize();
-  dispatchCompute(w / workSize[0] + 1U, h / workSize[1] + 1U, 1U);
+  dispatchCompute((static_cast<uint32_t>(w) / workSize[0U]) + 1U,
+                  (static_cast<uint32_t>(h) / workSize[1U]) + 1U, 1U);
   memoryBarrier(GL_ALL_BARRIER_BITS);
 
   bind(false);

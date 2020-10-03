@@ -51,7 +51,7 @@ class VertexArrayObject final {
   void addVertexBufferObject(uint32_t location,
                              const std::shared_ptr<VertexBufferObject>& vbo);
 
-  void render(const DrawMode& mode, const uint32_t first, const uint32_t count);
+  void render(const DrawMode& mode, uint32_t first, uint32_t count);
 
  private:
   VertexArrayObject(const VertexArrayObject&) = delete;

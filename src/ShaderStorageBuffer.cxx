@@ -20,13 +20,13 @@ ShaderStorageBuffer::~ShaderStorageBuffer() {
   mHandle = INVALID_HANDLE;
 }
 
-int32_t ShaderStorageBuffer::getSizeInBytes() const {
-  int32_t size;
+uint32_t ShaderStorageBuffer::getSizeInBytes() const {
+  GLint64 size = 0;
   bind(true);
-  glGetBufferParameteriv(GL_SHADER_STORAGE_BUFFER, GL_BUFFER_SIZE, &size);
+  glGetBufferParameteri64v(GL_SHADER_STORAGE_BUFFER, GL_BUFFER_SIZE, &size);
 
   bind(false);
-  return size;
+  return static_cast<uint32_t>(size);
 }
 
 void ShaderStorageBuffer::create(const void* dataStart, uint32_t nBytes) {
@@ -41,7 +41,7 @@ void ShaderStorageBuffer::create(const void* dataStart, uint32_t nBytes) {
 
 void ShaderStorageBuffer::upload(const void* dataStart, uint32_t nBytes) {
   // check if enough bytes allocated
-  if (nBytes != (uint32_t)getSizeInBytes()) {
+  if (nBytes != static_cast<uint32_t>(getSizeInBytes())) {
     std::cout << "ShaderStorageBuffer::reallocated:size: " << nBytes
               << std::endl;
     create(dataStart, nBytes);
@@ -52,7 +52,7 @@ void ShaderStorageBuffer::upload(const void* dataStart, uint32_t nBytes) {
 
   GLvoid* data = glMapBuffer(GL_SHADER_STORAGE_BUFFER, GL_WRITE_ONLY);
 
-  memcpy(data, dataStart, nBytes);
+  std::memcpy(data, dataStart, nBytes);
 
   glUnmapBuffer(GL_SHADER_STORAGE_BUFFER);
 
@@ -86,12 +86,12 @@ void ShaderStorageBuffer::bindBase(uint32_t location) const {
 }
 
 void ShaderStorageBuffer::copyTo(ShaderStorageBuffer& other) const {
-  int32_t otherSize = other.getSizeInBytes();
-  int32_t thisSize  = getSizeInBytes();
+  const auto otherSize = other.getSizeInBytes();
+  const auto thisSize  = getSizeInBytes();
 
-  int32_t cReadBuffer;
+  int32_t cReadBuffer = 0;
   glGetIntegerv(GL_COPY_READ_BUFFER, &cReadBuffer);
-  int32_t cWriteBuffer;
+  int32_t cWriteBuffer = 0;
   glGetIntegerv(GL_COPY_WRITE_BUFFER, &cWriteBuffer);
 
   if (thisSize != otherSize) {

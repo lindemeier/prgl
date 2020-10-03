@@ -211,7 +211,7 @@ class Texture2d final {
   void setEnvMode(TextureEnvMode envMode);
   void setFilter(TextureMinFilter minFilter, TextureMagFilter magFilter);
   void setMaxIsotropy(float anisotropy);
-  void render(float posX, float posY, float width, float height);
+  void render(float posX, float posY, float width, float height) const;
 
   uint32_t getId() const;
   uint32_t getWidth() const;
