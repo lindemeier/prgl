@@ -34,3 +34,7 @@
 \.vscode/
 
 build/
+bazel-bin
+bazel-out
+bazel-prgl
+bazel-testlogs

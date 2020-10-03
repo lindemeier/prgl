@@ -1,6 +1,6 @@
 #include "prgl/Window.hxx"
 
-#include "ContextImplementation.hxx"
+#include "prgl/ContextImplementation.hxx"
 #include "prgl/glCommon.hxx"
 
 namespace prgl {
