@@ -16,7 +16,7 @@ int32_t main(int32_t argc, char** args) {
 
   // create vertex positions
   std::vector<prgl::vec3> positions = {
-    {{-1.0f, -1.0f, 0.0f}, {1.0f, -1.0f, 0.0f}, {0.0f, 1.0f, 0.0f}}};
+    {{-1.0F, -1.0F, 0.0F}, {1.0F, -1.0F, 0.0F}, {0.0F, 1.0F, 0.0F}}};
   auto vboPosition = prgl::VertexBufferObject::Create(
     prgl::VertexBufferObject::Usage::StaticDraw);
   vboPosition->createBuffer(positions);
@@ -97,7 +97,7 @@ int32_t main(int32_t argc, char** args) {
     }
 
     // render the texture into the main window
-    tex->render(0.0f, 0.0f, gl->getWidth(), gl->getHeight());
+    tex->render(0.0F, 0.0F, gl->getWidth(), gl->getHeight());
   });
 
   gl->renderLoop(true);

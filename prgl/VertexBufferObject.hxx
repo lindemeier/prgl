@@ -101,12 +101,6 @@ class VertexBufferObject final {
     //   {
     //     update
     //   }
-    if (startIndex < 0U) {
-      std::cerr << "VertexBufferObject::updateBuffer: startIndex < 0, "
-                   "Ignoring update..."
-                << std::endl;
-      return;
-    }
     if (startIndex >= mVerticesCount) {
       std::cerr
         << "VertexBufferObject::updateBuffer: startIndex >= mVerticesCount, "

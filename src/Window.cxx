@@ -160,8 +160,9 @@ void Window::close() {
 }
 
 void Window::resize(uint32_t width, uint32_t height) {
-  glfwSetWindowSize(mContext->getGLFW(), width, height);
-  internalOnResize(width, height);
+  glfwSetWindowSize(mContext->getGLFW(), static_cast<int32_t>(width),
+                    static_cast<int32_t>(height));
+  internalOnResize(static_cast<int32_t>(width), static_cast<int32_t>(height));
 }
 
 void Window::setTitle(const std::string& title) {

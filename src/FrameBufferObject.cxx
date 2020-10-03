@@ -71,7 +71,7 @@ bool FrameBufferObject::checkStatus() {
 
   // glReadBuffer(GL_NONE);
 
-  int32_t status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
+  const auto status = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER_EXT);
   bool result    = false;
 
   switch (status) {

@@ -7,7 +7,7 @@
 
 namespace prgl {
 
-std::string ReadShaderFromFile(const std::string& filename) {
+std::string GlslProgram::ReadShaderFromFile(const std::string& filename) {
   std::string content;
   std::ifstream fileStream(filename, std::ios::in);
 
@@ -42,7 +42,7 @@ uint32_t GlslProgram::compile(const std::string& source, uint32_t type) {
   uint32_t id = glCreateShader(type);
 
   const char* c_str = source.c_str();
-  glShaderSource(id, 1, &c_str, NULL);
+  glShaderSource(id, 1, &c_str, nullptr);
   glCompileShader(id);
 
   int32_t c = 0;
@@ -51,7 +51,7 @@ uint32_t GlslProgram::compile(const std::string& source, uint32_t type) {
 
   if (!c) {
     std::unique_ptr<GLchar[]> logstr(new GLchar[2048]);
-    glGetShaderInfoLog(id, 2048, NULL, logstr.get());
+    glGetShaderInfoLog(id, 2048, nullptr, logstr.get());
     std::stringstream ss;
     ss << "SHADER::Error compiling shader"
        << "\n"
@@ -162,7 +162,7 @@ uint32_t GlslProgram::getCurrentlyBoundProgram() const {
   int32_t id;
   glGetIntegerv(GL_CURRENT_PROGRAM, &id);
 
-  return (uint32_t)id;
+  return static_cast<uint32_t>(id);
 }
 
 /**
@@ -177,7 +177,7 @@ void GlslProgram::bindSampler(const std::string& name, const TextureUnit unit,
   bind(true);
   glActiveTexture(static_cast<uint32_t>(unit));
   texture->bind(true);
-  seti(name.c_str(), static_cast<uint32_t>(unit));
+  setui(name.c_str(), static_cast<uint32_t>(unit));
   bind(false);
 }
 

@@ -29,7 +29,7 @@ Texture2d::Texture2d(uint32_t width, uint32_t height,
       mWrap(wrapMode),
       mEnvMode(envMode),
       mCreateMipMaps(createMipMaps),
-      mMaxAnisotropy(1.0f) {
+      mMaxAnisotropy(1.0F) {
   glGenTextures(1, &mHandle);
 }
 
@@ -41,9 +41,10 @@ Texture2d::~Texture2d() {
 void Texture2d::upload(void* data) {
   bind(true);
 
-  glTexImage2D(mTarget, mMipLevel, static_cast<uint32_t>(mInternalFormat),
-               mWidth, mHeight, mBorder, static_cast<uint32_t>(mFormat),
-               static_cast<uint32_t>(mType), data);
+  glTexImage2D(mTarget, mMipLevel, static_cast<GLint>(mInternalFormat),
+               static_cast<GLint>(mWidth), static_cast<GLint>(mHeight),
+               static_cast<GLint>(mBorder), static_cast<GLuint>(mFormat),
+               static_cast<GLuint>(mType), data);
 
   if (mCreateMipMaps) {
     glTexParameteri(mTarget, GL_GENERATE_MIPMAP, GL_TRUE);
@@ -51,16 +52,15 @@ void Texture2d::upload(void* data) {
   }
 
   glTexParameteri(mTarget, GL_TEXTURE_MIN_FILTER,
-                  static_cast<uint32_t>(mMinFilter));
+                  static_cast<GLint>(mMinFilter));
   glTexParameteri(mTarget, GL_TEXTURE_MAG_FILTER,
-                  static_cast<uint32_t>(mMagFilter));
+                  static_cast<GLint>(mMagFilter));
 
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,
-            static_cast<uint32_t>(mEnvMode));
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, static_cast<GLint>(mEnvMode));
 
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, static_cast<uint32_t>(mWrap));
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, static_cast<uint32_t>(mWrap));
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_R, static_cast<uint32_t>(mWrap));
+  glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, static_cast<GLint>(mWrap));
+  glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, static_cast<GLint>(mWrap));
+  glTexParameteri(mTarget, GL_TEXTURE_WRAP_R, static_cast<GLint>(mWrap));
 
   glTexParameterf(mTarget, GL_TEXTURE_MAX_ANISOTROPY_EXT, mMaxAnisotropy);
 
@@ -173,9 +173,9 @@ void Texture2d::setWrapMode(TextureWrapMode wrap) {
 
   bind(true);
 
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, static_cast<uint32_t>(mWrap));
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, static_cast<uint32_t>(mWrap));
-  glTexParameteri(mTarget, GL_TEXTURE_WRAP_R, static_cast<uint32_t>(mWrap));
+  glTexParameteri(mTarget, GL_TEXTURE_WRAP_S, static_cast<GLint>(mWrap));
+  glTexParameteri(mTarget, GL_TEXTURE_WRAP_T, static_cast<GLint>(mWrap));
+  glTexParameteri(mTarget, GL_TEXTURE_WRAP_R, static_cast<GLint>(mWrap));
 
   bind(false);
 }
@@ -185,8 +185,7 @@ void Texture2d::setEnvMode(TextureEnvMode envMode) {
 
   bind(true);
 
-  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,
-            static_cast<uint32_t>(mEnvMode));
+  glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, static_cast<GLint>(mEnvMode));
 
   bind(false);
 }
@@ -199,9 +198,9 @@ void Texture2d::setFilter(TextureMinFilter minFilter,
   bind(true);
 
   glTexParameteri(mTarget, GL_TEXTURE_MIN_FILTER,
-                  static_cast<uint32_t>(mMinFilter));
+                  static_cast<GLint>(mMinFilter));
   glTexParameteri(mTarget, GL_TEXTURE_MAG_FILTER,
-                  static_cast<uint32_t>(mMagFilter));
+                  static_cast<GLint>(mMagFilter));
 
   bind(false);
 }
@@ -227,7 +226,7 @@ void Texture2d::render(float posX, float posY, float width, float height) {
   glActiveTexture(GL_TEXTURE0);
   glBindTexture(GL_TEXTURE_2D, 0);
 
-  glColor4f(1.0, 1.0, 1.0, 1.0f);
+  glColor4f(1.0, 1.0, 1.0, 1.0F);
 
   glEnable(GL_TEXTURE_2D);
   glActiveTexture(GL_TEXTURE0);
@@ -255,19 +254,19 @@ void Texture2d::render(float posX, float posY, float width, float height) {
   glDisable(GL_LIGHTING);
 
   glPushMatrix();
-  glTranslatef(posX, posY, 0.0f);
+  glTranslatef(posX, posY, 0.0F);
   glBegin(GL_QUADS);
-  glTexCoord2f(0.0f, 1.0f);
-  glVertex3f(0.0f, 0.0f, 0.0f);
+  glTexCoord2f(0.0F, 1.0F);
+  glVertex3f(0.0F, 0.0F, 0.0F);
 
-  glTexCoord2f(1.0f, 1.0f);
-  glVertex3f(width, 0.0f, 0.0f);
+  glTexCoord2f(1.0F, 1.0F);
+  glVertex3f(width, 0.0F, 0.0F);
 
-  glTexCoord2f(1.0f, 0.0f);
-  glVertex3f(width, height, 0.0f);
+  glTexCoord2f(1.0F, 0.0F);
+  glVertex3f(width, height, 0.0F);
 
-  glTexCoord2f(0.0f, 0.0f);
-  glVertex3f(0.0, height, 0.0f);
+  glTexCoord2f(0.0F, 0.0F);
+  glVertex3f(0.0, height, 0.0F);
   glEnd();
   glPopMatrix();
 

@@ -24,7 +24,7 @@ class ShaderStorageBuffer final {
   ~ShaderStorageBuffer();
 
   // retun current buffer size in bytes
-  int32_t getSizeInBytes() const;
+  uint32_t getSizeInBytes() const;
 
   // allocate buffer
   void create(const void* dataStart, uint32_t nBytes);

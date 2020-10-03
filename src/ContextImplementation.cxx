@@ -6,11 +6,12 @@
 #include "prgl/ContextImplementation.hxx"
 
 #include <iostream>
+#include <sstream>
 
 namespace prgl {
 
 void checkGLError(const char* file, const char* function, int line) {
-  int32_t err(glGetError());
+  auto err = glGetError();
 
   while (err != GL_NO_ERROR) {
     std::string error;
@@ -45,11 +46,12 @@ void checkGLError(const char* file, const char* function, int line) {
   }
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-function"
 // http://blog.nobel-joergensen.com/2013/02/17/debugging-opengl-part-2-using-gldebugmessagecallback/
-void APIENTRY openGlDebugCallback(GLenum source, GLenum type, GLuint id,
-                                  GLenum severity, GLsizei length,
-                                  const GLchar* message,
-                                  const void* userParam) {
+static void APIENTRY openGlDebugCallback(GLenum, GLenum type, GLuint id,
+                                         GLenum severity, GLsizei,
+                                         const GLchar* message, const void*) {
   if (severity != GL_DEBUG_SEVERITY_MEDIUM &&
       severity != GL_DEBUG_SEVERITY_HIGH) {
     return;
@@ -99,6 +101,7 @@ void APIENTRY openGlDebugCallback(GLenum source, GLenum type, GLuint id,
             << std::endl;
   std::cerr << std::endl;
 }
+#pragma clang diagnostic pop
 
 ContextImplementation::ContextImplementation()
     : ContextImplementation(640, 480, "", 8, 8, 8, 8, 8, 8, 4, false, false,
@@ -111,12 +114,10 @@ ContextImplementation::~ContextImplementation() {
   }
 }
 
-void ContextImplementation::onError(int32_t errorCode,
-                                    const char* errorMessage) {
-  std::cerr << "GLWindow::ERROR_GLFW:\t" << errorMessage << std::endl;
-  std::cout << "press continue to exit";
-  std::cin.get();
-  exit(EXIT_FAILURE);
+void ContextImplementation::onError(int32_t, const char* errorMessage) {
+  std::stringstream ss;
+  ss << "GLWindow::ERROR_GLFW:\t" << errorMessage;
+  throw std::runtime_error(ss.str());
 }
 
 void ContextImplementation::initGLFW() {
@@ -134,9 +135,9 @@ void ContextImplementation::initGLEW(GLFWwindow* window) {
   makeCurrent();
 
   // glewExperimental = GL_TRUE;
-  int32_t err = glewInit();
+  auto err = glewInit();
   if (GLEW_OK != err) {
-    fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+    std::cerr << "Error: " << glewGetErrorString(err) << std::endl;
     std::cout << "press enter to exit";
     std::cin.get();
     exit(EXIT_FAILURE);
@@ -148,10 +149,12 @@ void ContextImplementation::initGLEW(GLFWwindow* window) {
     glfwGetWindowAttrib(window, GLFW_CONTEXT_VERSION_MINOR);
   const auto iOpenGLRevision =
     glfwGetWindowAttrib(window, GLFW_CONTEXT_REVISION);
-  printf("Status: Using GLFW Version %s\n", glfwGetVersionString());
-  printf("Status: Using OpenGL Version: %i.%i, Revision: %i\n", iOpenGLMajor,
-         iOpenGLMinor, iOpenGLRevision);
-  printf("Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+  std::cout << "Status: Using GLFW Version " << glfwGetVersionString()
+            << std::endl;
+  std::cout << "Status: Using OpenGL Version: " << iOpenGLMajor << "."
+            << iOpenGLMinor << ", Revision: " << iOpenGLRevision << std::endl;
+  std::cout << "Status: Using GLEW " << glewGetString(GLEW_VERSION)
+            << std::endl;
 }
 
 GLFWwindow* ContextImplementation::getGLFW() const {
@@ -161,7 +164,7 @@ GLFWwindow* ContextImplementation::getGLFW() const {
 ContextImplementation::ContextImplementation(
   uint32_t width, uint32_t height, const std::string& name, int32_t redBits,
   int32_t greenBits, int32_t blueBits, int32_t alphaBits, int32_t depthBits,
-  int32_t stencilBits, uint32_t samples, bool resizable, bool visible,
+  int32_t stencilBits, int32_t samples, bool resizable, bool visible,
   bool sRGB_capable, GLFWmonitor* monitor, GLFWwindow* shareContext)
     : mGlfwWindow(nullptr) {
   initGLFW();
@@ -173,9 +176,9 @@ ContextImplementation::ContextImplementation(
   glfwWindowHint(GLFW_STENCIL_BITS, stencilBits);
   glfwWindowHint(GLFW_DEPTH_BITS, depthBits);
   glfwWindowHint(GLFW_SAMPLES, samples);
-  glfwWindowHint(GLFW_RESIZABLE, resizable);
-  glfwWindowHint(GLFW_VISIBLE, visible);
-  glfwWindowHint(GLFW_SRGB_CAPABLE, sRGB_capable);
+  glfwWindowHint(GLFW_RESIZABLE, static_cast<int32_t>(resizable));
+  glfwWindowHint(GLFW_VISIBLE, static_cast<int32_t>(visible));
+  glfwWindowHint(GLFW_SRGB_CAPABLE, static_cast<int32_t>(sRGB_capable));
 //    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 //    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
 //    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -186,7 +189,8 @@ ContextImplementation::ContextImplementation(
   glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GL_FALSE);
 #endif
   mGlfwWindow =
-    glfwCreateWindow(width, height, name.c_str(), monitor, shareContext);
+    glfwCreateWindow(static_cast<int32_t>(width), static_cast<int32_t>(height),
+                     name.c_str(), monitor, shareContext);
 
   if (!mGlfwWindow) {
     glfwTerminate();
@@ -220,7 +224,7 @@ ContextImplementation::ContextImplementation(
               << width << ">" << dims << " height: " << height << ">" << dims
               << std::endl;
   }
-  glViewport(0, 0, width, height);
+  glViewport(0, 0, static_cast<int32_t>(width), static_cast<int32_t>(height));
 
   // disable any sRGB conversion. Should not be needed as long as no sRGB
   // textures are used.

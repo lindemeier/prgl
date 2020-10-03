@@ -59,16 +59,18 @@ void GlslComputeShader::attach(const std::string& source) {
   }
 }
 
-vec3i GlslComputeShader::getWorkGroupSize() {
+vec3ui GlslComputeShader::getWorkGroupSize() {
   vec3i size;
   glGetProgramiv(mProgHandle, GL_COMPUTE_WORK_GROUP_SIZE, &(size[0]));
-  return size;
+  return {static_cast<uint32_t>(size[0U]), static_cast<uint32_t>(size[1U]),
+          static_cast<uint32_t>(size[2U])};
 }
 
-vec3i GlslComputeShader::getMaxWorkGroupSize() const {
+vec3ui GlslComputeShader::getMaxWorkGroupSize() const {
   vec3i size;
   glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &(size[0]));
-  return size;
+  return {static_cast<uint32_t>(size[0U]), static_cast<uint32_t>(size[1U]),
+          static_cast<uint32_t>(size[2U])};
 }
 
 void GlslComputeShader::dispatchCompute(uint32_t num_groups_x,
@@ -95,7 +97,8 @@ void GlslComputeShader::execute(int32_t x, int32_t y, int32_t w, int32_t h) {
   set2i("offset", x, y);
 
   const auto workSize = getWorkGroupSize();
-  dispatchCompute(w / workSize[0] + 1U, h / workSize[1] + 1U, 1U);
+  dispatchCompute((static_cast<uint32_t>(w) / workSize[0U]) + 1U,
+                  (static_cast<uint32_t>(h) / workSize[1U]) + 1U, 1U);
   memoryBarrier(GL_ALL_BARRIER_BITS);
 
   bind(false);

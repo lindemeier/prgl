@@ -26,10 +26,9 @@ class ContextImplementation {
   ContextImplementation(uint32_t width, uint32_t height,
                         const std::string& name, int32_t redBits,
                         int32_t greenBits, int32_t blueBits, int32_t alphaBits,
-                        int32_t depthBits, int32_t stencilBits,
-                        uint32_t samples, bool resizable, bool visible,
-                        bool sRGB_capable, GLFWmonitor* monitor,
-                        GLFWwindow* shareContext);
+                        int32_t depthBits, int32_t stencilBits, int32_t samples,
+                        bool resizable, bool visible, bool sRGB_capable,
+                        GLFWmonitor* monitor, GLFWwindow* shareContext);
 
   ContextImplementation();
 
@@ -37,7 +36,7 @@ class ContextImplementation {
 
   virtual ~ContextImplementation();
 
-  static void onError(int32_t errorCode, const char* errorMessage);
+  [[noreturn]] static void onError(int32_t errorCode, const char* errorMessage);
 
   void makeCurrent() const;
 };

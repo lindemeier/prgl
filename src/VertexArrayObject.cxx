@@ -50,7 +50,8 @@ void VertexArrayObject::bind(bool bind) const {
  */
 void VertexArrayObject::render(const DrawMode& mode, const uint32_t first,
                                const uint32_t count) {
-  glDrawArrays(static_cast<GLenum>(mode), first, count);
+  glDrawArrays(static_cast<GLenum>(mode), static_cast<GLint>(first),
+               static_cast<GLint>(count));
 }
 
 void VertexArrayObject::addVertexBufferObject(
@@ -60,10 +61,11 @@ void VertexArrayObject::addVertexBufferObject(
 
   bind(true);
   {
-    Binder binderVbo(vbo);
+    Binder<VertexBufferObject> binderVbo(vbo);
     glVertexAttribPointer(
       location, vbo->getVertexComponentDataColumns(),
-      static_cast<GLenum>(vbo->getVertexComponentDataType()), GL_FALSE, 0, 0);
+      static_cast<GLenum>(vbo->getVertexComponentDataType()), GL_FALSE, 0,
+      nullptr);
     glEnableVertexAttribArray(location);
   }
   bind(false);
