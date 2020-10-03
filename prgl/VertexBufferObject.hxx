@@ -50,6 +50,20 @@ class VertexBufferObject final {
 
   void bind(bool bind) const;
 
+  template <class T>
+  void createBuffer(const T* dataPtr, const uint32_t dimensions,
+                    const std::size_t count) {
+    mDataType      = DataTypeTr<T>::dataType;
+    mDataColumns   = dimensions;
+    mVerticesCount = count;
+
+    bind(true);
+    glBufferData(GL_ARRAY_BUFFER, (count * sizeof(T)) * mVerticesCount,
+                 static_cast<const void*>(dataPtr),
+                 static_cast<GLenum>(mUsage));
+    bind(false);
+  }
+
   /**
    * @brief Create Vertex Buffer object from data.
    *
@@ -61,15 +75,7 @@ class VertexBufferObject final {
    */
   template <size_t N, class Type, template <class, size_t> class VecType>
   void createBuffer(const std::vector<VecType<Type, N>>& data) {
-    mDataType      = DataTypeTr<Type>::dataType;
-    mDataColumns   = N;
-    mVerticesCount = data.size();
-
-    bind(true);
-    glBufferData(GL_ARRAY_BUFFER, (N * sizeof(Type)) * mVerticesCount,
-                 static_cast<const void*>(data.data()),
-                 static_cast<GLenum>(mUsage));
-    bind(false);
+    createBuffer(data.data()->data(), N, data.size());
   }
 
   /**
