@@ -8,6 +8,8 @@
 #include <array>
 #include <memory>
 
+#include "prgl/Types.hxx"
+
 namespace prgl {
 /**
  * @brief Shader, texture handles that are not yet initl
@@ -23,21 +25,6 @@ constexpr uint32_t INVALID_HANDLE = 0U;
  * @param line the line where the function gets called.
  */
 void checkGLError(const char* file, const char* function, int line);
-
-/**
- * @brief vec types.
- */
-using vec2 = std::array<float, 2U>;
-using vec3 = std::array<float, 3U>;
-using vec4 = std::array<float, 4U>;
-
-using vec2i = std::array<int32_t, 2U>;
-using vec3i = std::array<int32_t, 3U>;
-using vec4i = std::array<int32_t, 4U>;
-
-using vec2ui = std::array<uint32_t, 2U>;
-using vec3ui = std::array<uint32_t, 3U>;
-using vec4ui = std::array<uint32_t, 4U>;
 
 /**
  * @brief "Specifies the data type of the pixel data. The following symbolic
