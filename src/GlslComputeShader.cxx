@@ -110,7 +110,7 @@ void GlslComputeShader::execute(int32_t x, int32_t y, int32_t w, int32_t h) {
  * @param texture
  * @param access
  */
-void GlslComputeShader::bindImage2D(uint32_t location,
+void GlslComputeShader::bindImage2D(TextureUnit location,
                                     const std::shared_ptr<Texture2d>& texture,
                                     TextureAccess access) {
   bind(true);

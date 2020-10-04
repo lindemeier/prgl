@@ -131,10 +131,16 @@ void Texture2d::bind(bool bind) const {
   }
 }
 
-void Texture2d::bindImageTexture(uint32_t unit, TextureAccess access,
+void Texture2d::bindAtUnit(TextureUnit unit) const {
+  glActiveTexture(static_cast<GLenum>(unit));
+  glBindTexture(mTarget, mHandle);
+}
+
+void Texture2d::bindImageTexture(TextureUnit unit, TextureAccess access,
                                  int32_t level, bool layered, int32_t layer) {
-  glBindImageTexture(unit, mHandle, level, static_cast<GLboolean>(layered),
-                     layer, static_cast<uint32_t>(access),
+  glBindImageTexture(static_cast<GLenum>(unit), mHandle, level,
+                     static_cast<GLboolean>(layered), layer,
+                     static_cast<uint32_t>(access),
                      static_cast<uint32_t>(mInternalFormat));
 }
 

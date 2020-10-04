@@ -195,8 +195,10 @@ class Texture2d final {
   ~Texture2d();
 
   void bind(bool bind) const;
-  // used for binding at shader location for write andor read operations
-  void bindImageTexture(uint32_t unit,
+  // glActiveTexture + glBindTexture
+  void bindAtUnit(TextureUnit unit) const;
+  // used for binding single image at shader location for write and/or read operations
+  void bindImageTexture(TextureUnit unit,
                         TextureAccess access = TextureAccess::ReadWrite,
                         int32_t level = 0, bool layered = GL_TRUE,
                         int32_t layer = 0);

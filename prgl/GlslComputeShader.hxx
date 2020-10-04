@@ -34,7 +34,8 @@ class GlslComputeShader final : public GlslProgram {
 
   void execute(int32_t x, int32_t y, int32_t w, int32_t h);
 
-  void bindImage2D(uint32_t location, const std::shared_ptr<Texture2d>& texture,
+  void bindImage2D(TextureUnit location,
+                   const std::shared_ptr<Texture2d>& texture,
                    TextureAccess access);
   void bindSSBO(uint32_t location,
                 const std::shared_ptr<ShaderStorageBuffer>& buffer);
