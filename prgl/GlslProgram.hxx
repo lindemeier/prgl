@@ -61,7 +61,7 @@ class GlslProgram {
   void setMatrix(const std::string& label, const mat4x4<float>& m);
   void setMatrix(const std::string& label, const mat4x4<double>& m);
 
-  void bindSampler(const std::string& name, TextureUnit unit,
+  void bindSampler(const std::string& name, uint32_t unit,
                    const std::shared_ptr<Texture2d>& texture);
 
   static std::string ReadShaderFromFile(const std::string& filename);
