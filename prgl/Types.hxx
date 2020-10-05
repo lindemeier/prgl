@@ -15,9 +15,13 @@
 
 namespace prgl {
 
-using vec2 = std::array<float, 2U>;
-using vec3 = std::array<float, 3U>;
-using vec4 = std::array<float, 4U>;
+using vec2f = std::array<float, 2U>;
+using vec3f = std::array<float, 3U>;
+using vec4f = std::array<float, 4U>;
+
+using vec2d = std::array<double, 2U>;
+using vec3d = std::array<double, 3U>;
+using vec4d = std::array<double, 4U>;
 
 using vec2i = std::array<int32_t, 2U>;
 using vec3i = std::array<int32_t, 3U>;

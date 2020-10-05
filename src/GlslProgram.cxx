@@ -136,6 +136,22 @@ void GlslProgram::set4fv(const std::string& label, const float* args) {
   glUniform4fv(glGetUniformLocation(mProgHandle, label.c_str()), 1, args);
 }
 
+void GlslProgram::set2(const std::string& label, const vec2f& vec) {
+  glUniform4fv(glGetUniformLocation(mProgHandle, label.c_str()), 1, &(vec[0U]));
+}
+
+void GlslProgram::set3(const std::string& label, const vec3f& vec) {
+  glUniform4fv(glGetUniformLocation(mProgHandle, label.c_str()), 1, &(vec[0U]));
+}
+
+void GlslProgram::set2(const std::string& label, const vec2d& vec) {
+  glUniform4dv(glGetUniformLocation(mProgHandle, label.c_str()), 1, &(vec[0U]));
+}
+
+void GlslProgram::set3(const std::string& label, const vec3d& vec) {
+  glUniform4dv(glGetUniformLocation(mProgHandle, label.c_str()), 1, &(vec[0U]));
+}
+
 void GlslProgram::setMatrix(const std::string& label, const float* m,
                             bool transpose) {
   glUniformMatrix4fv(glGetUniformLocation(mProgHandle, label.c_str()), 1,
@@ -146,6 +162,22 @@ void GlslProgram::setMatrix(const std::string& label, const double* m,
                             bool transpose) {
   glUniformMatrix4dv(glGetUniformLocation(mProgHandle, label.c_str()), 1,
                      static_cast<GLboolean>(transpose), m);
+}
+
+void GlslProgram::setMatrix(const std::string& label, const mat3x3<float>& m) {
+  setMatrix(label, &(m.front().front()), true);
+}
+
+void GlslProgram::setMatrix(const std::string& label, const mat3x3<double>& m) {
+  setMatrix(label, &(m.front().front()), true);
+}
+
+void GlslProgram::setMatrix(const std::string& label, const mat4x4<float>& m) {
+  setMatrix(label, &(m.front().front()), true);
+}
+
+void GlslProgram::setMatrix(const std::string& label, const mat4x4<double>& m) {
+  setMatrix(label, &(m.front().front()), true);
 }
 
 void GlslProgram::bind(bool use) const {

@@ -15,13 +15,13 @@ int32_t main(int32_t /*argc*/, char** /*args*/) {
                                            4, true);
 
   // create vertex positions
-  std::vector<prgl::vec3> positions = {
+  std::vector<prgl::vec3f> positions = {
     {{-1.0F, -1.0F, 0.0F}, {1.0F, -1.0F, 0.0F}, {0.0F, 1.0F, 0.0F}}};
   auto vboPosition = prgl::VertexBufferObject::Create(
     prgl::VertexBufferObject::Usage::StaticDraw);
   vboPosition->createBuffer(positions);
   // create vertex colors
-  std::vector<prgl::vec3> colors = {
+  std::vector<prgl::vec3f> colors = {
     {1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}};
   auto vboColors = prgl::VertexBufferObject::Create(
     prgl::VertexBufferObject::Usage::StaticDraw);
@@ -40,9 +40,9 @@ int32_t main(int32_t /*argc*/, char** /*args*/) {
     gl->getWidth(), gl->getHeight(), prgl::TextureFormatInternal::Rgb32F,
     prgl::TextureFormat::Rgb, prgl::DataType::Float);
   {
-    std::vector<prgl::vec3> colorBuffer(gl->getWidth() * gl->getHeight());
+    std::vector<prgl::vec3f> colorBuffer(gl->getWidth() * gl->getHeight());
     // fill the texture with a color
-    prgl::vec3 color = {0.25F, 0.1F, 0.3F};
+    prgl::vec3f color = {0.25F, 0.1F, 0.3F};
     for (auto& c : colorBuffer) {
       c = color;
     }

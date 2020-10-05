@@ -48,8 +48,18 @@ class GlslProgram {
   void set3iv(const std::string& label, const int* args);
   void set3fv(const std::string& label, const float* args);
   void set4fv(const std::string& label, const float* args);
+
+  void set2(const std::string& label, const vec2f& vec);
+  void set3(const std::string& label, const vec3f& vec);
+  void set2(const std::string& label, const vec2d& vec);
+  void set3(const std::string& label, const vec3d& vec);
+
   void setMatrix(const std::string& label, const float* m, bool transpose);
   void setMatrix(const std::string& label, const double* m, bool transpose);
+  void setMatrix(const std::string& label, const mat3x3<float>& m);
+  void setMatrix(const std::string& label, const mat3x3<double>& m);
+  void setMatrix(const std::string& label, const mat4x4<float>& m);
+  void setMatrix(const std::string& label, const mat4x4<double>& m);
 
   void bindSampler(const std::string& name, TextureUnit unit,
                    const std::shared_ptr<Texture2d>& texture);
