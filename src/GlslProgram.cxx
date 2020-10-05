@@ -206,10 +206,8 @@ uint32_t GlslProgram::getCurrentlyBoundProgram() {
  */
 void GlslProgram::bindSampler(const std::string& name, const uint32_t unit,
                               const std::shared_ptr<Texture2d>& texture) {
-  bind(true);
   texture->bindUnit(unit);
   setui(name, static_cast<uint32_t>(unit));
-  bind(false);
 }
 
 }  // namespace prgl
