@@ -165,19 +165,19 @@ void GlslProgram::setMatrix(const std::string& label, const double* m,
 }
 
 void GlslProgram::setMatrix(const std::string& label, const mat3x3<float>& m) {
-  setMatrix(label, m.data(), false);
+  setMatrix(label, m.data(), true);
 }
 
 void GlslProgram::setMatrix(const std::string& label, const mat3x3<double>& m) {
-  setMatrix(label, m.data(), false);
+  setMatrix(label, m.data(), true);
 }
 
 void GlslProgram::setMatrix(const std::string& label, const mat4x4<float>& m) {
-  setMatrix(label, m.data(), false);
+  setMatrix(label, m.data(), true);
 }
 
 void GlslProgram::setMatrix(const std::string& label, const mat4x4<double>& m) {
-  setMatrix(label, m.data(), false);
+  setMatrix(label, m.data(), true);
 }
 
 void GlslProgram::bind(bool use) const {
