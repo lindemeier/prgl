@@ -33,24 +33,40 @@ namespace prgl::projection {
 template <class T>
 auto ortho(const T left, const T right, const T bottom, const T top,
            const T near, const T far) -> mat4x4<T> {
-  if (std::fabs(right - left) <
+  const auto width  = (right - left);
+  const auto height = (top - bottom);
+  const auto zclip = (far - near);
+  if (std::fabs(width) <
       (static_cast<T>(100.0) * std::numeric_limits<T>::epsilon())) {
     throw std::invalid_argument("left and right are not allowed to be equal");
   }
-  if (std::fabs(top - bottom) <
+  if (std::fabs(height) <
       (static_cast<T>(100.0) * std::numeric_limits<T>::epsilon())) {
     throw std::invalid_argument("top and bottom are not allowed to be equal");
   }
-  if (std::fabs(near - far) <
+  if (std::fabs(zclip) <
       (static_cast<T>(0.0) * std::numeric_limits<T>::epsilon())) {
     throw std::invalid_argument("near and far are not allowed to be equal");
   }
   constexpr auto Zero = static_cast<T>(0.0);
   constexpr auto Two  = static_cast<T>(2.0);
-  return {{{Two / (right - left), Zero, Zero, -(right + left) / (right - left)},
-           {Zero, Two / (top - bottom), Zero, -(top + bottom) / (top - bottom)},
-           {Zero, Zero, -Two / (far - near), -(far + near) / (far - near)},
-           {Zero, Zero, Zero, static_cast<T>(1.0)}}};
+
+  return {Two / width,
+          Zero,
+          Zero,
+          -(left + right) / width,
+          Zero,
+          Two / height,
+          Zero,
+          -(top + bottom) / height,
+          Zero,
+          Zero,
+          -Two / zclip,
+          -(near + far) / zclip,
+          Zero,
+          Zero,
+          Zero,
+          static_cast<T>(1.0)};
 }
 }  // namespace prgl::projection
 
