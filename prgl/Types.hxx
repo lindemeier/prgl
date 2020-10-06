@@ -32,9 +32,9 @@ using vec3ui = std::array<uint32_t, 3U>;
 using vec4ui = std::array<uint32_t, 4U>;
 
 template <class T>
-using mat4x4 = std::array<std::array<T, 4U>, 4U>;
+using mat4x4 = std::array<T, 4U * 4U>;
 template <class T>
-using mat3x3 = std::array<std::array<T, 3U>, 3U>;
+using mat3x3 = std::array<T, 3U * 3U>;
 
 }  // namespace prgl
 
