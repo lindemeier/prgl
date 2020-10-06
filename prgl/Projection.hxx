@@ -47,10 +47,22 @@ auto ortho(const T left, const T right, const T bottom, const T top,
   }
   constexpr auto Zero = static_cast<T>(0.0);
   constexpr auto Two  = static_cast<T>(2.0);
-  return {{{Two / (right - left), Zero, Zero, -(right + left) / (right - left)},
-           {Zero, Two / (top - bottom), Zero, -(top + bottom) / (top - bottom)},
-           {Zero, Zero, -Two / (far - near), -(far + near) / (far - near)},
-           {Zero, Zero, Zero, static_cast<T>(1.0)}}};
+  return {Two / (right - left),
+          Zero,
+          Zero,
+          -(right + left) / (right - left),
+          Zero,
+          Two / (top - bottom),
+          Zero,
+          -(top + bottom) / (top - bottom),
+          Zero,
+          Zero,
+          -Two / (far - near),
+          -(far + near) / (far - near),
+          Zero,
+          Zero,
+          Zero,
+          static_cast<T>(1.0)};
 }
 }  // namespace prgl::projection
 
