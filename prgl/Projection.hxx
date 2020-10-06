@@ -46,32 +46,12 @@ auto ortho(const T left, const T right, const T bottom, const T top,
     throw std::invalid_argument("near and far are not allowed to be equal");
   }
   constexpr auto Zero = static_cast<T>(0.0);
-  constexpr auto One  = static_cast<T>(1.0);
   constexpr auto Two  = static_cast<T>(2.0);
-  // clang-format off
-  return {
-       Two / (right - left),
-       Zero,
-       Zero,
-       Zero,
-
-       Zero,
-       Two / (bottom - top),
-       Zero,
-       Zero,
-
-       Zero,
-       Zero,
-       One / (near - far),
-       Zero,
-
-       -(right + left) / (right - left),
-       -(bottom + top) / (bottom - top),
-       near / (near - far),
-       One
-    };
-  // clang-format off
-  }
+  return {{{Two / (right - left), Zero, Zero, -(right + left) / (right - left)},
+           {Zero, Two / (top - bottom), Zero, -(top + bottom) / (top - bottom)},
+           {Zero, Zero, -Two / (far - near), -(far + near) / (far - near)},
+           {Zero, Zero, Zero, static_cast<T>(1.0)}}};
+}
 }  // namespace prgl::projection
 
 #endif  // PRGL_PROJECTION_H
