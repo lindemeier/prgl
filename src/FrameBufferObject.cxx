@@ -26,6 +26,12 @@ void FrameBufferObject::bind(bool bind) const {
   } else {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
+
+  if (mTarget == nullptr) {
+    throw std::runtime_error("framebuffer: not target texture attached.");
+  }
+  glViewport(0, 0, static_cast<int32_t>(mTarget->getWidth()),
+             static_cast<int32_t>(mTarget->getHeight()));
 }
 
 void FrameBufferObject::attachTexture(
