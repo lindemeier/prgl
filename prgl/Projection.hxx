@@ -45,7 +45,7 @@ auto ortho(const T left, const T right, const T bottom, const T top,
     throw std::invalid_argument("top and bottom are not allowed to be equal");
   }
   if (std::fabs(zclip) <
-      (static_cast<T>(0.0) * std::numeric_limits<T>::epsilon())) {
+      (static_cast<T>(100.0) * std::numeric_limits<T>::epsilon())) {
     throw std::invalid_argument("near and far are not allowed to be equal");
   }
   constexpr auto Zero = static_cast<T>(0.0);
