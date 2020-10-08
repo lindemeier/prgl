@@ -203,12 +203,9 @@ class Texture2d final {
                         int32_t level = 0, bool layered = GL_TRUE,
                         int32_t layer = 0);
   void upload(void* data);
-  void download(std::vector<float>& data) const;
-  void download(std::vector<std::array<float, 3>>& data) const;
-  void download(std::vector<std::array<float, 4>>& data) const;
-  void download(std::vector<uint8_t>& data) const;
-  void download(std::vector<std::array<uint8_t, 3>>& data) const;
-  void download(std::vector<std::array<uint8_t, 4>>& data) const;
+
+  void download(void* dataPtr, TextureFormat format, DataType type);
+
   void setWrapMode(TextureWrapMode wrap);
   void setEnvMode(TextureEnvMode envMode);
   void setFilter(TextureMinFilter minFilter, TextureMagFilter magFilter);

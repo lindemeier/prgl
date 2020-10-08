@@ -67,59 +67,11 @@ void Texture2d::upload(void* data) {
   bind(false);
 }
 
-void Texture2d::download(std::vector<float>& data) const {
-  if (data.size() != (mWidth * mHeight)) {
-    data.resize(mWidth * mHeight);
-  }
+void Texture2d::download(void* dataPtr, const TextureFormat format,
+                         const DataType type) {
   bind(true);
-  glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_FLOAT, data.data());
-  bind(false);
-}
-
-void Texture2d::download(std::vector<std::array<float, 3>>& data) const {
-  if (data.size() != (mWidth * mHeight)) {
-    data.resize(mWidth * mHeight);
-  }
-  bind(true);
-  glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_FLOAT, data.data());
-  bind(false);
-}
-
-void Texture2d::download(std::vector<std::array<float, 4>>& data) const {
-  if (data.size() != (mWidth * mHeight)) {
-    data.resize(mWidth * mHeight);
-  }
-  bind(true);
-  glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_FLOAT, data.data());
-  bind(false);
-}
-
-void Texture2d::download(std::vector<uint8_t>& data) const {
-  if (data.size() != (mWidth * mHeight)) {
-    data.resize(mWidth * mHeight);
-  }
-  bind(true);
-  glGetTexImage(GL_TEXTURE_2D, 0, GL_RED, GL_UNSIGNED_BYTE, data.data());
-  bind(false);
-}
-
-void Texture2d::download(std::vector<std::array<uint8_t, 3>>& data) const {
-  if (data.size() != (mWidth * mHeight)) {
-    if (data.size() != (mWidth * mHeight)) {
-      data.resize(mWidth * mHeight);
-    }
-  }
-  bind(true);
-  glGetTexImage(GL_TEXTURE_2D, 0, GL_RGB, GL_UNSIGNED_BYTE, data.data());
-  bind(false);
-}
-
-void Texture2d::download(std::vector<std::array<uint8_t, 4>>& data) const {
-  if (data.size() != (mWidth * mHeight)) {
-    data.resize(mWidth * mHeight);
-  }
-  bind(true);
-  glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
+  glGetTexImage(GL_TEXTURE_2D, 0, static_cast<GLenum>(format),
+                static_cast<GLenum>(type), dataPtr);
   bind(false);
 }
 
