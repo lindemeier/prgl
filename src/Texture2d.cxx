@@ -193,10 +193,15 @@ void Texture2d::setMaxIsotropy(float anisotropy) {
   bind(false);
 }
 
-void Texture2d::render(float posX, float posY, float width,
-                       float height) const {
+void Texture2d::render(float posX, float posY, float width, float height,
+                       bool convert_sRGB) const {
   glPushAttrib(GL_ALL_ATTRIB_BITS);
 
+  if (convert_sRGB) {
+    glEnable(GL_FRAMEBUFFER_SRGB);
+  } else {
+    glDisable(GL_FRAMEBUFFER_SRGB);
+  }
   // deactivate color clamping
   glClampColor(GL_CLAMP_VERTEX_COLOR_ARB, GL_FALSE);
   glClampColor(GL_CLAMP_READ_COLOR_ARB, GL_FALSE);
