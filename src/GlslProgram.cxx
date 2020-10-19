@@ -180,9 +180,13 @@ void GlslProgram::setMatrix(const std::string& label, const mat4x4<double>& m) {
   setMatrix(label, m.data(), true);
 }
 
+auto GlslProgram::isBound() const -> bool {
+  return (getCurrentlyBoundProgram() == mProgHandle);
+}
+
 void GlslProgram::bind(bool use) const {
   if (use) {
-    if (getCurrentlyBoundProgram() != mProgHandle) {
+    if (!isBound()) {
       glUseProgram(mProgHandle);
     }
   } else {

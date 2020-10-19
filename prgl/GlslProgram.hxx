@@ -64,6 +64,8 @@ class GlslProgram {
   void bindSampler(const std::string& name, uint32_t unit,
                    const std::shared_ptr<Texture2d>& texture);
 
+  auto isBound() const -> bool;
+
   static std::string ReadShaderFromFile(const std::string& filename);
 
  protected:

@@ -91,7 +91,10 @@ void GlslComputeShader::memoryBarrier(GLbitfield barrierType) {
  * @param h
  */
 void GlslComputeShader::execute(int32_t x, int32_t y, int32_t w, int32_t h) {
-  bind(true);
+  if (!isBound()) {
+    throw std::runtime_error(
+      "trying to execute program that is not the currently bound program.");
+  }
 
   set2i("offset", x, y);
 
@@ -99,8 +102,6 @@ void GlslComputeShader::execute(int32_t x, int32_t y, int32_t w, int32_t h) {
   dispatchCompute((static_cast<uint32_t>(w) / workSize[0U]) + 1U,
                   (static_cast<uint32_t>(h) / workSize[1U]) + 1U, 1U);
   memoryBarrier(GL_ALL_BARRIER_BITS);
-
-  bind(false);
 }
 
 /**
@@ -113,9 +114,12 @@ void GlslComputeShader::execute(int32_t x, int32_t y, int32_t w, int32_t h) {
 void GlslComputeShader::bindImage2D(uint32_t unit,
                                     const std::shared_ptr<Texture2d>& texture,
                                     TextureAccess access) {
-  bind(true);
+  if (!isBound()) {
+    throw std::runtime_error(
+      "trying to bind image to program that is not the currently bound "
+      "program.");
+  }
   texture->bindImageTexture(unit, access);
-  bind(false);
 }
 
 /**
@@ -126,9 +130,12 @@ void GlslComputeShader::bindImage2D(uint32_t unit,
  */
 void GlslComputeShader::bindSSBO(
   uint32_t location, const std::shared_ptr<ShaderStorageBuffer>& buffer) {
-  bind(true);
+  if (!isBound()) {
+    throw std::runtime_error(
+      "trying to bind SSBO to program that is not the currently bound "
+      "program.");
+  }
   buffer->bindBase(location);
-  bind(false);
 }
 
 }  // namespace prgl
